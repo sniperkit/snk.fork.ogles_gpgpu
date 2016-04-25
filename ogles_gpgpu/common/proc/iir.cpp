@@ -70,7 +70,7 @@ ProcInterface* IirFilterProc::getOutputFilter() const { return m_impl->lastProc;
 
 int IirFilterProc::render(int position)
 {   // Execute internal filter chain
-    m_impl->iirProc.process(0);
+    m_impl->iirProc.process(0); // calls next->useTexture(); next->process();
     if(m_impl->kind == kHighPass)
     {
         // At this point useTexture() has been called and diffProc should have:
@@ -86,13 +86,20 @@ void IirFilterProc::useTexture(GLuint id, GLuint useTexUnit, GLenum target, int 
     auto &fifoProc = m_impl->fifoProc;
     auto &iirProc = m_impl->iirProc;
 
-    if((m_impl->kind == kHighPass) && isFirst)
+    if(m_impl->kind == kHighPass)
     {
         auto &diffProc = m_impl->diffProc;
         
         // (Optional) Diff filter for high pass filter:
         diffProc.useTexture(id, useTexUnit, target, 0);
-        diffProc.useTexture2(iirProc.getOutputTexId(), iirProc.getTextureUnit(), GL_TEXTURE_2D);
+        if(isFirst)
+        {
+            diffProc.useTexture2(id, useTexUnit, GL_TEXTURE_2D);
+        }
+        else
+        {
+            diffProc.useTexture2(iirProc.getOutputTexId(), iirProc.getTextureUnit(), GL_TEXTURE_2D);
+        }
     }
     
     // IIR filter input (same image for first frame)
@@ -104,12 +111,17 @@ void IirFilterProc::useTexture(GLuint id, GLuint useTexUnit, GLenum target, int 
         iirProc.useTexture2(id, useTexUnit, GL_TEXTURE_2D);
         
         // FIFO input (from IIR)
-        fifoProc.useTexture(iirProc.getOutputTexId(), iirProc.getTextureUnit(), GL_TEXTURE_2D, 0);
+        fifoProc.useTexture(id, useTexUnit, target, 0);
     }
     else
     {
         // Connect FIFO output to second input of IIR for frames >= 1
+        iirProc.useTexture(id, useTexUnit, target, 0);
         iirProc.useTexture2(fifoProc.getOutputTexId(), fifoProc.getTextureUnit(), GL_TEXTURE_2D);
+        
+        // FIFO input (from IIR)
+        fifoProc.useTexture(iirProc.getOutputTexId(), iirProc.getTextureUnit(), GL_TEXTURE_2D, 0);
+
     }
 }
 
