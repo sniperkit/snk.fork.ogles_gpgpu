@@ -70,7 +70,11 @@ ProcInterface* IirFilterProc::getOutputFilter() const { return m_impl->lastProc;
 
 int IirFilterProc::render(int position)
 {   // Execute internal filter chain
-    m_impl->iirProc.process(0); // calls next->useTexture(); next->process();
+    
+    // calls next->useTexture(); next->process();
+    // TODO: We don't really need this to call fifoProc->useTexture(),
+    // if it is done by this class (see below for special case first frame handling)
+    m_impl->iirProc.process(0);
     if(m_impl->kind == kHighPass)
     {
         // At this point useTexture() has been called and diffProc should have:
