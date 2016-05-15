@@ -12,6 +12,7 @@ const char *DiffProc::fshaderDiffSrc = OG_TO_STR
  uniform sampler2D inputImageTexture;
  uniform sampler2D inputImageTexture2;
  uniform float strength;
+ uniform float offset;
  void main()
  {
      vec4 centerIntensity = texture2D(inputImageTexture, textureCoordinate);
@@ -21,7 +22,7 @@ const char *DiffProc::fshaderDiffSrc = OG_TO_STR
  });
 
 
-DiffProc::DiffProc(float strength) : strength(strength)
+DiffProc::DiffProc(float strength, float offset) : strength(strength), offset(offset)
 {
     
 }
@@ -30,12 +31,14 @@ void DiffProc::getUniforms()
 {
     TwoInputProc::getUniforms();
     shParamUStrength = shader->getParam(UNIF, "strength");
+    shParamUOffset = shader->getParam(UNIF, "offset");
 }
 
 void DiffProc::setUniforms()
 {
     TwoInputProc::setUniforms();
     glUniform1f(shParamUStrength, strength);
+    glUniform1f(shParamUOffset, offset);
 }
 
 int DiffProc::render(int position)
