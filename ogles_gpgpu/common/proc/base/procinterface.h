@@ -130,6 +130,11 @@ public:
     virtual RenderOrientation getOutputRenderOrientation() const = 0;
 
     /**
+     * Get the output frame size.
+     */
+    virtual Size2d getOutFrameSize() const { return Size2d(getOutFrameW(), getOutFrameH()); }
+    
+    /**
      * Get the output frame width.
      */
     virtual int getOutFrameW() const = 0;
@@ -148,6 +153,11 @@ public:
      * Get the input frame height.
      */
     virtual int getInFrameH() const = 0;
+
+    /**
+     * Get the input frame size.
+     */
+    virtual Size2d getInFrameSize() const { return Size2d(getInFrameW(), getInFrameH()); }
 
     /**
      * Returns true if output size < input size.

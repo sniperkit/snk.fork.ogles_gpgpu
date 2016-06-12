@@ -4,6 +4,8 @@ Travis: [![Build Status](https://travis-ci.org/headupinclouds/ogles_gpgpu.svg?br
 
 Appveyor: [![Build status](https://ci.appveyor.com/api/projects/status/kv8cix0rf288ddcj?svg=true)](https://ci.appveyor.com/project/headupinclouds/ogles-gpgpu)
 
+UPDATE: In addition to the original build notes below, CMake support has been added via the [Hunter](https://github.com/ruslo/hunter) package manager with cross platform toolchains provided by [Polly](https://github.com/ruslo/polly).  See the README pages of these links for details.
+
 ## Features
 
 * fast and portable C++ code
