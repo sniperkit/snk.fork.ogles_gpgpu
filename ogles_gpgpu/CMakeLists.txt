@@ -34,7 +34,7 @@ write_basic_package_version_file(
 )
 
 # Note: use 'targets_export_name'
-configure_file("../cmake/Config.cmake.in" "${project_config}" @ONLY)
+configure_file("${CMAKE_SOURCE_DIR}/cmake/Config.cmake.in" "${project_config}" @ONLY)
 
 install(
     TARGETS ${PROJECT_NAME}
@@ -52,18 +52,18 @@ install(
 )
 
 install(
-    FILES
-    ${OGLES_GPGPU_COMMON_PUBLIC_HDRS}
-    DESTINATION "${include_install_dir}/${PROJECT_NAME}/common"
-)
+  DIRECTORY "${CMAKE_SOURCE_DIR}/ogles_gpgpu/" # Trailing slash is required
+  DESTINATION "${include_install_dir}/${PROJECT_NAME}"
+  FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
+  )  
 
 install(
-    FILES "${project_config}" "${version_config}"
-    DESTINATION "${config_install_dir}"
-)
+  FILES "${project_config}" "${version_config}"
+  DESTINATION "${config_install_dir}"
+  )
 
 install(
-    EXPORT "${targets_export_name}"
-    NAMESPACE "${namespace}"
-    DESTINATION "${config_install_dir}"
-)
+  EXPORT "${targets_export_name}"
+  NAMESPACE "${namespace}"
+  DESTINATION "${config_install_dir}"
+  )
