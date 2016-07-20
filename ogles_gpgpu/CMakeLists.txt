@@ -34,7 +34,11 @@ write_basic_package_version_file(
 )
 
 # Note: use 'targets_export_name'
-configure_file("${PROJECT_SOURCE_DIR}/cmake/Config.cmake.in" "${project_config}" @ONLY)
+configure_package_config_file(
+    "${PROJECT_SOURCE_DIR}/cmake/Config.cmake.in"
+    "${project_config}"
+     INSTALL_DESTINATION "${config_install_dir}"
+)
 
 install(
     TARGETS ${PROJECT_NAME}
