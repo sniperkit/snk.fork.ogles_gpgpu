@@ -59,7 +59,7 @@ install(
   DIRECTORY "${CMAKE_SOURCE_DIR}/ogles_gpgpu/" # Trailing slash is required
   DESTINATION "${include_install_dir}/${PROJECT_NAME}"
   FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp"
-  )  
+  )
 
 install(
   FILES "${project_config}" "${version_config}"
