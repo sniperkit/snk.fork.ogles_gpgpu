@@ -46,7 +46,7 @@ install(
     LIBRARY DESTINATION "lib"
     ARCHIVE DESTINATION "lib"
     RUNTIME DESTINATION "bin"
-    INCLUDES DESTINATION "${include_install_dir}/${PROJECT_NAME}"
+    INCLUDES DESTINATION "${include_install_dir}"
 )
 
 install(
