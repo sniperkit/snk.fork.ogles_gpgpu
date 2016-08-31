@@ -46,7 +46,7 @@ add_subdirectory(ogles_gpgpu)
 option(OGLES_GPGPU_BUILD_EXAMPLES "Build examples" OFF)
 option(OGLES_GPGPU_INSTALL "Perform installation" OFF)
 
-message("BUILD EXAMPLES ${BUILD_EXAMPLES}")
+message("OGLES_GPGPU_BUILD_EXAMPLES ${OGLES_GPGPU_BUILD_EXAMPLES}")
 if(OGLES_GPGPU_BUILD_EXAMPLES)
   message("BUILD EXAMPLES.......")
   add_subdirectory(examples)
