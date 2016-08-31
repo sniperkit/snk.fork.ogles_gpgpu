@@ -1,4 +1,4 @@
-if(is_ios)
+if(IOS)
   add_subdirectory(ios)
 elseif(ANDROID)
   # TODO: Need cmake-fu for APK packaging

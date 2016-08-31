@@ -11,7 +11,7 @@ endif()
 
 include(sugar_include)
 
-if(is_ios)
+if(IOS)
   sugar_include(ios)
 elseif(APPLE)
   sugar_include(osx)
