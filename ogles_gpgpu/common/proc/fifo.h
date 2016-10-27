@@ -15,7 +15,7 @@
 
 #include "../common_includes.h"
 #include "base/multiprocinterface.h"
-#include "gl/fbo.h"
+#include "ogles_gpgpu/common/gl/fbo.h"
 
 BEGIN_OGLES_GPGPU
     

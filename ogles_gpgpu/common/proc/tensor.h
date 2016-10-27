@@ -13,7 +13,7 @@
 #ifndef OGLES_GPGPU_COMMON_PROC_TENSOR
 #define OGLES_GPGPU_COMMON_PROC_TENSOR
 
-#include "proc/filter3x3.h"
+#include "ogles_gpgpu/common/proc/filter3x3.h"
 
 namespace ogles_gpgpu {
 

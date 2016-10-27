@@ -13,7 +13,7 @@
 #ifndef OGLES_GPGPU_COMMON_PROC_GRAD
 #define OGLES_GPGPU_COMMON_PROC_GRAD
 
-#include "proc/filter3x3.h"
+#include "ogles_gpgpu/common/proc/filter3x3.h"
 
 namespace ogles_gpgpu {
 

@@ -1,13 +1,14 @@
 include(sugar_include)
 sugar_include(.)
 
-include_directories(common)
-include_directories(platform)
 add_library(ogles_gpgpu ${OGLES_GPGPU_SRCS} )
 if(ANDROID)
   target_link_libraries(ogles_gpgpu PUBLIC EGL GLESv2)
 endif()
 set_property(TARGET ${library} PROPERTY FOLDER "libs/ogles_gpgpu")
+target_include_directories(
+    ogles_gpgpu PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>"
+)
 
 #
 # Provide interface lib for clean package config use
