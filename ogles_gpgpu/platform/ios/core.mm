@@ -1,4 +1,4 @@
-#include "core.h"
+#include "ogles_gpgpu/common/core.h"
 
 #import <CoreVideo/CVPixelBuffer.h> // CVPixelBufferRef
 #import <OpenGLES/EAGL.h> // EAGLContext
