@@ -2,6 +2,11 @@ include(sugar_include)
 sugar_include(.)
 
 add_library(ogles_gpgpu ${OGLES_GPGPU_SRCS} )
+
+if(OGLES_GPGPU_VERBOSE)
+  target_compile_definitions(ogles_gpgpu PUBLIC OGLES_GPGPU_VERBOSE=1)
+endif()
+
 if(ANDROID)
   target_link_libraries(ogles_gpgpu PUBLIC EGL GLESv2)
 endif()
