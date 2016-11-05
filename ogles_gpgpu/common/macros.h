@@ -13,7 +13,7 @@
 #define OG_TO_STR_(x) #x
 #define OG_TO_STR(x) OG_TO_STR_(x)
 
-#if !defined(NDEBUG)
+#if defined(OGLES_GPGPU_VERBOSE)
 #define OG_LOGINF(class, args...) fprintf(stdout, "ogles_gpgpu::%s - %s - ", class, __FUNCTION__); fprintf(stdout, args); fprintf(stdout, "\n")
 #else
 #define OG_LOGINF(class, args...)
