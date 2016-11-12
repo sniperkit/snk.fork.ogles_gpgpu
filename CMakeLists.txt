@@ -29,9 +29,18 @@ if(XCODE)
   set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "Configuration types")
 endif()
 
+option(OGLES_GPGPU_BUILD_EXAMPLES "Build examples" OFF)
+option(OGLES_GPGPU_INSTALL "Perform installation" ON)
+option(OGLES_GPGPU_VERBOSE "Perform per filter logging" OFF)
+
 ## #################################################################
 ## Dependencies - OpenGL stuff
 ## #################################################################
+
+if(MSVC)
+  hunter_add_package(glew)
+  find_package(glew CONFIG REQUIRED)
+endif()
 
 ## #################################################################
 ## Project
@@ -43,11 +52,6 @@ add_subdirectory(ogles_gpgpu)
 ## Examples
 ## #################################################################
 
-option(OGLES_GPGPU_BUILD_EXAMPLES "Build examples" OFF)
-option(OGLES_GPGPU_INSTALL "Perform installation" OFF)
-option(OGLES_GPGPU_VERBOSE "Perform per filter logging" OFF)
-
-message("OGLES_GPGPU_BUILD_EXAMPLES ${OGLES_GPGPU_BUILD_EXAMPLES}")
 if(OGLES_GPGPU_BUILD_EXAMPLES)
   message("BUILD EXAMPLES.......")
   add_subdirectory(examples)

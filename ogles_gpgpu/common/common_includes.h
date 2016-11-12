@@ -25,6 +25,8 @@
 #  endif
 #elif __ANDROID__ || defined(ANDROID)
 #  define OGLES_GPGPU_ANDROID 1
+#elif defined(_WIN32) || defined(_WIN64)
+#  define OGLES_GPGPU_WINDOWS 1
 #endif
 
 #ifdef OGLES_GPGPU_IOS

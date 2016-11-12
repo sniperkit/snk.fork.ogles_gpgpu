@@ -17,6 +17,8 @@
 
 #include "../../gl/memtransfer.h"
 
+#include <functional>
+
 BEGIN_OGLES_GPGPU
 
 /**
@@ -216,12 +218,12 @@ public:
     /**
      * Process a filter chain:
      */
-    virtual void process(GLuint id, GLuint useTexUnit, GLenum target, int index = 0, int position = 0, Logger logger=0);
+    virtual void process(GLuint id, GLuint useTexUnit, GLenum target, int index = 0, int position = 0, Logger logger = {});
     
     /**
      * Process filter chain filter[i] : i >= 1
      */
-    virtual void process(int position, Logger logger=0);
+    virtual void process(int position, Logger logger = {});
     
     /**
      * Allow this proc to use mipmaps
