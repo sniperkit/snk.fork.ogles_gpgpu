@@ -218,7 +218,7 @@ public:
     /**
      * Process a filter chain:
      */
-	virtual void process(GLuint id, GLuint useTexUnit, GLenum target, int index = 0, int position = 0, Logger logger = {});
+    virtual void process(GLuint id, GLuint useTexUnit, GLenum target, int index = 0, int position = 0, Logger logger = {});
     
     /**
      * Process filter chain filter[i] : i >= 1
