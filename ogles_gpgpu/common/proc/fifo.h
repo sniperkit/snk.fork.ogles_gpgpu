@@ -58,7 +58,7 @@ public:
 protected:
     
     virtual void prepare(int inW, int inH, int index = 0, int position = 0);
-    virtual void process(int position, Logger logger=0);
+    virtual void process(int position, Logger logger = {});
     
     int m_count = 0;
     int m_inputIndex = -1;
