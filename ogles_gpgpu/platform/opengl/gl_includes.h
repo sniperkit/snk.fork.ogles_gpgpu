@@ -13,7 +13,9 @@
 
 //define something for Windows (64-bit)
 #if defined(_WIN32) || defined(_WIN64)
-#  include <windows.h>
+#  include <algorithm> // min/max
+#  include <windows.h> // CMakeLists.txt defines NOMINMAX
+#  include <gl/glew.h>
 #  include <GL/gl.h>
 #  include <GL/glu.h>
 #elif __APPLE__
