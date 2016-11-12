@@ -10,6 +10,13 @@ endif()
 if(ANDROID)
   target_link_libraries(ogles_gpgpu PUBLIC EGL GLESv2)
 endif()
+
+if(MSVC)
+  target_link_libraries(ogles_gpgpu glew::glew)
+  target_compile_definitions(ogles_gpgpu PUBLIC NOMINMAX) # avoid std::{min,max} conflicts
+  target_compile_definitions(ogles_gpgpu PUBLIC _USE_MATH_DEFINES) # M_PI, etc
+endif()
+
 set_property(TARGET ${library} PROPERTY FOLDER "libs/ogles_gpgpu")
 target_include_directories(
     ogles_gpgpu PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>"

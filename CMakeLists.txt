@@ -20,6 +20,11 @@ include(sugar_include)
 
 string(COMPARE EQUAL "${CMAKE_SYSTEM_NAME}" "Linux" is_linux)
 
+if(MSVC)
+  hunter_add_package(glew)
+  find_package(glew CONFIG REQUIRED)
+endif()
+
 message("Android: ${ANDROID}")
 message("iOS    : ${IOS}")
 message("Linux  : ${is_linux}")
