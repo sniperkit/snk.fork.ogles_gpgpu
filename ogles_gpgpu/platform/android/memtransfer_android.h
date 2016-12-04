@@ -34,6 +34,8 @@
 // "Really I have no idea, but this should be big enough"
 #define OG_ANDROID_GRAPHIC_BUFFER_SIZE 1024
 
+struct ANativeWindowBuffer;
+
 namespace ogles_gpgpu {
 
 /**
@@ -169,8 +171,8 @@ private:
     void *inputGraBufHndl;      // Android GraphicBuffer handle for input
     void *outputGraBufHndl;     // Android GraphicBuffer handle for output
 
-    struct ANativeWindowBuffer *inputNativeBuf;     // pointer to native window buffer for input (weak ref - do not free()!)
-    struct ANativeWindowBuffer *outputNativeBuf;	// pointer to native window buffer for output (weak ref - do not free()!)
+    ANativeWindowBuffer *inputNativeBuf;     // pointer to native window buffer for input (weak ref - do not free()!)
+    ANativeWindowBuffer *outputNativeBuf;	// pointer to native window buffer for output (weak ref - do not free()!)
 
     EGLImageKHR inputImage;     // ImageKHR handle for input
     EGLImageKHR outputImage;    // ImageKHR handle for output
