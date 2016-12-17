@@ -441,7 +441,10 @@ Flow2Pipeline::Flow2Pipeline(float tau, float strength, bool doGray)
     procPasses.push_back(&m_pImpl->nmsProc);
 };
 
-Flow2Pipeline::~Flow2Pipeline() {}
+Flow2Pipeline::~Flow2Pipeline()
+{
+    procPasses.clear();
+}
 ProcInterface * Flow2Pipeline::getInputFilter() const { return &m_pImpl->grayProc; }
 
 #if USE_MEDIAN

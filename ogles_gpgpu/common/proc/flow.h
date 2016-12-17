@@ -139,7 +139,7 @@ class Flow2Pipeline : public MultiPassProc
 public:
     
     Flow2Pipeline(float tau = 0.004f, float strength = 1.0f, bool doGray=false);
-    virtual ~Flow2Pipeline();
+    ~Flow2Pipeline();
     
     virtual float getStrength() const;
     virtual ProcInterface * corners(); // corner output
