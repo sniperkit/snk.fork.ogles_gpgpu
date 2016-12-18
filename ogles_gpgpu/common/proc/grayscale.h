@@ -26,7 +26,7 @@ typedef enum {
     GRAYSCALE_INPUT_CONVERSION_NONE     = -2,
     GRAYSCALE_INPUT_CONVERSION_CUSTOM   = -1,
     GRAYSCALE_INPUT_CONVERSION_RGB      = 0,
-    GRAYSCALE_INPUT_CONVERSION_BGR,
+    GRAYSCALE_INPUT_CONVERSION_BGR      = 1,
 } GrayscaleInputConversionType;
 
 /**
@@ -99,6 +99,7 @@ private:
     static const char *fshaderGrayscaleSrc;         // fragment shader source
     static const GLfloat grayscaleConvVecRGB[3];    // weighted channel grayscale conversion for RGB input (default)
     static const GLfloat grayscaleConvVecBGR[3];    // weighted channel grayscale conversion for BGR input
+    static const GLfloat grayscaleConvVecNone[3];   // identity transformation for pass through shader behavior
 
     GLint shParamUInputConvVec; // shader uniform weighted channel grayscale conversion vector
 
