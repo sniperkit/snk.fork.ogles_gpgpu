@@ -116,18 +116,4 @@ install:
 
 build_script:
   - cmd: python %POLLY_SOURCE_DIR%\bin\build.py --toolchain "%TOOLCHAIN%" --config "%CONFIG%" --verbose --test
-
-artifacts:
-  - path: _builds\*\ogles_gpgpu-*.tar.gz
-    name: Releases
-
-deploy:
-  provider: GitHub
-  auth_token:
-    secure: "U5MPrdwVvE0Xyt7KNsBHp3e03qaBZ5UTV1s7GpTYy4Jxsx6EkKsXuZzBtaDtcU12"
-  artifact: /ogles_gpgpu-.*\.tar.gz/
-  draft: false
-  prerelease: false
-  on:
-    appveyor_repo_tag: true
-    
+  
