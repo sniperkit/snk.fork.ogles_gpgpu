@@ -23,6 +23,10 @@ const GLfloat GrayscaleProc::grayscaleConvVecBGR[3] = {
     0.114, 0.587, 0.299
 };
 
+const GLfloat GrayscaleProc::grayscaleConvVecNone[3] = {
+    1.0, 1.0, 1.0
+};
+
 const char *GrayscaleProc::fshaderGrayscaleSrc = OG_TO_STR(
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -86,15 +90,16 @@ void GrayscaleProc::setGrayscaleConvType(GrayscaleInputConversionType type) {
 
     const GLfloat *v = NULL;
 
-    if (type == GRAYSCALE_INPUT_CONVERSION_RGB) {
-        v = &grayscaleConvVecRGB[0];
-    } else if (type == GRAYSCALE_INPUT_CONVERSION_BGR) {
-        v = &grayscaleConvVecBGR[0];
-    } else {
-        OG_LOGERR(getProcName(), "unknown grayscale input conversion type %d", type);
-        v = &grayscaleConvVecRGB[0];    // set default
+    switch(type)
+    {
+        case GRAYSCALE_INPUT_CONVERSION_RGB: v = &grayscaleConvVecRGB[0]; break;
+        case GRAYSCALE_INPUT_CONVERSION_BGR: v = &grayscaleConvVecBGR[0]; break;
+        case GRAYSCALE_INPUT_CONVERSION_NONE: v = &grayscaleConvVecNone[0]; break;
+        default:
+            v = &grayscaleConvVecNone[0];
+            OG_LOGERR(getProcName(), "unknown grayscale input conversion type %d", type);
     }
-
+    
     memcpy(grayscaleConvVec, v, sizeof(GLfloat) * 3);
 
     inputConvType = type;
