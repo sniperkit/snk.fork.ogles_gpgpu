@@ -64,7 +64,10 @@ int IirFilterProc::reinit(int inW, int inH, bool prepareForExternalInput)
     return MultiPassProc::reinit(inW, inH, prepareForExternalInput);
 }
 
-IirFilterProc::~IirFilterProc() {}
+IirFilterProc::~IirFilterProc()
+{
+    procPasses.clear();
+}
 ProcInterface* IirFilterProc::getInputFilter() const { return &m_impl->iirProc; }
 ProcInterface* IirFilterProc::getOutputFilter() const { return m_impl->lastProc; }
 
