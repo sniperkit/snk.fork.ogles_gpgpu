@@ -16,6 +16,7 @@ class DiffProc : public TwoInputProc
 {
 public:
     DiffProc(float strength = 1.f, float offset=0.f);
+    ~DiffProc() {}
     virtual const char *getProcName() { return "DiffProc"; }
     virtual void getUniforms();
     virtual void setUniforms();
