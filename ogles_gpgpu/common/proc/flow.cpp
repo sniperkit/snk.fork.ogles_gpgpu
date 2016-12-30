@@ -245,16 +245,18 @@ const char * FlowImplProc::fshaderFlowXSrc = OG_TO_STR
 #if defined(OGLES_GPGPU_OPENGLES)
  precision highp float;
 #endif
+ 
  varying vec2 textureCoordinate;
  uniform sampler2D inputImageTexture;
  uniform float strength;
+ 
  void main()
  {
      vec4 val = texture2D(inputImageTexture, textureCoordinate);
      vec4 pix = (val * 2.0) - 1.0;
      vec3 t = vec3(pix.x*pix.x, pix.y*pix.y, (pix.x*pix.y+1.0)/2.0);
      vec4 x = vec4(t, (pix.x*pix.z+1.0)/2.0);
-     gl_FragColor = x;
+     gl_FragColor = x * strength;
  });
 
 const char *FlowImplProc::fshaderFlowYSrc = OG_TO_STR
@@ -273,7 +275,7 @@ const char *FlowImplProc::fshaderFlowYSrc = OG_TO_STR
      vec4 pix = (val * 2.0) - 1.0;
      vec3 t = vec3(pix.x*pix.x, pix.y*pix.y, (pix.x*pix.y+1.0)/2.0);
      vec4 y = vec4(t, (pix.y*pix.z+1.0)/2.0);
-     gl_FragColor = y;
+     gl_FragColor = y * strength;
  });
 
 
