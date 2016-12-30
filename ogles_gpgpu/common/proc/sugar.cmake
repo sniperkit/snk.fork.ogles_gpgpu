@@ -39,6 +39,8 @@ sugar_files(
     grad.h
     grayscale.cpp
     grayscale.h
+    hessian.cpp
+    hessian.h
     highpass.h
     iir.cpp
     iir.h
