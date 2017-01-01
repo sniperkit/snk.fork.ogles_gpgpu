@@ -25,7 +25,7 @@ public:
     /**
      * Constructor.
      */
-    HessianProc(float edgeStrength=1.f);
+    HessianProc(float edgeStrength=1.f, bool doHessian=true);
 
     /**
      * Return the processors name.
@@ -43,7 +43,10 @@ private:
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() { return fshaderHessianSrc; }
+    virtual const char *getFragmentShaderSource()
+    {
+        return doHessian ? fshaderHessianAndDeterminantSrc : fshaderDeterminantSrc;
+    }
     
     /**
      * Set uniform values;
@@ -55,11 +58,15 @@ private:
      */
     virtual void getUniforms();
     
+    bool doHessian = true;
+    
     float edgeStrength = 1.0f;
     
     GLuint shParamUEdgeStrength = 0;
     
-    static const char *fshaderHessianSrc;   // fragment shader source
+    static const char *fshaderHessianAndDeterminantSrc;   // fragment shader source
+    
+    static const char *fshaderDeterminantSrc;   // fragment shader source
 };
 }
 
