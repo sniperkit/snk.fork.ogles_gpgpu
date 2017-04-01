@@ -74,6 +74,34 @@ if(OGLES_GPGPU_BUILD_TESTS)
 endif()
 
 ## #################################################################
+## Testing: 
+## #################################################################
+
+if(NOT (IOS OR ANDROID OR MSVC))
+  
+  option(OGLES_GPGPU_BUILD_TESTS "Build shader unit tests" OFF)  
+  if(OGLES_GPGPU_BUILD_TESTS)
+
+    enable_testing()    
+
+    hunter_add_package(GTest)
+    find_package(GTest CONFIG REQUIRED)
+    list(APPEND OGLES_GPGPU_TEST_LIBS GTest::gtest)
+
+    # Include glfw for lightweight hidden window opengl context:
+    # Alternatives: boost or glm for iOS and Android
+    hunter_add_package(glfw)
+    find_package(glfw3 REQUIRED)
+    list(APPEND OGLES_GPGPU_TEST_LIBS glfw)
+    
+    hunter_add_package(OpenCV)
+    find_package(OpenCV REQUIRED)
+    list(APPEND OGLES_GPGPU_TEST_LIBS "${OpenCV_LIBS}")
+    
+  endif()
+endif()
+
+## #################################################################
 ## Project
 ## #################################################################
 

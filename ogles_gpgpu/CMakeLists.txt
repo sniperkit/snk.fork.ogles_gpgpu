@@ -1,53 +1,28 @@
 include(sugar_include)
 sugar_include(.)
 
-add_library(ogles_gpgpu ${OGLES_GPGPU_SRCS})
+add_library(ogles_gpgpu ${OGLES_GPGPU_SRCS} )
 
 if(OGLES_GPGPU_VERBOSE)
   target_compile_definitions(ogles_gpgpu PUBLIC OGLES_GPGPU_VERBOSE=1)
 endif()
 
-## #################################################################
-## Dependencies - OpenGL stuff
-## #################################################################
-
-if(APPLE)
-  if(IOS)
-    target_link_libraries(ogles_gpgpu PUBLIC
-      "-framework ImageIO"
-      "-framework CoreFoundation"
-      "-framework Foundation" # NSLog
-      "-framework OpenGLES"      
-      )    
-  else()
-    target_link_libraries(ogles_gpgpu PUBLIC
-      "-framework ImageIO"
-      "-framework CoreFoundation"
-      "-framework CoreVideo"
-      "-framework OpenGL"
-      )
-  endif()
-elseif(ANDROID)
-  find_package(Android REQUIRED)
-  find_package(Log REQUIRED)
-  find_package(EGL REQUIRED)
-  find_package(OpenGLES2 REQUIRED)
+if(ANDROID)
   target_link_libraries(ogles_gpgpu PUBLIC log android EGL GLESv2)
   target_compile_definitions(ogles_gpgpu PUBLIC EGL_EGLEXT_PROTOTYPES GL_GLEXT_PROTOTYPES)
-else()
-  find_package(OpenGL REQUIRED)
-  set(target_link_libraries OpenGL::GL)
-  if(MSVC)
-    target_compile_definitions(ogles_gpgpu PUBLIC NOMINMAX) # avoid std::{min,max} conflicts
-    target_compile_definitions(ogles_gpgpu PUBLIC _USE_MATH_DEFINES) # M_PI, etc
-  endif()
 endif()
-list(APPEND drishti_sdk_libs "${DRISHTI_OPENGL_LIBS}")
-  
+
+if(MSVC)
+  target_link_libraries(ogles_gpgpu glew::glew)
+  target_compile_definitions(ogles_gpgpu PUBLIC NOMINMAX) # avoid std::{min,max} conflicts
+  target_compile_definitions(ogles_gpgpu PUBLIC _USE_MATH_DEFINES) # M_PI, etc
+endif()
+
 set_property(TARGET ${library} PROPERTY FOLDER "libs/ogles_gpgpu")
 target_include_directories(
     ogles_gpgpu PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>"
 )
+
 
 ## #################################################################
 ## Testing: 
