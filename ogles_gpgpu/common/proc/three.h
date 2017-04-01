@@ -1,6 +1,11 @@
-/**
- * GPGPU grayscale processor.
- */
+//
+// ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
+//
+// See LICENSE file in project repository root for the license.
+//
+
+// Copyright (c) 2016-2017, David Hirvonen (this file)
+
 #ifndef OGLES_GPGPU_COMMON_THREEINPUT_PROC
 #define OGLES_GPGPU_COMMON_THREEINPUT_PROC
 
@@ -21,43 +26,53 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() { return "ThreeInputProc";  }
-    
+    virtual const char *getProcName() {
+        return "ThreeInputProc";
+    }
+
     /**
      * Use texture id <id> as input texture at texture <useTexUnit> with texture target <target>.
      */
     virtual void useTexture(GLuint id, GLuint useTexUnit = 1, GLenum target = GL_TEXTURE_2D, int position = 0);
-    
+
     /**
      * Use texture id <id> as input texture at texture <useTexUnit> with texture target <target>.
      */
     virtual void useTexture2(GLuint id, GLuint useTexUnit = 1, GLenum target = GL_TEXTURE_2D);
-    void setWaitForSecondTexture(bool flag) { waitForSecondTexture = flag; }
+    void setWaitForSecondTexture(bool flag) {
+        waitForSecondTexture = flag;
+    }
 
     virtual void useTexture3(GLuint id, GLuint useTexUnit, GLenum target = GL_TEXTURE_2D);
-    void setWaitForThirdTexture(bool flag) { waitForThirdTexture = flag; }
-    
+    void setWaitForThirdTexture(bool flag) {
+        waitForThirdTexture = flag;
+    }
+
     virtual int render(int position=0);
-    
+
 protected:
-    
+
     virtual void filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target);
-    
+
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() { return fshaderThreeInputSrc; }
-    
+    virtual const char *getFragmentShaderSource() {
+        return fshaderThreeInputSrc;
+    }
+
     /**
      * Get the vertex shader source.
      */
-    virtual const char *getVertexShaderSource() { return vshaderThreeInputSrc; }
-    
+    virtual const char *getVertexShaderSource() {
+        return vshaderThreeInputSrc;
+    }
+
     /**
      * Set additional uniforms.
      */
     virtual void setUniforms();
-    
+
     /**
      * Get uniform indices.
      */
@@ -67,7 +82,7 @@ protected:
      * Bind all input textures
      */
     virtual void filterRenderPrepare();
-    
+
     bool hasTex1 = false;
     bool waitForFirstTexture = true;
 
@@ -84,7 +99,7 @@ protected:
     GLuint texId3;       // input texture id
     GLuint texUnit3;     // input texture unit (glActiveTexture())
     GLenum texTarget3;   // input texture target
-    
+
     static const char *fshaderThreeInputSrc; // fragment shader source
     static const char *vshaderThreeInputSrc; // vertex shader source
 };

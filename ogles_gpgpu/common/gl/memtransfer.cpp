@@ -61,7 +61,7 @@ GLuint MemTransfer::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat, v
     inputW = inTexW;
     inputH = inTexH;
     inputPixelFormat = outputPixelFormat = inputPxFormat;
-    
+
     // generate texture id
     glGenTextures(1, &inputTexId);
 
@@ -72,9 +72,9 @@ GLuint MemTransfer::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat, v
 
     // done
     preparedInput = true;
-    
+
     // Texture data to be upladed with Core::setInputData(...)
-    
+
     return inputTexId;
 }
 
@@ -107,7 +107,7 @@ GLuint MemTransfer::prepareOutput(int outTexW, int outTexH) {
     Tools::checkGLErr("MemTransfer", "fbo texture parameters");
 
     GLenum rgbFormat = DFLT_TEXTURE_FORMAT;
-    
+
     // create empty texture space on GPU
     glTexImage2D(GL_TEXTURE_2D, 0,
                  GL_RGBA,
@@ -176,7 +176,7 @@ size_t MemTransfer::bytesPerRow() {
 
 void MemTransfer::setOutputPixelFormat(GLenum outputPxFormat) {
     outputPixelFormat = outputPxFormat;
-}                                       
+}
 
 #pragma mark protected methods
 

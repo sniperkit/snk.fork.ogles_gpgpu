@@ -7,6 +7,8 @@
 // See LICENSE file in project repository root for the license.
 //
 
+// Modifications: Copyright (c) 2016-2017, David Hirvonen (this file)
+
 #include "../../common_includes.h"
 #include "gauss_pass.h"
 
@@ -14,14 +16,15 @@ using namespace ogles_gpgpu;
 
 // #### 7 tap filters ####
 
+// *INDENT-OFF*
 const char *GaussProcPass::vshaderGauss7Src = OG_TO_STR
 (
  attribute vec4 position;
  attribute vec4 inputTextureCoordinate;
- 
+
  uniform float texelWidth;
  uniform float texelHeight;
- 
+
  varying vec2 textureCoordinateN3;
  varying vec2 textureCoordinateN2;
  varying vec2 textureCoordinateN1;
@@ -29,24 +32,26 @@ const char *GaussProcPass::vshaderGauss7Src = OG_TO_STR
  varying vec2 textureCoordinateP1;
  varying vec2 textureCoordinateP2;
  varying vec2 textureCoordinateP3;
- 
+
  void main()
  {
      gl_Position = position;
-     
+
      vec2 texelStep = vec2(texelWidth, texelHeight);
 
      textureCoordinate = inputTextureCoordinate.xy;
-     
+
      textureCoordinateN3 = textureCoordinate - texelStep * 3.0;
      textureCoordinateN2 = textureCoordinate - texelStep * 2.0;
      textureCoordinateN1 = textureCoordinate - texelStep;
-     
+
      textureCoordinateP1 = textureCoordinate + texelStep;
      textureCoordinateP2 = textureCoordinate + texelStep * 2.0;
      textureCoordinateP3 = textureCoordinate + texelStep * 3.0;
  });
+// *INDENT-ON*
 
+// *INDENT-OFF*
 const char *GaussProcPass::fshaderGauss7Src = OG_TO_STR
 (
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -54,7 +59,7 @@ precision mediump float;
 #endif
 
  uniform sampler2D inputImageTexture;
- 
+
  varying vec2 textureCoordinateN3;
  varying vec2 textureCoordinateN2;
  varying vec2 textureCoordinateN1;
@@ -62,7 +67,7 @@ precision mediump float;
  varying vec2 textureCoordinateP1;
  varying vec2 textureCoordinateP3;
  varying vec2 textureCoordinateP2;
- 
+
 // 7x1 Gauss kernel
 void main()
 {
@@ -73,10 +78,11 @@ void main()
     vec4 pxR1 = texture2D(inputImageTexture, textureCoordinateP1);
     vec4 pxR2 = texture2D(inputImageTexture, textureCoordinateP2);
     vec4 pxR3 = texture2D(inputImageTexture, textureCoordinateP3);
-    
+
     gl_FragColor = 0.015625 * (pxL3 + pxR3) + 0.09375 * (pxL2 + pxR2) + 0.234375 * (pxL1 + pxR1) + 0.3125 * pxC;
 }
 );
+// *INDENT-ON*
 
 // 1 6 15 20 15 6 1
 // 20+30+12+2 = 64
@@ -85,6 +91,7 @@ void main()
 // 6/64 = 0.09375
 // 1/64 = 0.015625
 
+// *INDENT-OFF*
 const char *GaussProcPass::fshaderGauss7SrcR = OG_TO_STR
 (
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -100,7 +107,7 @@ precision mediump float;
  varying vec2 textureCoordinateP1;
  varying vec2 textureCoordinateP2;
  varying vec2 textureCoordinateP3;
- 
+
 // 7x1 Gauss kernel
 void main()
 {
@@ -111,57 +118,61 @@ void main()
     float pxR1 = texture2D(inputImageTexture, textureCoordinateP1).r;
     float pxR2 = texture2D(inputImageTexture, textureCoordinateP2).r;
     float pxR3 = texture2D(inputImageTexture, textureCoordinateP3).r;
-    
+
     pxC.r = (0.006 * (pxL3 + pxR3) + 0.061 * (pxL2 + pxR2) + 0.242 * (pxL1 + pxR1) + 0.382 * pxC.r);
     gl_FragColor = pxC;
 });
+// *INDENT-ON*
 
 // #### 5 tap filters ####
 
+// *INDENT-OFF*
 const char *GaussProcPass::vshaderGauss5Src = OG_TO_STR
 (
  attribute vec4 position;
  attribute vec4 inputTextureCoordinate;
- 
+
  uniform float texelWidth;
  uniform float texelHeight;
- 
+
  varying vec2 textureCoordinateN2;
  varying vec2 textureCoordinateN1;
  varying vec2 textureCoordinate;
  varying vec2 textureCoordinateP1;
  varying vec2 textureCoordinateP2;
- 
+
  void main()
  {
      gl_Position = position;
-     
+
      vec2 texelStep = vec2(texelWidth, texelHeight);
-     
+
      textureCoordinate = inputTextureCoordinate.xy;
-     
+
      textureCoordinateN2 = textureCoordinate - texelStep * 2.0;
      textureCoordinateN1 = textureCoordinate - texelStep;
-     
+
      textureCoordinateP1 = textureCoordinate + texelStep;
      textureCoordinateP2 = textureCoordinate + texelStep * 2.0;
  });
+// *INDENT-ON*
 
+// *INDENT-OFF*
 const char *GaussProcPass::fshaderGauss5Src = OG_TO_STR
 (
- 
+
 #if defined(OGLES_GPGPU_OPENGLES)
  precision highp float;
 #endif
- 
+
  uniform sampler2D inputImageTexture;
- 
+
  varying vec2 textureCoordinateN2;
  varying vec2 textureCoordinateN1;
  varying vec2 textureCoordinate;
  varying vec2 textureCoordinateP1;
  varying vec2 textureCoordinateP2;
- 
+
  // 5x1 Gauss kernel
  void main()
 {
@@ -170,10 +181,11 @@ const char *GaussProcPass::fshaderGauss5Src = OG_TO_STR
     vec4 pxC  = texture2D(inputImageTexture, textureCoordinate);
     vec4 pxR1 = texture2D(inputImageTexture, textureCoordinateP1);
     vec4 pxR2 = texture2D(inputImageTexture, textureCoordinateP2);
-    
+
     vec4 result = (0.0625 * (pxL2 + pxR2) + 0.25 * (pxL1 + pxR1) + 0.375 * pxC);
     gl_FragColor = result;
 });
+// *INDENT-ON*
 
 // 1 4 6 4 1
 // 1+4+6+4+1 = 16
@@ -181,13 +193,13 @@ const char *GaussProcPass::fshaderGauss5Src = OG_TO_STR
 // 4/16 = 0.25
 // 1/16 = 0.0625
 
+// *INDENT-OFF*
 const char *GaussProcPass::fshaderGauss5SrcR = OG_TO_STR
 (
- 
 #if defined(OGLES_GPGPU_OPENGLES)
  precision mediump float;
 #endif
- 
+
  uniform sampler2D inputImageTexture;
 
  varying vec2 textureCoordinateN2;
@@ -195,7 +207,7 @@ const char *GaussProcPass::fshaderGauss5SrcR = OG_TO_STR
  varying vec2 textureCoordinate;
  varying vec2 textureCoordinateP1;
  varying vec2 textureCoordinateP2;
- 
+
  // 5x1 Gauss kernel
  void main()
 {
@@ -204,61 +216,60 @@ const char *GaussProcPass::fshaderGauss5SrcR = OG_TO_STR
     vec4 pxC  = texture2D(inputImageTexture, textureCoordinate);
     float pxR1 = texture2D(inputImageTexture, textureCoordinateP1).r;
     float pxR2 = texture2D(inputImageTexture, textureCoordinateP2).r;
-    
+
     pxC.r = (0.0625 * (pxL2 + pxR2) + 0.25 * (pxL1 + pxR1) + 0.375 * pxC.r);
     gl_FragColor = pxC;
 });
+// *INDENT-ON*
 
-void GaussProcPass::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target)
-{
+void GaussProcPass::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
     // create shader object
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
-    
+
     // get shader params
     shParamAPos = shader->getParam(ATTR, "position");
     shParamATexCoord = shader->getParam(ATTR, "inputTextureCoordinate");
-    
+
     texelWidthUniform = shader->getParam(UNIF, "texelWidth");
     texelHeightUniform = shader->getParam(UNIF, "texelHeight");
-    
+
     Tools::checkGLErr(getProcName(), "filterShaderSetup");
 }
 
-void GaussProcPass::setUniforms()
-{
+void GaussProcPass::setUniforms() {
     FilterProcBase::setUniforms();
 
     glUniform1f(texelWidthUniform, (renderPass == 1) * texelWidth);
     glUniform1f(texelHeightUniform, (renderPass == 2) * texelHeight);
 }
 
-void GaussProcPass::getUniforms()
-{
+void GaussProcPass::getUniforms() {
     FilterProcBase::getUniforms();
-    
+
     // calculate pixel delta values
     texelWidth = 1.0f / (float)outFrameW; // input or output?
     texelHeight = 1.0f / (float)outFrameH;
     shParamUInputTex = shader->getParam(UNIF, "inputImageTexture");
 }
 
-const char *GaussProcPass::getFragmentShaderSource()
-{
-    switch(kernel)
-    {
-        case k5Tap: return doR ? fshaderGauss5SrcR : fshaderGauss5Src;
-        case k7Tap: return doR ? fshaderGauss7SrcR : fshaderGauss7Src;
-        default: assert(false);
+const char *GaussProcPass::getFragmentShaderSource() {
+    switch(kernel) {
+    case k5Tap:
+        return doR ? fshaderGauss5SrcR : fshaderGauss5Src;
+    case k7Tap:
+        return doR ? fshaderGauss7SrcR : fshaderGauss7Src;
+    default:
+        assert(false);
     }
 }
 
-const char *GaussProcPass::getVertexShaderSource()
-{
-    switch(kernel)
-    {
-        case k5Tap: return vshaderGauss5Src;
-        case k7Tap: return vshaderGauss7Src;
-        default: assert(false);
+const char *GaussProcPass::getVertexShaderSource() {
+    switch(kernel) {
+    case k5Tap:
+        return vshaderGauss5Src;
+    case k7Tap:
+        return vshaderGauss7Src;
+    default:
+        assert(false);
     }
 }
-

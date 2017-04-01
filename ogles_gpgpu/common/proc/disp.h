@@ -68,7 +68,7 @@ public:
     virtual void getResultData(unsigned char *data) const {
         assert(false);
     }
-    
+
     /**
      * Not implemented - no output is returned because Disp renders on screen.
      */

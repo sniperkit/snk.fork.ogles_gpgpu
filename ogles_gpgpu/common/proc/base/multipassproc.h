@@ -29,7 +29,7 @@ public:
     virtual ProcInterface* getOutputFilter() const;
     virtual ProcInterface * operator[](int i) const;
     virtual size_t size() const;
-    
+
     /**
      * Deconstructor.
      * Removes all pass instances.
@@ -78,12 +78,16 @@ public:
     /**
      * Get number of passes for this multipass processor.
      */
-    size_t getNumPasses() const { return size(); }
+    size_t getNumPasses() const {
+        return size();
+    }
 
     /**
      * Return te list of processor instances of each pass of this multipass processor.
      */
-    std::vector<ProcInterface *> getProcPasses() const { return procPasses; }
+    std::vector<ProcInterface *> getProcPasses() const {
+        return procPasses;
+    }
 
 protected:
 

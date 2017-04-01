@@ -1,11 +1,10 @@
 //
 // ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 //
-// Author: Markus Konrad <post@mkonrad.net>, Winter 2014/2015 (http://www.mkonrad.net)
-//         David Hirvonen
-//
 // See LICENSE file in project repository root for the license.
 //
+
+// Copyright (c) 2016-2017, David Hirvonen (this file)
 
 /**
  * GPGPU median processor.
@@ -16,7 +15,7 @@
 #include "ogles_gpgpu/common/proc/filter3x3.h"
 
 BEGIN_OGLES_GPGPU
-    
+
 /**
  * GPGPU median filter
  */
@@ -35,17 +34,19 @@ public:
     }
 
 private:
-    
+
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() { return fshaderMedianSrc; }
-    
+    virtual const char *getFragmentShaderSource() {
+        return fshaderMedianSrc;
+    }
+
     /**
      * Get uniform indices.
      */
     virtual void getUniforms();
-    
+
     static const char *fshaderMedianSrc;   // fragment shader source
 };
 

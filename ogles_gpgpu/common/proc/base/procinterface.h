@@ -26,11 +26,13 @@ BEGIN_OGLES_GPGPU
  */
 class ProcInterface {
 public:
-    
+
     typedef std::function<void(const std::string &tag)> Logger;
 
+    using ProcDelegate = std::function<void(ProcInterface *)>;
+
     using FrameDelegate = MemTransfer::FrameDelegate;
-    
+
     /**
      * Important: deconstructor must be virtual
      */
@@ -84,13 +86,17 @@ public:
     /**
      * Set a custom tag name.
      */
-    virtual void setProcTitle(const std::string &name) { title = name; }
-    
+    virtual void setProcTitle(const std::string &name) {
+        title = name;
+    }
+
     /**
      * Return the custom tag name.
      */
-    virtual const char *getProcTitle() { return title.c_str(); }
-    
+    virtual const char *getProcTitle() {
+        return title.c_str();
+    }
+
     /**
      * Print some information about the processor's setup.
      */
@@ -109,8 +115,10 @@ public:
     /**
      * Return the texture target (i.e., GL_TEXTURE_2D, ...)
      */
-    virtual GLenum getTextureTarget() const { return GL_TEXTURE_2D; }
-    
+    virtual GLenum getTextureTarget() const {
+        return GL_TEXTURE_2D;
+    }
+
     /**
      * Set output size by scaling down or up the input frame size by factor <scaleFactor>.
      */
@@ -134,8 +142,10 @@ public:
     /**
      * Get the output frame size.
      */
-    virtual Size2d getOutFrameSize() const { return Size2d(getOutFrameW(), getOutFrameH()); }
-    
+    virtual Size2d getOutFrameSize() const {
+        return Size2d(getOutFrameW(), getOutFrameH());
+    }
+
     /**
      * Get the output frame width.
      */
@@ -145,12 +155,12 @@ public:
      * Get the output frame height.
      */
     virtual int getOutFrameH() const = 0;
-    
+
     /**
      * Get the input frame width.
      */
     virtual int getInFrameW() const = 0;
-    
+
     /**
      * Get the input frame height.
      */
@@ -159,7 +169,9 @@ public:
     /**
      * Get the input frame size.
      */
-    virtual Size2d getInFrameSize() const { return Size2d(getInFrameW(), getInFrameH()); }
+    virtual Size2d getInFrameSize() const {
+        return Size2d(getInFrameW(), getInFrameH());
+    }
 
     /**
      * Returns true if output size < input size.
@@ -175,7 +187,7 @@ public:
      * Return the result data from the FBO (zero copy).
      */
     virtual void getResultData(FrameDelegate &) const = 0;
-    
+
     /**
      * Return pointer to MemTransfer object of this processor.
      */
@@ -186,7 +198,9 @@ public:
      *
      * Note: This is typically the same, except for multi-pass processors.
      */
-    virtual MemTransfer *getInputMemTransferObj() const { return getMemTransferObj(); }
+    virtual MemTransfer *getInputMemTransferObj() const {
+        return getMemTransferObj();
+    }
 
     /**
      * Return input texture id.
@@ -197,9 +211,9 @@ public:
      * Return the output texture id (= texture that is attached to the FBO).
      */
     virtual GLuint getOutputTexId() const = 0;
-    
+
     // ############ Begin filter chain methods ####################
-    
+
     /**
      * Add a subscriber
      */
@@ -214,36 +228,83 @@ public:
      *  Prepare the filter chain filter[i] : i >= 1
      */
     virtual void prepare(int inW, int inH, int index = 0, int position = 0);
-    
+
     /**
      * Process a filter chain:
      */
-    virtual void process(GLuint id, GLuint useTexUnit, GLenum target, int index = 0, int position = 0, Logger logger = {});
-    
+    virtual void process(GLuint texId, GLuint useTexUnit, GLenum target, int index = 0, int position = 0, Logger logger = {});
+
     /**
      * Process filter chain filter[i] : i >= 1
      */
     virtual void process(int position, Logger logger = {});
-    
+
     /**
      * Allow this proc to use mipmaps
      */
-    virtual void setUseMipmaps(bool flag) { useMipmaps = flag; }
-    
+    virtual void setUseMipmaps(bool flag) {
+        useMipmaps = flag;
+    }
+
     /**
      * Turn this filter on/off:
      */
     virtual void setActive(bool active);
-    
+
+    /**
+     * Set a pre processing callback
+     */
+    virtual void setPreProcessCallback(ProcDelegate &cb);
+
+    /**
+     * Set a pre processing callback
+     */
+    virtual void setPostProcessCallback(ProcDelegate &cb);
+
+    /**
+     * Set a pre render callback
+     */
+    virtual void setPreRenderCallback(ProcDelegate &cb);
+
+    /**
+     * Set a post render callback
+     */
+    virtual void setPostRenderCallback(ProcDelegate &cb);
+
+    /**
+     * Set a pre init callback
+     */
+    virtual void setPreInitCallback(ProcDelegate &cb);
+
+    /**
+     * Set a post init callback
+     */
+    virtual void setPostInitCallback(ProcDelegate &cb);
+
+
 protected:
-    
+
+    /**
+     * Get a formatted/unique filter tag
+     */
+    virtual std::string getFilterTag();
+
     bool useMipmaps = false; // TODO:
-    
+
     std::string title;
-    
+
     bool active = true;
-    
+
     std::vector<std::pair<ProcInterface *, int>> subscribers;
+
+    ProcDelegate m_preProcessCallback;
+    ProcDelegate m_postProcessCallback;
+
+    ProcDelegate m_preRenderCallback;
+    ProcDelegate m_postRenderCallback;
+
+    ProcDelegate m_preInitCallback;
+    ProcDelegate m_postInitCallback;
 };
 
 END_OGLES_GPGPU

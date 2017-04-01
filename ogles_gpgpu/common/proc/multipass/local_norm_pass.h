@@ -1,15 +1,11 @@
 //
 // ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 //
-// Author: Markus Konrad <post@mkonrad.net>, Winter 2014/2015 http://www.mkonrad.net
-//         David Hirvonen
-//
 // See LICENSE file in project repository root for the license.
 //
 
-/**
- * GPGPU gaussian smoothing processor.
- */
+// Copyright (c) 2016-2017, David Hirvonen (this file)
+
 #ifndef OGLES_GPGPU_COMMON_PROC_LOCAL_NORM_PASS
 #define OGLES_GPGPU_COMMON_PROC_LOCAL_NORM_PASS
 
@@ -28,11 +24,12 @@ public:
      * Construct as render pass <pass> (1 or 2).
      */
     LocalNormPass(int pass, float normConst = 0.00005)
-    : FilterProcBase()
-    , renderPass(pass)
-    , pxDx(0.0f)
-    , pxDy(0.0f)
-    {  assert(renderPass == 1 || renderPass == 2); }
+        : FilterProcBase()
+        , renderPass(pass)
+        , pxDx(0.0f)
+        , pxDy(0.0f) {
+        assert(renderPass == 1 || renderPass == 2);
+    }
 
     /**
      * Return the processors name.
@@ -51,7 +48,7 @@ public:
      * Render the output.
      */
     virtual int render(int position=0);
-    
+
     /**
      * Create a texture that is attached to the FBO and will contain the processing result.
      * Set <genMipmap> to true to generate a mipmap (usually only works with POT textures).
@@ -65,10 +62,10 @@ private:
     GLint shParamUPxD;		// pixel delta values for texture lookup in the fragment shader. only used for adapt. thresholding
     float pxDx;	// pixel delta value for texture access
     float pxDy;	// pixel delta value for texture access
-    
+
     GLint shParamUNormConst;
     float normConst = 0.00005; // normalization constant
-    
+
     static const char *fshaderLocalNormPass1Src;  // fragment shader source for gaussian smoothing for both passes
     static const char *fshaderLocalNormPass2Src;  // fragment shader source for gaussian smoothing for both passes
 };

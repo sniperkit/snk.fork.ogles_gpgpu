@@ -7,9 +7,12 @@
 // See LICENSE file in project repository root for the license.
 //
 
+// Modifications: Copyright (c) 2016-2017, David Hirvonen (this file)
+
 /**
  * GPGPU gaussian smoothing processor.
  */
+
 #ifndef OGLES_GPGPU_COMMON_PROC_GAUSS_PASS
 #define OGLES_GPGPU_COMMON_PROC_GAUSS_PASS
 
@@ -24,24 +27,24 @@ namespace ogles_gpgpu {
  */
 class GaussProcPass : public FilterProcBase {
 public:
-    
-    enum KernelSize
-    {
+
+    enum KernelSize {
         k5Tap,
         k7Tap
     };
-    
+
     /**
      * Construct as render pass <pass> (1 or 2).
      */
     GaussProcPass(int pass, KernelSize kernel=k5Tap, bool doR=false)
-    : FilterProcBase()
-    , renderPass(pass)
-    , kernel(kernel)
-    , doR(doR)
-    , texelWidth(0.0f)
-    , texelHeight(0.0f)
-    {  assert(renderPass == 1 || renderPass == 2); }
+        : FilterProcBase()
+        , renderPass(pass)
+        , kernel(kernel)
+        , doR(doR)
+        , texelWidth(0.0f)
+        , texelHeight(0.0f) {
+        assert(renderPass == 1 || renderPass == 2);
+    }
 
     /**
      * Return the processors name.
@@ -55,22 +58,21 @@ public:
     virtual void getUniforms();
     virtual const char *getFragmentShaderSource();
     virtual const char *getVertexShaderSource();
-    
+
 private:
     int renderPass; // render pass number. must be 1 or 2
-    
+
     KernelSize kernel = k5Tap;
-    
+
     bool doR = false; // do r channel only
-    
+
     GLint texelWidthUniform, texelHeightUniform;
     float texelWidth, texelHeight;
 
-    
     static const char *vshaderGauss7Src;
     static const char *fshaderGauss7Src;  // fragment shader source for gaussian smoothing for both passes
     static const char *fshaderGauss7SrcR; // shader for R channel
-    
+
     static const char *vshaderGauss5Src;
     static const char *fshaderGauss5Src;  // fragment shader source for gaussian smoothing for both passes
     static const char *fshaderGauss5SrcR; // shader for R channel

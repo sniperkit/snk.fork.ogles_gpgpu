@@ -34,6 +34,13 @@
 // "Really I have no idea, but this should be big enough"
 #define OG_ANDROID_GRAPHIC_BUFFER_SIZE 1024
 
+
+// TODO: Disable for now, try cmake build test for availability:
+//
+// typedef EGLint eglDupNativeFenceFDANDROID(EGLDisplay dpy, EGLSyncKHR sync);
+
+#define OPENGLES_GPGPU_HAS_NATIVE_FENCE_FD_ANDROID 0
+
 struct ANativeWindowBuffer;
 
 namespace ogles_gpgpu {
@@ -67,6 +74,19 @@ typedef EGLImageKHR (*EGLExtFnCreateImage)(EGLDisplay dpy, EGLContext ctx, EGLen
 // destroy ImageKHR
 typedef EGLBoolean (*EGLExtFnDestroyImage)(EGLDisplay dpy, EGLImageKHR image);
 
+//typedef EGLSyncKHR eglCreateSyncKHR(EGLDisplay py, EGLenum condition, const EGLint * attrib_list);
+typedef EGLSyncKHR (*EGLExtFnCreateSyncKHR)(EGLDisplay py, EGLenum condition, const EGLint * attrib_list);
+
+//typedef EGLBoolean glDestroySyncKHR(EGLDisplay dpy, EGLSyncKHR sync);
+typedef EGLBoolean (*EGLExtFnDestroySyncKHR)(EGLDisplay dpy, EGLSyncKHR sync);
+
+//typedef EGLint eglClientWaitSyncKHR(EGLDisplay dpy, EGLSyncKHR sync, EGLint flags, EGLTimeKHR timeout);
+typedef EGLint (*EGLExtFnClientWaitSyncKHR)(EGLDisplay dpy, EGLSyncKHR sync, EGLint flags, EGLTimeKHR timeout);
+
+#if OPENGLES_GPGPU_HAS_NATIVE_FENCE_FD_ANDROID
+//typedef EGLint eglDupNativeFenceFDANDROID(EGLDisplay dpy, EGLSyncKHR sync);
+typedef EGLint (*EGLExtFnDupNativeFenceFDANDROID)(EGLDisplay dpy, EGLSyncKHR sync);
+#endif
 
 /**
  * MemTransferAndroid is a platform specific implementation for fast texture access on Android platforms.
@@ -134,8 +154,10 @@ public:
      * Inidcates whether or not this MemTransfer implementation
      * support zero copy texture access (i.e., MemTransferIOS)
      */
-    virtual bool hasDirectTextureAccess() const { return true; }
-    
+    virtual bool hasDirectTextureAccess() const {
+        return true;
+    }
+
     /**
      * Apply callback to FBO texture.
      */
@@ -158,6 +180,11 @@ public:
      */
     virtual void unlockBuffer(BufType bufType);
 
+    /**
+     * EGL flush command: possibly faster alternative to glFinish() prior to GraphicBuffer use
+     */
+    virtual void flush(uint32_t us = 2000000000 /* 2 sec */ );
+
 private:
     static GraphicBufferFnCtor graBufCreate;        // function pointer to GraphicBufferFnCtor
     static GraphicBufferFnDtor graBufDestroy;       // function pointer to GraphicBufferFnDtor
@@ -168,6 +195,14 @@ private:
     static EGLExtFnCreateImage  imageKHRCreate;     // function pointer to EGLExtFnCreateImage
     static EGLExtFnDestroyImage  imageKHRDestroy;   // function pointer to EGLExtFnDestroyImage
 
+    static EGLExtFnCreateSyncKHR createKHRSync;
+    static EGLExtFnDestroySyncKHR destroyKHRSync;
+    static EGLExtFnClientWaitSyncKHR waitKHRSync;
+
+#if OPENGLES_GPGPU_HAS_NATIVE_FENCE_FD_ANDROID
+    static EGLExtFnDupNativeFenceFDANDROID dupNativeFenceFDANDROID;
+#endif
+
     void *inputGraBufHndl;      // Android GraphicBuffer handle for input
     void *outputGraBufHndl;     // Android GraphicBuffer handle for output
 
@@ -176,6 +211,8 @@ private:
 
     EGLImageKHR inputImage;     // ImageKHR handle for input
     EGLImageKHR outputImage;    // ImageKHR handle for output
+
+    EGLDisplay mEGLDisplay;  // active display
 };
 
 }

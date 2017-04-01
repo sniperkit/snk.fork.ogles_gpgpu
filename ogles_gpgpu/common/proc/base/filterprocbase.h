@@ -45,34 +45,38 @@ public:
      * to specify the input index for multi-texture filters.
      */
     virtual int render(int position=0);
-    
+
 protected:
-    
+
     /**
      * Perform a standard shader initialization.
      */
     virtual int init(int inW, int inH, unsigned int order, bool prepareForExternalInput);
-    
+
     /**
      * Get the vertex shader source.
      */
-    virtual const char *getVertexShaderSource() { return vshaderDefault; }
-    
+    virtual const char *getVertexShaderSource() {
+        return vshaderDefault;
+    }
+
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() { return 0; }
-    
+    virtual const char *getFragmentShaderSource() {
+        return 0;
+    }
+
     /**
      * Set additional uniforms.
      */
     virtual void setUniforms() {}
-    
+
     /**
      * Get uniform indices.
      */
     virtual void getUniforms();
-    
+
     /**
      * Common initialization method for filters with vertex shader source <vShaderSrc>
      * fragment shader source <fShaderSrc> and render output orientation <o>.
@@ -80,7 +84,7 @@ protected:
     void filterInit(const char *vShaderSrc, const char *fShaderSrc, RenderOrientation o = RenderOrientationNone);
 
     /**
-     * Common filter shader creation method with vertexshader source <vSaderSrc> 
+     * Common filter shader creation method with vertexshader source <vSaderSrc>
      * fragment shader source <fShaderSrc> and texture target <target>.
      */
     virtual void filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target);
@@ -96,7 +100,7 @@ protected:
      * <renderOrientation> or override member variable by <overrideRenderOrientation>.
      */
     static const GLfloat * getTexCoordBuf(RenderOrientation o);
-    
+
     virtual void filterRenderPrepare();
     virtual void filterRenderSetCoords();
     virtual void filterRenderDraw();
