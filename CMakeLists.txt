@@ -1,15 +1,16 @@
-# Copyright (c) 2015, David Hirvonen, Ruslan Baratov
+# Copyright (c) 2015-2017, David Hirvonen, Ruslan Baratov
 # All rights reserved.
 
 cmake_minimum_required(VERSION 3.0)
 
 include("cmake/HunterGate.cmake")
 HunterGate(
-    URL "https://github.com/ruslo/hunter/archive/v0.14.3.tar.gz"
-    SHA1 "e05bc95f6d62b7c55188044e39e8be5afb1e8af4"
-)
+  URL "https://github.com/ruslo/hunter/archive/v0.18.29.tar.gz"
+  SHA1 "ebea5d2fa4aa70de1234b05c4bf1b69705abb1ba"
+  LOCAL
+  )
 
-project(ogles_gpgpu VERSION 0.1.0) # Don't see version #?
+project(ogles_gpgpu VERSION 0.2.0)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -40,6 +41,34 @@ option(OGLES_GPGPU_VERBOSE "Perform per filter logging" OFF)
 if(MSVC)
   hunter_add_package(glew)
   find_package(glew CONFIG REQUIRED)
+endif()
+
+## #################################################################
+## Testing: 
+## #################################################################
+
+if(NOT (IOS OR ANDROID OR MSVC))
+  
+  option(OGLES_GPGPU_BUILD_TESTS "Build shader unit tests" OFF)  
+  if(OGLES_GPGPU_BUILD_TESTS)
+
+    enable_testing()    
+
+    hunter_add_package(GTest)
+    find_package(GTest CONFIG REQUIRED)
+    list(APPEND OGLES_GPGPU_TEST_LIBS GTest::gtest)
+
+    # Include glfw for lightweight hidden window opengl context:
+    # Alternatives: boost or glm for iOS and Android
+    hunter_add_package(glfw)
+    find_package(glfw3 REQUIRED)
+    list(APPEND OGLES_GPGPU_TEST_LIBS glfw)
+    
+    hunter_add_package(OpenCV)
+    find_package(OpenCV REQUIRED)
+    list(APPEND OGLES_GPGPU_TEST_LIBS "${OpenCV_LIBS}")
+    
+  endif()
 endif()
 
 ## #################################################################

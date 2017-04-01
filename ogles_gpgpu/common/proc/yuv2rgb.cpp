@@ -1,14 +1,11 @@
 //
 // ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 //
-// Author: Markus Konrad <post@mkonrad.net>, Winter 2014/2015
-//         David Hirvonen <dhirvonen@elucideye.com>
-// http://www.mkonrad.net
-//
 // See LICENSE file in project repository root for the license.
 //
-// Most of the shader code was taken from GPUImage
-// https://github.com/BradLarson/GPUImage/blob/master/framework/Source/GPUImageVideoCamera.m
+
+// Original shaders: https://github.com/BradLarson/GPUImage/blob/master/framework/Source/GPUImageVideoCamera.m
+// Modifications: Copyright (c) 2016-2017, David Hirvonen (this file)
 
 #include "../common_includes.h"
 #include "yuv2rgb.h"
@@ -43,110 +40,110 @@ GLfloat *kColorConversion601 = kColorConversion601Default;
 GLfloat *kColorConversion601FullRange = kColorConversion601FullRangeDefault;
 GLfloat *kColorConversion709 = kColorConversion709Default;
 
-void setColorConversion601( GLfloat conversionMatrix[9] )
-{
+void setColorConversion601( GLfloat conversionMatrix[9] ) {
     kColorConversion601 = conversionMatrix;
 }
 
-void setColorConversion601FullRange( GLfloat conversionMatrix[9] )
-{
+void setColorConversion601FullRange( GLfloat conversionMatrix[9] ) {
     kColorConversion601FullRange = conversionMatrix;
 }
 
-void setColorConversion709( GLfloat conversionMatrix[9] )
-{
+void setColorConversion709( GLfloat conversionMatrix[9] ) {
     kColorConversion709 = conversionMatrix;
 }
 
+// *INDENT-OFF*
 const char *kGPUImageYUVVideoRangeConversionForRGFragmentShaderString = OG_TO_STR(
 
 #if defined(OGLES_GPGPU_OPENGLES)
   precision mediump float;
 #endif
-                                                                                  
+
  varying OGLES_GPGPU_HIGHP vec2 vTexCoord;
- 
+
  uniform sampler2D luminanceTexture;
  uniform sampler2D chrominanceTexture;
  uniform OGLES_GPGPU_MEDIUMP mat3 colorConversionMatrix;
- 
+
  void main()
  {
      OGLES_GPGPU_MEDIUMP vec3 yuv;
      OGLES_GPGPU_LOWP vec3 rgb;
-     
+
      yuv.x = texture2D(luminanceTexture, vTexCoord).r;
      yuv.yz = texture2D(chrominanceTexture, vTexCoord).rg - vec2(0.5, 0.5);
      rgb = colorConversionMatrix * yuv;
-     
+
      gl_FragColor = vec4(rgb, 1);
  }
 );
+// *INDENT-ON*
 
+// *INDENT-OFF*
 const char *kGPUImageYUVFullRangeConversionForLAFragmentShaderString = OG_TO_STR(
 
  varying OGLES_GPGPU_HIGHP vec2 vTexCoord;
- 
+
  uniform sampler2D luminanceTexture;
  uniform sampler2D chrominanceTexture;
  uniform OGLES_GPGPU_MEDIUMP mat3 colorConversionMatrix;
- 
+
  void main()
  {
      OGLES_GPGPU_MEDIUMP vec3 yuv;
      OGLES_GPGPU_LOWP vec3 rgb;
-     
+
      yuv.x = texture2D(luminanceTexture, vTexCoord).r;
      yuv.yz = texture2D(chrominanceTexture, vTexCoord).ra - vec2(0.5, 0.5);
      rgb = colorConversionMatrix * yuv;
-     
+
      gl_FragColor = vec4(rgb, 1);
  }
 );
+// *INDENT-ON*
 
+// *INDENT-OFF*
 const char *kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = OG_TO_STR(
 
  varying OGLES_GPGPU_HIGHP vec2 vTexCoord;
- 
+
  uniform sampler2D luminanceTexture;
  uniform sampler2D chrominanceTexture;
  uniform OGLES_GPGPU_MEDIUMP mat3 colorConversionMatrix;
- 
+
  void main()
  {
      OGLES_GPGPU_MEDIUMP vec3 yuv;
      OGLES_GPGPU_LOWP vec3 rgb;
-     
+
      yuv.x = texture2D(luminanceTexture, vTexCoord).r - (16.0/255.0);
      yuv.yz = texture2D(chrominanceTexture, vTexCoord).ra - vec2(0.5, 0.5);
      rgb = colorConversionMatrix * yuv;
-     
+
      gl_FragColor = vec4(rgb, 1);
  }
 );
+// *INDENT-ON*
 
 // =================================================================================
 
-Yuv2RgbProc::Yuv2RgbProc()
-{
+Yuv2RgbProc::Yuv2RgbProc() {
     _preferredConversion = kColorConversion601FullRange;
-    
+
     texTarget = GL_TEXTURE_2D;
 }
 
-void Yuv2RgbProc::setTextures(GLuint luminance, GLuint chrominance)
-{
+void Yuv2RgbProc::setTextures(GLuint luminance, GLuint chrominance) {
     luminanceTexture = luminance;
     chrominanceTexture = chrominance;
 }
 
-void Yuv2RgbProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target)
-{
+void Yuv2RgbProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
     //FilterProcBase::filterShaderSetup(vShaderSrc, fShaderSrc, target);
-    
+
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
     Tools::checkGLErr(getProcName(), "createShader()");
-    
+
     // get shader params
     shParamAPos = shader->getParam(ATTR, "aPos");
     shParamATexCoord = shader->getParam(ATTR, "aTexCoord");
@@ -156,14 +153,13 @@ void Yuv2RgbProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderS
     yuvConversionChrominanceTextureUniform = shader->getParam(UNIF, "chrominanceTexture");
     yuvConversionMatrixUniform = shader->getParam(UNIF, "colorConversionMatrix");
     Tools::checkGLErr(getProcName(), "getParam()");
-    
+
     // remember used shader source
     vertexShaderSrcForCompilation = vShaderSrc;
     fragShaderSrcForCompilation = fShaderSrc;
 }
 
-int Yuv2RgbProc::init(int inW, int inH, unsigned int order, bool prepareForExternalInput)
-{
+int Yuv2RgbProc::init(int inW, int inH, unsigned int order, bool prepareForExternalInput) {
     OG_LOGINF(getProcName(), "initialize");
 
     // create fbo for output
@@ -174,24 +170,23 @@ int Yuv2RgbProc::init(int inW, int inH, unsigned int order, bool prepareForExter
 
     // FilterProcBase init - create shaders, get shader params, set buffers for OpenGL
     filterInit(FilterProcBase::vshaderDefault, kGPUImageYUVFullRangeConversionForLAFragmentShaderString);
-    
+
     return 1;
 }
 
-void Yuv2RgbProc::filterRenderPrepare()
-{
+void Yuv2RgbProc::filterRenderPrepare() {
     shader->use();
-    
+
     // set the viewport
     glViewport(0, 0, outFrameW, outFrameH);
-    
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, luminanceTexture);
     glUniform1i(yuvConversionLuminanceTextureUniform, 4);
-    
+
     glActiveTexture(GL_TEXTURE5);
     glBindTexture(GL_TEXTURE_2D, chrominanceTexture);
     glUniform1i(yuvConversionChrominanceTextureUniform, 5);
@@ -199,8 +194,7 @@ void Yuv2RgbProc::filterRenderPrepare()
     glUniformMatrix3fv(yuvConversionMatrixUniform, 1, GL_FALSE, _preferredConversion);
 }
 
-int Yuv2RgbProc::render(int position)
-{
+int Yuv2RgbProc::render(int position) {
     OG_LOGINF(getProcName(), "input tex %d, target %d, framebuffer of size %dx%d", texId, texTarget, outFrameW, outFrameH);
 
     filterRenderPrepare();
@@ -214,7 +208,7 @@ int Yuv2RgbProc::render(int position)
 
     filterRenderCleanup();
     Tools::checkGLErr(getProcName(), "render cleanup");
-    
+
     return 0;
 }
 

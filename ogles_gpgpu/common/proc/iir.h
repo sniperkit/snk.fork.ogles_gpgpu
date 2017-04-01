@@ -1,3 +1,11 @@
+//
+// ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
+//
+// See LICENSE file in project repository root for the license.
+//
+
+// Copyright (c) 2016-2017, David Hirvonen (this file)
+
 #ifndef OGLES_GPGPU_COMMON_IIR_PROC
 #define OGLES_GPGPU_COMMON_IIR_PROC
 
@@ -6,33 +14,33 @@
 
 BEGIN_OGLES_GPGPU
 
-class IirFilterProc : public MultiPassProc
-{
+class IirFilterProc : public MultiPassProc {
 public:
 
-    enum FilterKind
-    {
+    enum FilterKind {
         kLowPass,
         kHighPass
     };
-    
+
     class Impl;
-    
+
     IirFilterProc(FilterKind kind, float alpha=0.5, float strength=1.f);
     ~IirFilterProc();
     virtual void useTexture(GLuint id, GLuint useTexUnit = 1, GLenum target = GL_TEXTURE_2D, int position=0);
     virtual int render(int position=0);
-    virtual const char *getProcName() { return "IirFilterProc"; }
+    virtual const char *getProcName() {
+        return "IirFilterProc";
+    }
     virtual ProcInterface* getInputFilter() const;
     virtual ProcInterface* getOutputFilter() const;
-    
+
     virtual int init(int inW, int inH, unsigned int order, bool prepareForExternalInput = false);
     virtual int reinit(int inW, int inH, bool prepareForExternalInput = false);
-    
+
     bool isFirst = true;
     std::unique_ptr<Impl> m_impl;
 };
 
 END_OGLES_GPGPU
 
-#endif 
+#endif

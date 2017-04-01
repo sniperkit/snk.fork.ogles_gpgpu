@@ -1,15 +1,11 @@
 //
 // ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 //
-// Author: Markus Konrad <post@mkonrad.net>, Winter 2014/2015 (http://www.mkonrad.net)
-//         David Hirvonen
-//
 // See LICENSE file in project repository root for the license.
 //
 
-/**
- * GPGPU grad processor.
- */
+// Copyright (c) 2016-2017, David Hirvonen (this file)
+
 #ifndef OGLES_GPGPU_COMMON_PROC_GRAD
 #define OGLES_GPGPU_COMMON_PROC_GRAD
 
@@ -18,7 +14,7 @@
 namespace ogles_gpgpu {
 
 /**
- * GPGPU gradient, gradient magnitude and orientation 
+ * GPGPU gradient, gradient magnitude and orientation
  */
 class GradProc : public Filter3x3Proc {
 public:
@@ -35,26 +31,28 @@ public:
     }
 
 private:
-    
+
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() { return fshaderGradSrc; }
-    
+    virtual const char *getFragmentShaderSource() {
+        return fshaderGradSrc;
+    }
+
     /**
      * Get uniform indices.
      */
     virtual void getUniforms();
-    
+
     /**
      * Set uniform indices.
      */
     virtual void setUniforms();
 
     static const char *fshaderGradSrc;   // fragment shader source
-    
+
     GLint shParamUStrength;
-    
+
     float strength = 1.f;
 };
 }

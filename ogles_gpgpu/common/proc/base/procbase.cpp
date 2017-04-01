@@ -189,22 +189,20 @@ void ProcBase::setInOutFrameSizes(int inW, int inH, int outW, int outH, float sc
     inFrameH = inH;
 
     bool isFirst = (outW <= 0 && outH <= 0);
-    
+
     // If only one dimension is specified, compute the other via aspect ratio:
     if((std::min(outW, outH) <= 0) && (std::max(outW, outH) > 0)) {
         if(outH > 0) {
             outW = (outH * inW / inH);
-        }
-        else {
+        } else {
             outH = (outW * inH / inW);
         }
-    }
-    else {
+    } else {
 
         if (outW <= 0) {
             outW = (int)((float)inW * scaleFactor + 0.5f);
         }
-        
+
         if (outH <= 0) {
             outH = (int)((float)inH * scaleFactor + 0.5f);
         }
@@ -214,7 +212,7 @@ void ProcBase::setInOutFrameSizes(int inW, int inH, int outW, int outH, float sc
     if(isFirst && (renderOrientation >= RenderOrientationDiagonal)) {
         std::swap(outW, outH);
     }
-    
+
     assert(outW > 0 && outH > 0);
 
     outFrameW = outW;

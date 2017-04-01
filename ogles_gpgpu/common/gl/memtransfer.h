@@ -26,9 +26,9 @@ namespace ogles_gpgpu {
  */
 class MemTransfer {
 public:
-    
+
     typedef std::function<void(const Size2d &size, const void *pixels, size_t rowStride)> FrameDelegate;
-    
+
     /**
      * Constructor
      */
@@ -55,7 +55,7 @@ public:
      * Prepare for output frames of size <outTexW>x<outTexH>. Return a texture id for the output frames.
      */
     virtual GLuint prepareOutput(int outTexW, int outTexH);
-    
+
     /**
      * Set output pixel format.
      */
@@ -77,7 +77,7 @@ public:
     virtual GLuint getInputTexId() const {
         return inputTexId;
     }
-    
+
     /**
      * Get output texture id.
      */
@@ -91,14 +91,14 @@ public:
     virtual GLuint getLuminanceTexId() const {
         return luminanceTexId;
     }
-    
+
     /**
      * Get output chrominance texture id.
      */
     virtual GLuint getChrominanceTexId() const {
         return chrominanceTexId;
     }
-    
+
     /**
      * Map data in <buf> to GPU.
      */
@@ -113,29 +113,35 @@ public:
      * Callback for data in GPU.
      */
     virtual void fromGPU(FrameDelegate &delegate);
-    
+
     /**
      * Get output pixel format (i.e., GL_BGRA or GL_RGBA)
      */
-    virtual GLenum getOutputPixelFormat() const { return outputPixelFormat; }
-    
+    virtual GLenum getOutputPixelFormat() const {
+        return outputPixelFormat;
+    }
+
     /**
      * Inidcates whether or not this MemTransfer implementation
      * support zero copy texture access (i.e., MemTransferIOS)
      */
-    virtual bool hasDirectTextureAccess() const { return false; }
-    
+    virtual bool hasDirectTextureAccess() const {
+        return false;
+    }
+
     /**
      * Row stride (in bytes) of the underlying FBO.
      */
-     
+
     virtual size_t bytesPerRow();
-    
+
     /**
      * Specify input image format, raw pixels or platform specific image type
      */
-    virtual void setUseRawPixels(bool flag) { useRawPixels = flag; }
-    
+    virtual void setUseRawPixels(bool flag) {
+        useRawPixels = flag;
+    }
+
     /**
      * Try to initialize platform optimizations. Returns true on success, else false.
      * Is only fully implemented in platform-specialized classes of MemTransfer.
@@ -148,7 +154,7 @@ protected:
      * set clamping (allows NPOT textures)
      */
     virtual void setCommonTextureParams(GLuint texId, GLenum target=GL_TEXTURE_2D);
-    
+
     bool initialized;       // is initialized?
 
     bool preparedInput;     // input is prepared?
@@ -161,13 +167,13 @@ protected:
 
     GLuint inputTexId;      // input texture id
     GLuint outputTexId;     // output texture id
-    
+
     GLuint luminanceTexId = 0;
     GLuint chrominanceTexId = 0;
 
     GLenum inputPixelFormat;    // input texture pixel format
     GLenum outputPixelFormat;
-    
+
     bool useRawPixels = false;
 };
 
