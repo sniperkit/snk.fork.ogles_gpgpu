@@ -1,4 +1,4 @@
-# Copyright (c) 2015, David Hirvonen, Ruslan Baratov
+# Copyright (c) 2015-2017, David Hirvonen, Ruslan Baratov
 # All rights reserved.
 
 cmake_minimum_required(VERSION 3.0)
