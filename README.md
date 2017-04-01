@@ -1,8 +1,15 @@
 # ogles_gpgpu - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 
-Travis: [![Build Status](https://travis-ci.org/headupinclouds/ogles_gpgpu.svg?branch=hunter)](https://travis-ci.org/headupinclouds/ogles_gpgpu)
+| Linux/OSX/Android/iOS                           | Windows                                             |
+|-------------------------------------------------|-----------------------------------------------------|
+| [![Build Status][travis_status]][travis_builds] | [![Build Status][appveyor_status]][appveyor_builds] |
 
-Appveyor: [![Build status](https://ci.appveyor.com/api/projects/status/kv8cix0rf288ddcj?svg=true)](https://ci.appveyor.com/project/headupinclouds/ogles-gpgpu)
+
+[travis_status]: https://travis-ci.org/headupinclouds/ogles_gpgpu.svg?branch=hunter
+[travis_builds]: https://travis-ci.org/headupinclouds/ogles_gpgpu
+
+[appveyor_status]: https://ci.appveyor.com/api/projects/status/kv8cix0rf288ddcj?svg=true
+[appveyor_builds]: https://ci.appveyor.com/api/projects/headupinclouds/ogles_gpgpu
 
 UPDATE: In addition to the original build notes below, CMake support has been added via the [Hunter](https://github.com/ruslo/hunter) package manager with cross platform toolchains provided by [Polly](https://github.com/ruslo/polly).  See the README pages of these links for details.
 
