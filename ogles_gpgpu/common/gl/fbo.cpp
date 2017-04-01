@@ -41,7 +41,7 @@ FBO::~FBO() {
 
 void FBO::bind() {
     glBindFramebuffer(GL_FRAMEBUFFER, id);
-    Tools::checkGLErr("FBO" , "glBindFrameBuffer");
+    Tools::checkGLErr("FBO", "glBindFrameBuffer");
 }
 
 void FBO::unbind() {
@@ -85,16 +85,16 @@ void FBO::createAttachedTex(int w, int h, bool genMipmap, GLenum attachment, GLe
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glGenerateMipmap(GL_TEXTURE_2D);
-        Tools::checkGLErr("FBO" , "fbo texture mipmap generation");
+        Tools::checkGLErr("FBO", "fbo texture mipmap generation");
     } else {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     }
-    
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    
-    Tools::checkGLErr("FBO" , "fbo texture stuff");
+
+    Tools::checkGLErr("FBO", "fbo texture stuff");
 
     // bind it to FBO
     glFramebufferTexture2D(GL_FRAMEBUFFER,
@@ -129,16 +129,15 @@ void FBO::readBuffer(unsigned char *buf) {
     unbind();
 }
 
-void FBO::readBuffer(FrameDelegate &delegate)
-{
+void FBO::readBuffer(FrameDelegate &delegate) {
     assert(memTransfer && attachedTexId > 0 && texW > 0 && texH > 0);
-    
+
     // bind the FBO
     bind();
-    
+
     // get the contents of its attached texture
     memTransfer->fromGPU(delegate);
-    
+
     // unbind again
     unbind();
 }

@@ -6,8 +6,7 @@
 
 #include <android/native_window.h>
 
-typedef struct android_native_base_t
-{
+typedef struct android_native_base_t {
     /* a magic value defined by the actual EGL native type */
     int magic;
 
@@ -21,8 +20,7 @@ typedef struct android_native_base_t
     void (*decRef)(struct android_native_base_t* base);
 } android_native_base_t;
 
-typedef struct native_handle
-{
+typedef struct native_handle {
     int version;        /* sizeof(native_handle_t) */
     int numFds;         /* number of file-descriptors at &data[0] */
     int numInts;        /* number of ints at &data[numFds] */
@@ -31,8 +29,7 @@ typedef struct native_handle
 
 typedef const native_handle_t* buffer_handle_t;
 
-typedef struct ANativeWindowBuffer
-{
+typedef struct ANativeWindowBuffer {
     struct android_native_base_t common;
 
     int width;
@@ -46,7 +43,7 @@ typedef struct ANativeWindowBuffer
     buffer_handle_t handle;
 
     void* reserved_proc[8];
-    
+
 } ANativeWindowBuffer_t;
 
 using namespace ogles_gpgpu;
@@ -108,6 +105,14 @@ GraphicBufferFnUnlock MemTransferAndroid::graBufUnlock = NULL;
 EGLExtFnCreateImage MemTransferAndroid::imageKHRCreate = NULL;
 EGLExtFnDestroyImage MemTransferAndroid::imageKHRDestroy = NULL;
 
+EGLExtFnCreateSyncKHR MemTransferAndroid::createKHRSync = NULL;
+EGLExtFnDestroySyncKHR  MemTransferAndroid::destroyKHRSync = NULL;
+EGLExtFnClientWaitSyncKHR MemTransferAndroid::waitKHRSync = NULL;
+
+#if OPENGLES_GPGPU_HAS_NATIVE_FENCE_FD_ANDROID
+EGLExtFnDupNativeFenceFDANDROID MemTransferAndroid::dupNativeFenceFDANDROID = NULL;
+#endif
+
 bool MemTransferAndroid::initPlatformOptimizations() {
     // load necessary EGL extension functions
     void *dlEGLhndl = dlopen("libEGL.so", RTLD_LAZY);
@@ -121,6 +126,24 @@ bool MemTransferAndroid::initPlatformOptimizations() {
 
     imageKHRDestroy = OG_DL_FUNC(dlEGLhndl, "eglDestroyImageKHR", EGLExtFnDestroyImage);
     OG_DL_FUNC_CHECK(dlEGLhndl, imageKHRDestroy, "eglDestroyImageKHR");
+
+#if OPENGLES_GPGPU_HAS_NATIVE_FENCE_FD_ANDROID
+    // Load sync points for ANDROID:
+    dupNativeFenceFDANDROID = OG_DL_FUNC(dlEGLhndl, "eglDupNativeFenceFDANDROID", EGLExtFnDupNativeFenceFDANDROID);
+    //OG_DL_FUNC_CHECK(dlEGLhndl, dupNativeFenceFDANDROID, "eglDupNativeFenceFDANDROID");
+#endif
+
+    // Try loading egl{Create,Destroy,ClientWait}SyncKHR, else we will resort to glFinish():
+    createKHRSync = OG_DL_FUNC(dlEGLhndl, "eglCreateSyncKHR", EGLExtFnCreateSyncKHR);
+    //OG_DL_FUNC_CHECK(dlEGLhndl, createKHRSync, "eglCreateSyncKHR");
+    if(createKHRSync) {
+        destroyKHRSync = OG_DL_FUNC(dlEGLhndl, "eglDestroySyncKHR", EGLExtFnDestroySyncKHR);
+        //OG_DL_FUNC_CHECK(dlEGLhndl, destroyKHRSync, "eglDestroySyncKHR");
+        if(destroyKHRSync) {
+            waitKHRSync = OG_DL_FUNC(dlEGLhndl, "eglClientWaitSyncKHR", EGLExtFnClientWaitSyncKHR);
+            //OG_DL_FUNC_CHECK(dlEGLhndl, destroyKHRSync, "eglClientWaitSyncKHR");
+        }
+    }
 
     dlclose(dlEGLhndl);
 
@@ -209,6 +232,8 @@ void MemTransferAndroid::init() {
 
     // call parent init
     MemTransfer::init();
+
+    mEGLDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 }
 
 GLuint MemTransferAndroid::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat, void *inputDataPtr) {
@@ -256,7 +281,7 @@ GLuint MemTransferAndroid::prepareInput(int inTexW, int inTexH, GLenum inputPxFo
 
     // create image for reading back the results
     EGLint eglImgAttrs[] = { EGL_IMAGE_PRESERVED_KHR, EGL_TRUE, EGL_NONE, EGL_NONE };
-    inputImage = imageKHRCreate(eglGetDisplay(EGL_DEFAULT_DISPLAY),
+    inputImage = imageKHRCreate(mEGLDisplay,
                                 EGL_NO_CONTEXT,
                                 EGL_NATIVE_BUFFER_ANDROID,
                                 (EGLClientBuffer)inputNativeBuf,
@@ -326,7 +351,7 @@ GLuint MemTransferAndroid::prepareOutput(int outTexW, int outTexH) {
 
     // create image for reading back the results
     EGLint eglImgAttrs[] = { EGL_IMAGE_PRESERVED_KHR, EGL_TRUE, EGL_NONE, EGL_NONE };
-    outputImage = imageKHRCreate(eglGetDisplay(EGL_DEFAULT_DISPLAY),
+    outputImage = imageKHRCreate(mEGLDisplay,
                                  EGL_NO_CONTEXT,
                                  EGL_NATIVE_BUFFER_ANDROID,
                                  (EGLClientBuffer)outputNativeBuf,
@@ -342,6 +367,53 @@ GLuint MemTransferAndroid::prepareOutput(int outTexW, int outTexH) {
     OG_LOGINF("MemTransferAndroid", "successfully prepared output with texture id %d", outputTexId);
 
     return outputTexId;
+}
+
+void MemTransferAndroid::flush(uint32_t us) {
+    // https://github.com/android/platform_frameworks_base/blob/master/services/core/jni/com_android_server_AssetAtlasService.cpp#L169-L185
+    EGLSyncKHR sync;
+
+    if(createKHRSync && destroyKHRSync) {
+
+#if OPENGLES_GPGPU_HAS_NATIVE_FENCE_FD_ANDROID
+        // Give priority to eglDupNativeFenceFDANDROID
+        if(dupNativeFenceFDANDROID)  {
+            sync = eglCreateSyncKHR(mEGLDisplay, EGL_SYNC_NATIVE_FENCE_ANDROID, NULL);
+            glFlush(); // getRenderEngine().flush();
+
+            if (sync != EGL_NO_SYNC_KHR) {
+                auto syncFd = eglDupNativeFenceFDANDROID(mEGLDisplay, sync);
+                if (syncFd == EGL_NO_NATIVE_FENCE_FD_ANDROID) {
+                    OG_LOGERR("MemTransferAndroid::flush:", "failed to dup sync khr object");
+                    syncFd = -1;
+                }
+                eglDestroySyncKHR(mEGLDisplay, sync);
+                return;
+            }
+        }
+#endif
+
+        // Fallback mechanism:
+        if(waitKHRSync) {
+            sync = createKHRSync(mEGLDisplay, EGL_SYNC_FENCE_KHR, NULL);
+            if (sync != EGL_NO_SYNC_KHR) {
+                EGLint result = waitKHRSync(mEGLDisplay, sync, EGL_SYNC_FLUSH_COMMANDS_BIT_KHR, us);
+                EGLint eglErr = eglGetError();
+                if (result == EGL_TIMEOUT_EXPIRED_KHR) {
+                    OG_LOGERR("MemTransferAndroid::flush:", "fence wait timed out");
+                } else if(eglErr != EGL_SUCCESS) {
+                    OG_LOGERR("MemTransferAndroid::flush:", "error waiting on EGL fence: %#x", eglErr);
+                }
+                destroyKHRSync(mEGLDisplay, sync);
+                return;
+            } else {
+                OG_LOGERR("MemTransferAndroid::flush:","captureScreen: error creating EGL fence: %#x", eglGetError());
+            }
+        }
+    }
+
+    //  Use glFinish() as a last resort
+    glFinish();
 }
 
 void MemTransferAndroid::toGPU(const unsigned char *buf) {
@@ -396,7 +468,7 @@ void MemTransferAndroid::fromGPU(FrameDelegate &delegate) {
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, outputImage);
 
     Tools::checkGLErr("MemTransferAndroid", "call to glEGLImageTargetTexture2DOES() for output");
-    
+
     const void *pixelBufferAddr = lockBufferAndGetPtr(BUF_TYPE_OUTPUT);
     delegate({outputW, outputH}, pixelBufferAddr, bytesPerRow());
 

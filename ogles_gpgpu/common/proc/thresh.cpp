@@ -7,6 +7,8 @@
 // See LICENSE file in project repository root for the license.
 //
 
+// Copyright (c) 2016-2017, David Hirvonen (this file)
+
 #include "../common_includes.h"
 #include "thresh.h"
 
@@ -18,19 +20,18 @@ using namespace ogles_gpgpu;
 const char *ThreshProc::fshaderSimpleThreshSrc = OG_TO_STR(
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+            precision mediump float;
 #endif
 
-varying vec2 vTexCoord;
-uniform float uThresh;
-uniform sampler2D uInputTex;
-void main()
-{
+            varying vec2 vTexCoord;
+            uniform float uThresh;
+            uniform sampler2D uInputTex;
+void main() {
     float gray = texture2D(uInputTex, vTexCoord).r;
     float bin = step(uThresh, gray);
     gl_FragColor = vec4(bin, bin, bin, 1.0);
 }
-);
+        );
 
 ThreshProc::ThreshProc() {
     // set defaults
@@ -72,6 +73,6 @@ int ThreshProc::render(int position) {
 
     filterRenderCleanup();
     Tools::checkGLErr("ThreshProc", "render cleanup");
-    
+
     return 0;
 }

@@ -34,7 +34,7 @@
  * data needs to be copied from/to the camera. The camera frame is used directly as texture
  * for the GPU processing tasks.
  */
-@interface RootViewController : UIViewController<AVCaptureVideoDataOutputSampleBufferDelegate , GLKViewDelegate> {
+@interface RootViewController : UIViewController<AVCaptureVideoDataOutputSampleBufferDelegate, GLKViewDelegate> {
     AVCaptureSession *camSession;               // controlls the camera session
     AVCaptureDeviceInput *camDeviceInput;       // input device: camera
     AVCaptureVideoDataOutput *vidDataOutput;    // controlls the video output

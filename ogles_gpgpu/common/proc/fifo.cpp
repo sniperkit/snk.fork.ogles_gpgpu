@@ -1,11 +1,10 @@
 //
 // ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 //
-// Author: Markus Konrad <post@mkonrad.net>, Winter 2014/2015
-// http://www.mkonrad.net
-//
 // See LICENSE file in project repository root for the license.
 //
+
+// Copyright (c) 2016-2017, David Hirvonen (this file)
 
 #include "../common_includes.h"
 #include "base/filterprocbase.h"
@@ -17,16 +16,25 @@ using namespace ogles_gpgpu;
 class NoopProc : public ogles_gpgpu::FilterProcBase {
 public:
     NoopProc(float gain=1.f) : gain(gain) {}
-    virtual const char *getProcName() { return "NoopProc"; }
+    virtual const char *getProcName() {
+        return "NoopProc";
+    }
 private:
-    virtual const char *getFragmentShaderSource() { return fshaderNoopSrc; }
-    virtual void getUniforms() { shParamUGain = shader->getParam(UNIF, "gain"); }
-    virtual void setUniforms() { glUniform1f(shParamUGain, gain); }
+    virtual const char *getFragmentShaderSource() {
+        return fshaderNoopSrc;
+    }
+    virtual void getUniforms() {
+        shParamUGain = shader->getParam(UNIF, "gain");
+    }
+    virtual void setUniforms() {
+        glUniform1f(shParamUGain, gain);
+    }
     static const char *fshaderNoopSrc; // fragment shader source
     float gain = 1.f;
     GLint shParamUGain;
 };
 
+// *INDENT-OFF*
 const char * NoopProc::fshaderNoopSrc = OG_TO_STR
 (
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -40,18 +48,21 @@ const char * NoopProc::fshaderNoopSrc = OG_TO_STR
      vec4 val = texture2D(uInputTex, vTexCoord);
      gl_FragColor = clamp(val * gain, 0.0, 1.0);
  });
+// *INDENT-ON*
 
 // #################### FIFO ####################
 
 // negative modulo arithmetic
-static int modulo(int a, int b) { return (((a % b) + b) % b); }
+static int modulo(int a, int b) {
+    return (((a % b) + b) % b);
+}
 
 FifoProc::FifoProc(int size) {
     m_inputIndex = m_outputIndex = 0;
     for(int i = 0; i < size; i++) {
         procPasses.push_back( new NoopProc );
     }
-    
+
     delayedSubscribers.resize(size);
 }
 
@@ -63,21 +74,17 @@ FifoProc::~FifoProc() {
     procPasses.clear();
 }
 
-void FifoProc::addWithDelay(ProcInterface *filter, int position, int time)
-{
+void FifoProc::addWithDelay(ProcInterface *filter, int position, int time) {
     assert(time >= 0 && time < size());
     delayedSubscribers[time].emplace_back(filter, position);
 }
 
-void FifoProc::prepare(int inW, int inH, int index, int position)
-{
+void FifoProc::prepare(int inW, int inH, int index, int position) {
     assert(position == 0);
     ProcInterface::prepare(inW, inH, index, position);
-    
-    for(int i = 0; i < delayedSubscribers.size(); i++)
-    {
-        for(auto &subscriber : delayedSubscribers[i])
-        {
+
+    for(int i = 0; i < delayedSubscribers.size(); i++) {
+        for(auto &subscriber : delayedSubscribers[i]) {
             // At startup we have to initialize with our main processor output
             subscriber.first->prepare(getOutFrameW(), getOutFrameH(), index+1, subscriber.second);
             subscriber.first->useTexture(getOutputTexId(), getTextureUnit(), GL_TEXTURE_2D, subscriber.second);
@@ -85,19 +92,15 @@ void FifoProc::prepare(int inW, int inH, int index, int position)
     }
 }
 
-void FifoProc::process(int position, Logger logger)
-{
+void FifoProc::process(int position, Logger logger) {
     assert(position == 0);
     ProcInterface::process(position, logger);
-    
-    if(isFull())
-    {
+
+    if(isFull()) {
         // Trigger delayed subscribers:
-        for(int i = 0; i < delayedSubscribers.size(); i++)
-        {
+        for(int i = 0; i < delayedSubscribers.size(); i++) {
             auto producer = (*this)[i];
-            for(auto &subscriber : delayedSubscribers[i])
-            {
+            for(auto &subscriber : delayedSubscribers[i]) {
                 subscriber.first->useTexture(producer->getOutputTexId(), producer->getTextureUnit(), GL_TEXTURE_2D, subscriber.second);
                 subscriber.first->process(subscriber.second, logger);
             }
@@ -105,8 +108,7 @@ void FifoProc::process(int position, Logger logger)
     }
 }
 
-ProcInterface * FifoProc::operator[](int i) const
-{
+ProcInterface * FifoProc::operator[](int i) const {
     int index = modulo(m_outputIndex+i, procPasses.size());
     return procPasses[index];
 }
@@ -121,8 +123,12 @@ int FifoProc::getOut() const {
     return m_outputIndex;
 }
 
-ProcInterface* FifoProc::getInputFilter() const { return procPasses[getIn()]; }
-ProcInterface* FifoProc::getOutputFilter() const { return procPasses[getOut()]; }
+ProcInterface* FifoProc::getInputFilter() const {
+    return procPasses[getIn()];
+}
+ProcInterface* FifoProc::getOutputFilter() const {
+    return procPasses[getOut()];
+}
 
 #pragma mark ProcInterface methods
 
@@ -187,10 +193,10 @@ int FifoProc::render(int position) {
     }
 
     getInputFilter()->render();
-    
+
     m_count = std::min(m_count + 1, int(size()));
     m_inputIndex = modulo(m_inputIndex + 1, size());
-    
+
     return 0;
 }
 

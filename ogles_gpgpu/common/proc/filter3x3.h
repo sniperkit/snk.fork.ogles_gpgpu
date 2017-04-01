@@ -1,15 +1,11 @@
 //
 // ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 //
-// Author: Markus Konrad <post@mkonrad.net>, Winter 2014/2015 (http://www.mkonrad.net)
-//         David Hirvonen <dhirvonen@elucideye.com>
-// 
 // See LICENSE file in project repository root for the license.
 //
 
-/**
- * GPGPU filter3x3 processor.
- */
+// Copyright (c) 2016-2017, David Hirvonen (this file)
+
 #ifndef OGLES_GPGPU_COMMON_PROC_FILTER3X3
 #define OGLES_GPGPU_COMMON_PROC_FILTER3X3
 
@@ -24,27 +20,31 @@ namespace ogles_gpgpu {
  */
 class Filter3x3Proc : public FilterProcBase {
 public:
-    
+
     /**
      * Constructor.
      */
     Filter3x3Proc();
-    
+
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() { return "Filter3x3Proc"; }
+    virtual const char *getProcName() {
+        return "Filter3x3Proc";
+    }
 
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getVertexShaderSource() { return vshaderFilter3x3Src; }
-    
+    virtual const char *getVertexShaderSource() {
+        return vshaderFilter3x3Src;
+    }
+
     /**
      * Set additional uniforms.
      */
     virtual void setUniforms();
-    
+
     /**
      * Get uniform indices.
      */
@@ -55,29 +55,26 @@ public:
      */
     virtual void filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target);
 
-    void setTexelWidth(float width)
-    {
+    void setTexelWidth(float width) {
         hasOverriddenImageSizeFactor = true;
         texelWidth = width;
     }
-    
-    void setTexelHeight(float height)
-    {
+
+    void setTexelHeight(float height) {
         hasOverriddenImageSizeFactor = true;
         texelHeight = height;
     }
-    
-    void reset()
-    {
+
+    void reset() {
         hasOverriddenImageSizeFactor = false;
     }
-    
+
 protected:
-    
+
     bool hasOverriddenImageSizeFactor = false;
     GLint texelWidthUniform, texelHeightUniform;
     float texelWidth, texelHeight;
-    
+
     static const char *fshaderFilter3x3Src;   // fragment shader source
 };
 }

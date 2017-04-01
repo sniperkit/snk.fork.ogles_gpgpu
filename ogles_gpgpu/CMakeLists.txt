@@ -8,7 +8,8 @@ if(OGLES_GPGPU_VERBOSE)
 endif()
 
 if(ANDROID)
-  target_link_libraries(ogles_gpgpu PUBLIC EGL GLESv2)
+  target_link_libraries(ogles_gpgpu PUBLIC log android EGL GLESv2)
+  target_compile_definitions(ogles_gpgpu PUBLIC EGL_EGLEXT_PROTOTYPES GL_GLEXT_PROTOTYPES)
 endif()
 
 if(MSVC)
@@ -21,6 +22,15 @@ set_property(TARGET ${library} PROPERTY FOLDER "libs/ogles_gpgpu")
 target_include_directories(
     ogles_gpgpu PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>"
 )
+
+
+## #################################################################
+## Testing: 
+## #################################################################
+
+if(OGLES_GPGPU_BUILD_TESTS)
+  add_subdirectory(ut)
+endif()
 
 #
 # Provide interface lib for clean package config use

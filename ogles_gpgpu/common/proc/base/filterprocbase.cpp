@@ -15,19 +15,19 @@ using namespace ogles_gpgpu;
 using namespace std;
 
 const char *FilterProcBase::vshaderGPUImage = OG_TO_STR(
- attribute vec4 position;
- attribute vec4 inputTextureCoordinate;
- 
- varying vec2 textureCoordinate;
- void main()
- {
-     gl_Position = position;
-     textureCoordinate = inputTextureCoordinate.xy;
- }
-);
+            attribute vec4 position;
+            attribute vec4 inputTextureCoordinate;
 
+            varying vec2 textureCoordinate;
+void main() {
+    gl_Position = position;
+    textureCoordinate = inputTextureCoordinate.xy;
+}
+        );
+
+// *INDENT-OFF*
 const char *FilterProcBase::vshaderFilter3x3Src = OG_TO_STR(
-                                                           
+
     attribute vec4 position;
     attribute vec4 inputTextureCoordinate;
 
@@ -79,6 +79,7 @@ void main()
     vTexCoord = aTexCoord;
 }
 );
+// *INDENT-ON*
 
 #pragma mark public methods
 
@@ -92,7 +93,7 @@ void FilterProcBase::useTexture(GLuint id, GLuint useTexUnit, GLenum target, int
     texId = id;
     texUnit = useTexUnit;
 
-    if (target != texTarget) {	// changed        
+    if (target != texTarget) {	// changed
         if (fragShaderSrcForCompilation) {	// recreate shader with new texture target
             auto vShaderSrc  = vertexShaderSrcForCompilation ? vertexShaderSrcForCompilation : vshaderDefault;
             filterShaderSetup(vShaderSrc, fragShaderSrcForCompilation, target);
@@ -122,14 +123,14 @@ void FilterProcBase::filterShaderSetup(const char *vShaderSrc, const char *fShad
     shParamAPos = shader->getParam(ATTR, "aPos");
     shParamATexCoord = shader->getParam(ATTR, "aTexCoord");
     shParamUInputTex = shader->getParam(UNIF, "uInputTex");
-    
+
     // remember used shader source
     vertexShaderSrcForCompilation = vShaderSrc;
     fragShaderSrcForCompilation = fShaderSrc;
 }
 
 void FilterProcBase::getUniforms() {
-    
+
 }
 
 /**
@@ -138,22 +139,22 @@ void FilterProcBase::getUniforms() {
  */
 int FilterProcBase::render(int position) {
     OG_LOGINF(getProcName(), "input tex %d, target %d, framebuffer of size %dx%d", texId, texTarget, outFrameW, outFrameH);
-    
+
     filterRenderPrepare();
     Tools::checkGLErr(getProcName(), "render prepare");
 
     setUniforms();
     Tools::checkGLErr(getProcName(), "setUniforms");
-    
+
     filterRenderSetCoords();
     Tools::checkGLErr(getProcName(), "render set coords");
-    
+
     filterRenderDraw();
     Tools::checkGLErr(getProcName(), "render draw");
-    
+
     filterRenderCleanup();
     Tools::checkGLErr(getProcName(), "render cleanup");
-    
+
     return 0;
 }
 
@@ -163,32 +164,32 @@ int FilterProcBase::render(int position) {
  */
 const GLfloat * FilterProcBase::getTexCoordBuf(RenderOrientation o) {
     const GLfloat *coordsPtr;
-    
+
     switch (o) {
-        default:
-        case RenderOrientationStd:
-            coordsPtr = ProcBase::quadTexCoordsStd;
-            break;
-        case RenderOrientationStdMirrored:
-            coordsPtr = ProcBase::quadTexCoordsStdMirrored;
-            break;
-        case RenderOrientationFlipped:
-            coordsPtr = ProcBase::quadTexCoordsFlipped;
-            break;
-        case RenderOrientationFlippedMirrored:
-            coordsPtr = ProcBase::quadTexCoordsFlippedMirrored;
-            break;
-        case RenderOrientationDiagonal:
-            coordsPtr = ProcBase::quadTexCoordsDiagonal;
-            break;
-        case RenderOrientationDiagonalFlipped:
-            coordsPtr = ProcBase::quadTexCoordsDiagonalFlipped;
-            break;
-        case RenderOrientationDiagonalMirrored:
-            coordsPtr = ProcBase::quadTexCoordsDiagonalMirrored;
-            break;
+    default:
+    case RenderOrientationStd:
+        coordsPtr = ProcBase::quadTexCoordsStd;
+        break;
+    case RenderOrientationStdMirrored:
+        coordsPtr = ProcBase::quadTexCoordsStdMirrored;
+        break;
+    case RenderOrientationFlipped:
+        coordsPtr = ProcBase::quadTexCoordsFlipped;
+        break;
+    case RenderOrientationFlippedMirrored:
+        coordsPtr = ProcBase::quadTexCoordsFlippedMirrored;
+        break;
+    case RenderOrientationDiagonal:
+        coordsPtr = ProcBase::quadTexCoordsDiagonal;
+        break;
+    case RenderOrientationDiagonalFlipped:
+        coordsPtr = ProcBase::quadTexCoordsDiagonalFlipped;
+        break;
+    case RenderOrientationDiagonalMirrored:
+        coordsPtr = ProcBase::quadTexCoordsDiagonalMirrored;
+        break;
     }
-    
+
     return coordsPtr;
 }
 
@@ -207,7 +208,7 @@ void FilterProcBase::filterRenderPrepare() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     assert(texTarget == GL_TEXTURE_2D); // texTarget = GL_TEXTURE_2D;
-    
+
     // set input texture
     glActiveTexture(GL_TEXTURE0 + texUnit);
     glBindTexture(texTarget, texId);	// bind input texture
@@ -253,19 +254,19 @@ void FilterProcBase::filterRenderCleanup() {
 
 int FilterProcBase::init(int inW, int inH, unsigned int order, bool prepareForExternalInput) {
     OG_LOGINF(getProcName(), "initialize");
-    
+
     // create fbo for output
     createFBO();
-    
+
     // ProcBase init - set defaults
     baseInit(inW, inH, order, prepareForExternalInput, procParamOutW, procParamOutH, procParamOutScale);
-    
+
     // FilterProcBase init - create shaders, get shader params, set buffers for OpenGL
     filterInit(getVertexShaderSource(), getFragmentShaderSource());
 
     // Get shader specific uniforms
     getUniforms();
-    
+
     return 1;
 }
 
