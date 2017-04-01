@@ -27,9 +27,9 @@ class Core;
  */
 class FBO {
 public:
-    
+
     using FrameDelegate = MemTransfer::FrameDelegate;
-    
+
     /**
      * Constructor.
      */
@@ -101,7 +101,7 @@ public:
      * Call the delegate on framebuffer data which was written to the framebuffer texture.
      */
     virtual void readBuffer(FrameDelegate &delegate);
-    
+
     /**
      * Free the framebuffer.
      */

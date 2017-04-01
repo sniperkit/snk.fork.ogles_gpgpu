@@ -7,6 +7,8 @@
 // See LICENSE file in project repository root for the license.
 //
 
+// Modifications: Copyright (c) 2016-2017, David Hirvonen (this file)
+
 /**
  * GPGPU grayscale processor.
  */
@@ -51,7 +53,7 @@ public:
      * Make this a noop/pass-through shader.
      */
     void setIdentity();
-    
+
     /**
      * Set weighted channel grayscale conversion vector directly to <v>.
      */
@@ -77,24 +79,24 @@ public:
     }
 
 private:
-    
+
     /**
      * Get the fragment shader source.
      */
     virtual const char *getFragmentShaderSource() {
         return inputConvType == GRAYSCALE_INPUT_CONVERSION_NONE ? fshaderNoopSrc : fshaderGrayscaleSrc;
     }
-    
+
     /**
      * Set additional uniforms.
      */
     virtual void setUniforms();
-    
+
     /**
      * Get uniform indices.
      */
     virtual void getUniforms();
-    
+
     static const char *fshaderNoopSrc;              // Noop pass through shader
     static const char *fshaderGrayscaleSrc;         // fragment shader source
     static const GLfloat grayscaleConvVecRGB[3];    // weighted channel grayscale conversion for RGB input (default)

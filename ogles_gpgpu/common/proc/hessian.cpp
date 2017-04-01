@@ -1,11 +1,10 @@
 //
 // ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 //
-// Author: Markus Konrad <post@mkonrad.net>, Winter 2014/2015 (http://www.mkonrad.net)
-//         David Hirvonen
-//
 // See LICENSE file in project repository root for the license.
 //
+
+// Copyright (c) 2017, David Hirvonen (this file)
 
 #include "../common_includes.h"
 #include "hessian.h"
@@ -40,6 +39,8 @@ using namespace std;
 using namespace ogles_gpgpu;
 
 // Source: GPUImageXYDerivativeFilter.m
+
+// *INDENT-OFF*
 const char *HessianProc::fshaderHessianAndDeterminantSrc = OG_TO_STR(
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -73,7 +74,7 @@ void main()
     float bottomRightIntensity = texture2D(inputImageTexture, bottomRightTextureCoordinate).r;
     float leftIntensity = texture2D(inputImageTexture, leftTextureCoordinate).r;
     float rightIntensity = texture2D(inputImageTexture, rightTextureCoordinate).r;
-    
+
     //  1     2     1
     // -2    -4    -2
     //  1     2     1
@@ -89,42 +90,43 @@ void main()
     float Ixx1 = (topIntensity  + 2.0*centerIntensity + bottomIntensity) * 2.0;
     float Ixx2 = topRightIntensity + 2.0*rightIntensity + bottomRightIntensity;
     float Ixx = (Ixx0 - Ixx1 + Ixx2) / 16.0;
-    
+
     //  1     0    -1
     //  0     0     0
     // -1     0     1
     float Ixy = (topLeftIntensity + bottomRightIntensity - topRightIntensity - bottomLeftIntensity) / 4.0;
-    
+
     // Compute determinant of Hessian:
     float d = ((Ixx + Iyy) < 0.0) ? ((Ixx * Iyy) - (Ixy * Ixy)) : 0.0;
     //float d = (Ixx * Iyy) - (Ixy * Ixy);
-    
+
     gl_FragColor = vec4((Ixx + 1.0)/2.0, (Iyy + 1.0)/2.0, (Ixy + 1.0)/2.0, d * edgeStrength);
 });
+// *INDENT-ON*
 
-
+// *INDENT-OFF*
 const char *HessianProc::fshaderDeterminantSrc = OG_TO_STR(
- 
+
 #if defined(OGLES_GPGPU_OPENGLES)
  precision highp float;
 #endif
- 
+
  varying vec2 textureCoordinate;
  varying vec2 leftTextureCoordinate;
  varying vec2 rightTextureCoordinate;
- 
+
  varying vec2 topTextureCoordinate;
  varying vec2 topLeftTextureCoordinate;
  varying vec2 topRightTextureCoordinate;
- 
+
  varying vec2 bottomTextureCoordinate;
  varying vec2 bottomLeftTextureCoordinate;
  varying vec2 bottomRightTextureCoordinate;
- 
+
  uniform sampler2D inputImageTexture;
- 
+
  uniform float edgeStrength;
- 
+
  void main()
 {
     vec3 topIntensity = texture2D(inputImageTexture, topTextureCoordinate).rgb;
@@ -136,7 +138,7 @@ const char *HessianProc::fshaderDeterminantSrc = OG_TO_STR(
     vec3 bottomRightIntensity = texture2D(inputImageTexture, bottomRightTextureCoordinate).rgb;
     vec3 leftIntensity = texture2D(inputImageTexture, leftTextureCoordinate).rgb;
     vec3 rightIntensity = texture2D(inputImageTexture, rightTextureCoordinate).rgb;
-    
+
     //  1     2     1
     // -2    -4    -2
     //  1     2     1
@@ -144,7 +146,7 @@ const char *HessianProc::fshaderDeterminantSrc = OG_TO_STR(
     vec3 Iyy1 = (leftIntensity + 2.0*centerIntensity + rightIntensity) * 2.0;
     vec3 Iyy2 = bottomLeftIntensity + 2.0*bottomIntensity + bottomRightIntensity;
     vec3 Iyy = (Iyy0 - Iyy1 + Iyy2) / 16.0;
-    
+
     // 1    -2     1
     // 2    -4     2
     // 1    -2     1
@@ -152,23 +154,22 @@ const char *HessianProc::fshaderDeterminantSrc = OG_TO_STR(
     vec3 Ixx1 = (topIntensity  + 2.0*centerIntensity + bottomIntensity) * 2.0;
     vec3 Ixx2 = topRightIntensity + 2.0*rightIntensity + bottomRightIntensity;
     vec3 Ixx = (Ixx0 - Ixx1 + Ixx2) / 16.0;
-    
+
     //  1     0    -1
     //  0     0     0
     // -1     0     1
     vec3 Ixy = (topLeftIntensity + bottomRightIntensity - topRightIntensity - bottomLeftIntensity) / 4.0;
-    
+
     // Compute determinant of Hessian:
     vec3 d = (Ixx * Iyy) - (Ixy * Ixy);
-    
+
     gl_FragColor = vec4(d * edgeStrength, 1.0);
 });
-
+// *INDENT-ON*
 
 HessianProc::HessianProc(float edgeStrength, bool doHessian)
-: edgeStrength(edgeStrength)
-, doHessian(doHessian)
-{
+    : doHessian(doHessian)
+    , edgeStrength(edgeStrength) {
 
 }
 

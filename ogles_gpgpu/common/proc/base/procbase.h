@@ -129,14 +129,14 @@ public:
     virtual int getOutFrameH() const {
         return outFrameH;
     }
-    
+
     /**
      * Get the input frame width.
      */
     virtual int getInFrameW() const {
         return inFrameW;
     }
-    
+
     /**
      * Get the input frame height.
      */
@@ -160,7 +160,7 @@ public:
      * Return the result data from the FBO.
      */
     virtual void getResultData(FrameDelegate &delegate) const;
-    
+
     /**
      * Return pointer to MemTransfer object of this processor.
      */
@@ -177,14 +177,14 @@ public:
      * Return the output texture id (= texture that is attached to the FBO).
      */
     virtual GLuint getOutputTexId() const;
-    
+
     /**
      * Return the texture target (i.e., GL_TEXTURE_2D, ...)
      */
     virtual GLenum getTextureTarget() const {
         return texTarget;
     }
-    
+
 protected:
     /**
      * Common initializations with input size <inW>x<inH>, pipeline processing <order>, output size <outW>x<outH> and
@@ -209,7 +209,7 @@ protected:
      * <vshSrc> and <fshSrc>. The fragment shader source might be modified, depending
      * on texture target <target>.
      */
-    virtual void createShader(const char *vShSrc, const char *fShSrc, GLenum target, const Shader::Attributes &attributes={});
+    virtual void createShader(const char *vShSrc, const char *fShSrc, GLenum target, const Shader::Attributes &attributes= {});
 
 
     static const GLfloat quadTexCoordsStd[];                // default quad texture coordinates
@@ -226,7 +226,7 @@ protected:
 
     unsigned int orderNum;  // position of this processor in the pipeline
 
-    bool hasTexId = true; 
+    bool hasTexId = true;
     GLuint texId;       // input texture id
     GLuint texUnit;     // input texture unit (glActiveTexture())
     GLenum texTarget;   // input texture target

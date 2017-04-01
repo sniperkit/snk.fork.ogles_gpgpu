@@ -7,6 +7,8 @@
 // See LICENSE file in project repository root for the license.
 //
 
+// Modifications: Copyright (c) 2015-2017, David Hirvonen (this file)
+
 /**
  * GPGPU gaussian smoothing processor (two-pass).
  */

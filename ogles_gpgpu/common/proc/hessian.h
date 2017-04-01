@@ -1,11 +1,10 @@
 //
 // ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 //
-// Author: Markus Konrad <post@mkonrad.net>, Winter 2014/2015 (http://www.mkonrad.net)
-//         David Hirvonen
-//
 // See LICENSE file in project repository root for the license.
 //
+
+// Copyright (c) 2017, David Hirvonen (this file)
 
 /**
  * GPGPU hessian processor.
@@ -18,7 +17,7 @@
 namespace ogles_gpgpu {
 
 /**
- * GPGPU gradient, gradient magnitude and orientation 
+ * GPGPU gradient, gradient magnitude and orientation
  */
 class HessianProc : public Filter3x3Proc {
 public:
@@ -33,39 +32,42 @@ public:
     virtual const char *getProcName() {
         return "HessianProc";
     }
-    
-    void setEdgeStrength(float strength) { edgeStrength = strength; }
 
-    float getEdgeStrength() const { return edgeStrength; }
-    
+    void setEdgeStrength(float strength) {
+        edgeStrength = strength;
+    }
+
+    float getEdgeStrength() const {
+        return edgeStrength;
+    }
+
 private:
-    
+
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource()
-    {
+    virtual const char *getFragmentShaderSource() {
         return doHessian ? fshaderHessianAndDeterminantSrc : fshaderDeterminantSrc;
     }
-    
+
     /**
      * Set uniform values;
      */
     virtual void setUniforms();
-    
+
     /**
      * Get uniform indices.
      */
     virtual void getUniforms();
-    
+
     bool doHessian = true;
-    
+
     float edgeStrength = 1.0f;
-    
+
     GLuint shParamUEdgeStrength = 0;
-    
+
     static const char *fshaderHessianAndDeterminantSrc;   // fragment shader source
-    
+
     static const char *fshaderDeterminantSrc;   // fragment shader source
 };
 }

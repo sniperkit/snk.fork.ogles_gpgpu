@@ -1,11 +1,11 @@
 //
 // ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 //
-// Author: Markus Konrad <post@mkonrad.net>, Winter 2014/2015
-// http://www.mkonrad.net
-//
 // See LICENSE file in project repository root for the license.
 //
+
+// Original shader: theagentd/Myomyomyo http://www.java-gaming.org/index.php?topic=35123.0
+// Copyright (c) 2016-2017, David Hirvonen (this file)
 
 #include "../common_includes.h"
 #include "transform.h"
@@ -15,6 +15,7 @@
 using namespace std;
 using namespace ogles_gpgpu;
 
+// *INDENT-OFF*
 const char *TransformProc::vshaderTransformSrc = OG_TO_STR(
 attribute vec4 aPos;
 attribute vec2 aTexCoord;
@@ -26,7 +27,9 @@ void main()
     vTexCoord = aTexCoord;
 }
 );
+// *INDENT-ON*
 
+// *INDENT-OFF*
 const char *TransformProc::fshaderTransformSrc = OG_TO_STR(
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -40,11 +43,9 @@ void main()
     gl_FragColor = vec4(texture2D(uInputTex, vTexCoord).rgba);
 }
 );
+// *INDENT-ON*
 
-// Bicubic interpolation from here:
-// http://www.java-gaming.org/index.php?topic=35123.0
-// theagentd/Myomyomyo
-
+// *INDENT-OFF*
 const char *TransformProc::fshaderTransformBicubicSrc = OG_TO_STR(
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -66,30 +67,30 @@ vec4 cubic(OGLES_GPGPU_HIGHP float v)
 vec4 textureBicubic(sampler2D sampler, OGLES_GPGPU_HIGHP vec2 texCoords, OGLES_GPGPU_HIGHP vec2 texSize)
 {
     vec2 invTexSize = 1.0 / texSize;
-    
+
     texCoords = texCoords * texSize - 0.5;
-    
+
     vec2 fxy = fract(texCoords);
     texCoords -= fxy;
-    
+
     vec4 xcubic = cubic(fxy.x);
     vec4 ycubic = cubic(fxy.y);
-    
+
     vec4 c = texCoords.xxyy + vec2(-0.5, +1.5).xyxy;
-    
+
     vec4 s = vec4(xcubic.xz + xcubic.yw, ycubic.xz + ycubic.yw);
     vec4 offset = c + vec4(xcubic.yw, ycubic.yw) / s;
-    
+
     offset *= invTexSize.xxyy;
-    
+
     vec4 sample0 = texture2D(sampler, offset.xz);
     vec4 sample1 = texture2D(sampler, offset.yz);
     vec4 sample2 = texture2D(sampler, offset.xw);
     vec4 sample3 = texture2D(sampler, offset.yw);
-   
+
     float sx = s.x / (s.x + s.y);
     float sy = s.z / (s.z + s.w);
-   
+
    return mix(mix(sample3, sample2, sx), mix(sample1, sample0, sx), sy);
 }
 
@@ -102,6 +103,7 @@ void main()
    gl_FragColor = textureBicubic(uInputTex, vTexCoord, texSize);
 }
 );
+// *INDENT-ON*
 
 TransformProc::TransformProc() {
     memset(transformMatrix.data, 0, sizeof(transformMatrix.data));

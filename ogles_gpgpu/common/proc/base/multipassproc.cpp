@@ -11,10 +11,18 @@
 
 using namespace ogles_gpgpu;
 
-ProcInterface* MultiPassProc::getInputFilter() const { return procPasses.front(); }
-ProcInterface* MultiPassProc::getOutputFilter() const { return procPasses.back(); }
-ProcInterface * MultiPassProc::operator[](int i) const { return procPasses[i]; }
-size_t MultiPassProc::size() const { return procPasses.size(); }
+ProcInterface* MultiPassProc::getInputFilter() const {
+    return procPasses.front();
+}
+ProcInterface* MultiPassProc::getOutputFilter() const {
+    return procPasses.back();
+}
+ProcInterface * MultiPassProc::operator[](int i) const {
+    return procPasses[i];
+}
+size_t MultiPassProc::size() const {
+    return procPasses.size();
+}
 
 #pragma mark constructor/deconstructor
 
@@ -33,7 +41,7 @@ int MultiPassProc::init(int inW, int inH, unsigned int order, bool prepareForExt
     ProcInterface *prevProc = NULL;
     int num = 0;
     int numInitialized = 0;
-    
+
     for(auto &it : procPasses) {
 
         // find out the input frame size for the proc
@@ -64,7 +72,7 @@ int MultiPassProc::reinit(int inW, int inH, bool prepareForExternalInput) {
     ProcInterface *prevProc = NULL;
     int num = 0;
     int numInitialized = 0;
-    
+
     for(auto &it : procPasses) {
 
         // find out the input frame size for the proc
@@ -116,7 +124,7 @@ void MultiPassProc::useTexture(GLuint id, GLuint useTexUnit, GLenum target, int 
     ProcInterface *prevProc = NULL;
 
     assert(position == 0); // for now no multi-texture multi-pass filters are supported
-    
+
     for(auto &it : procPasses) {
         if (!prevProc) {    // means this is the first proc pass
             it->useTexture(id, useTexUnit, target);

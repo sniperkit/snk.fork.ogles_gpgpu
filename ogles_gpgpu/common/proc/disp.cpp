@@ -13,6 +13,7 @@
 using namespace std;
 using namespace ogles_gpgpu;
 
+// *INDENT-OFF*
 const char *Disp::fshaderDispSrc = OG_TO_STR(
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -26,6 +27,7 @@ void main()
     gl_FragColor = vec4(texture2D(uInputTex, vTexCoord).rgba);
 }
 );
+// *INDENT-ON*
 
 int Disp::init(int inW, int inH, unsigned int order, bool prepareForExternalInput) {
     OG_LOGINF(getProcName(), "initialize");
@@ -55,6 +57,6 @@ int Disp::render(int position) {
 
     filterRenderCleanup();
     Tools::checkGLErr(getProcName(), "render cleanup");
-    
+
     return 0;
 }
