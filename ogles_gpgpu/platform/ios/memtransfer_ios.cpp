@@ -58,12 +58,12 @@ void MemTransferIOS::releaseInput() {
         CFRelease(inputTexture);
         inputTexture = NULL;
     }
-    
+
     if (lumaTexture) {
         CFRelease(lumaTexture);
         lumaTexture = NULL;
     }
-    
+
     if (chromaTexture) {
         CFRelease(chromaTexture);
         chromaTexture = NULL;
@@ -141,7 +141,7 @@ GLuint MemTransferIOS::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat
     inputW = inTexW;
     inputH = inTexH;
     inputPixelFormat = inputPxFormat;
-    
+
     int bytesPerLine = 0;
 
     // define pixel format
@@ -157,17 +157,17 @@ GLuint MemTransferIOS::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat
         preparedInput = false;
         return 0;
     }
-    
+
     // prepare
     CVPixelBufferRef bufRef;
     CVOpenGLESTextureRef texRef = 0;
     CVOpenGLESTextureRef luminanceTextureRef = 0;
     CVOpenGLESTextureRef chrominanceTextureRef = 0;
     CVReturn res;
-    
+
     if(inputDataPtr) {
         if(useRawPixels) {
-            
+
             if(pxBufFmt == kCVPixelFormatType_420YpCbCr8BiPlanarFullRange) {
 
                 res = CVPixelBufferCreate(kCFAllocatorDefault,
@@ -176,57 +176,54 @@ GLuint MemTransferIOS::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat
                                           pxBufFmt,
                                           bufferAttr,
                                           &bufRef);
-                
+
                 CVPixelBufferLockBaseAddress(bufRef, 0);
-                
+
                 assert(CVPixelBufferGetPlaneCount(bufRef) == 2);
-                
+
                 // get plane addresses
                 unsigned char *baseAddressY  = (unsigned char *)CVPixelBufferGetBaseAddressOfPlane(bufRef, 0);
                 size_t bufferHeight0 = CVPixelBufferGetHeightOfPlane(bufRef, 0);
-                size_t bufferWidth0 = CVPixelBufferGetWidthOfPlane(bufRef, 0);
+                //size_t bufferWidth0 = CVPixelBufferGetWidthOfPlane(bufRef, 0);
                 size_t bytesPerRow0 = CVPixelBufferGetBytesPerRowOfPlane(bufRef, 0);
-                
+
                 unsigned char *baseAddressUV = (unsigned char *)CVPixelBufferGetBaseAddressOfPlane(bufRef, 1);
                 size_t bufferHeight1 = CVPixelBufferGetHeightOfPlane(bufRef, 1);
-                size_t bufferWidth1 = CVPixelBufferGetWidthOfPlane(bufRef, 1);
+                //size_t bufferWidth1 = CVPixelBufferGetWidthOfPlane(bufRef, 1);
                 size_t bytesPerRow1 = CVPixelBufferGetBytesPerRowOfPlane(bufRef, 1);
-                
+
                 uint8_t *yPtr = reinterpret_cast<uint8_t *>(inputDataPtr);
                 uint8_t *uvPtr = yPtr + (bytesPerRow0 * bufferHeight0);
-                
+
                 //TODO: copy your data buffers to the newly allocated memory locations
                 memcpy(baseAddressY, yPtr, bytesPerRow0 * bufferHeight0);
                 memcpy(baseAddressUV, uvPtr, bytesPerRow1 * bufferHeight1);
-                
+
                 // unlock pixel buffer address
                 CVPixelBufferUnlockBaseAddress(bufRef, 0);
-            }
-            else {
+            } else {
                 res = CVPixelBufferCreateWithBytes(
-                                                   kCFAllocatorDefault,
-                                                   inputW,
-                                                   inputH,
-                                                   pxBufFmt,
-                                                   inputDataPtr,
-                                                   bytesPerLine,
-                                                   nullptr, // releaseCallback
-                                                   nullptr, // releaseRefCon
-                                                   bufferAttr, // pixelBufferAttributes
-                                                   &bufRef);
+                          kCFAllocatorDefault,
+                          inputW,
+                          inputH,
+                          pxBufFmt,
+                          inputDataPtr,
+                          bytesPerLine,
+                          nullptr, // releaseCallback
+                          nullptr, // releaseRefCon
+                          bufferAttr, // pixelBufferAttributes
+                          &bufRef);
             }
             if (res != kCVReturnSuccess) {
                 OG_LOGERR("MemTransferIOS", "CVPixelBufferCreate error %d (input)", res);
                 preparedInput = false;
                 return 0;
             }
-        }
-        else {
+        } else {
             bufRef = (CVPixelBufferRef)inputDataPtr;
         }
-    }
-    else {
-        
+    } else {
+
         // create input pixel buffer if necessary
         res = CVPixelBufferCreate(kCFAllocatorDefault,
                                   inputW,
@@ -234,7 +231,7 @@ GLuint MemTransferIOS::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat
                                   pxBufFmt,
                                   bufferAttr,
                                   &bufRef);
-        
+
         if (res != kCVReturnSuccess) {
             OG_LOGERR("MemTransferIOS", "CVPixelBufferCreate error %d (input)", res);
             preparedInput = false;
@@ -246,53 +243,52 @@ GLuint MemTransferIOS::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat
     if(inputDataPtr) {
         if(inputPixelFormat == GL_BGRA) {
             res = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
-                                                               textureCache,
-                                                               bufRef,
-                                                               NULL, // texture attributes
-                                                               GL_TEXTURE_2D,
-                                                               GL_RGBA, // opengl format
-                                                               inputW,
-                                                               inputH,
-                                                               inputPixelFormat,
-                                                               GL_UNSIGNED_BYTE,
-                                                               0,
-                                                               &texRef);
-            
+                    textureCache,
+                    bufRef,
+                    NULL, // texture attributes
+                    GL_TEXTURE_2D,
+                    GL_RGBA, // opengl format
+                    inputW,
+                    inputH,
+                    inputPixelFormat,
+                    GL_UNSIGNED_BYTE,
+                    0,
+                    &texRef);
+
             if (res != kCVReturnSuccess) {
                 Core::printCVPixelBuffer("Texture creation failed", bufRef);
                 OG_LOGERR("MemTransferIOS", "CVOpenGLESTextureCacheCreateTextureFromImage error %d (input)", res);
                 preparedInput = false;
                 return 0;
             }
-            
+
             inputPixelBufferSize = inputW * inputH * 4; // always assume 4 channels of 8 bit data
-            
+
             // get created texture id
             inputTexId = CVOpenGLESTextureGetName(texRef);
-            
+
             OG_LOGINF("MemTransferIOS", "created input tex with id %d", inputTexId);
-            
+
             // set texture parameters
             setCommonTextureParams(inputTexId);
-        }
-        else {
-            
+        } else {
+
             inputPixelBufferSize = (inputW * inputH) * 3 / 2;
-            
+
             glActiveTexture(GL_TEXTURE4);
             res = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
-                                                               textureCache,
-                                                               bufRef,
-                                                               NULL,
-                                                               GL_TEXTURE_2D,
-                                                               GL_LUMINANCE,
-                                                               inputW,
-                                                               inputH,
-                                                               GL_LUMINANCE,
-                                                               GL_UNSIGNED_BYTE,
-                                                               0,
-                                                               &luminanceTextureRef);
-            
+                    textureCache,
+                    bufRef,
+                    NULL,
+                    GL_TEXTURE_2D,
+                    GL_LUMINANCE,
+                    inputW,
+                    inputH,
+                    GL_LUMINANCE,
+                    GL_UNSIGNED_BYTE,
+                    0,
+                    &luminanceTextureRef);
+
             if (res != kCVReturnSuccess) {
                 Core::printCVPixelBuffer("Texture creation failed", bufRef);
                 OG_LOGERR("MemTransferIOS", "CVOpenGLESTextureCacheCreateTextureFromImage error %d (input)", res);
@@ -303,34 +299,34 @@ GLuint MemTransferIOS::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat
             glBindTexture(GL_TEXTURE_2D, luminanceTexId);
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            
+
             glActiveTexture(GL_TEXTURE5);
             res = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
-                                                               textureCache,
-                                                               bufRef,
-                                                               NULL,
-                                                               GL_TEXTURE_2D,
-                                                               GL_LUMINANCE_ALPHA,
-                                                               inputW/2,
-                                                               inputH/2,
-                                                               GL_LUMINANCE_ALPHA,
-                                                               GL_UNSIGNED_BYTE,
-                                                               1,
-                                                               &chrominanceTextureRef);
-            
+                    textureCache,
+                    bufRef,
+                    NULL,
+                    GL_TEXTURE_2D,
+                    GL_LUMINANCE_ALPHA,
+                    inputW/2,
+                    inputH/2,
+                    GL_LUMINANCE_ALPHA,
+                    GL_UNSIGNED_BYTE,
+                    1,
+                    &chrominanceTextureRef);
+
             if (res != kCVReturnSuccess) {
                 Core::printCVPixelBuffer("Texture creation failed", bufRef);
                 OG_LOGERR("MemTransferIOS", "CVOpenGLESTextureCacheCreateTextureFromImage error %d (input)", res);
                 preparedInput = false;
                 return 0;
             }
-            
+
             chrominanceTexId = CVOpenGLESTextureGetName(chrominanceTextureRef);
             glBindTexture(GL_TEXTURE_2D, chrominanceTexId);
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         }
-        
+
         lumaTexture = luminanceTextureRef;
         chromaTexture = chrominanceTextureRef;
     }
@@ -343,7 +339,7 @@ GLuint MemTransferIOS::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat
         // internally allocating a CVPixelBuferRef
         inputPixelBuffer = bufRef;
     }
-    
+
     inputTexture = texRef;
     preparedInput = true;
 
@@ -444,19 +440,17 @@ void MemTransferIOS::fromGPU(unsigned char *buf) {
     unlockBuffer(BUF_TYPE_OUTPUT);
 }
 
-void MemTransferIOS::fromGPU(FrameDelegate &delegate)
-{
+void MemTransferIOS::fromGPU(FrameDelegate &delegate) {
     // bind the texture
     glBindTexture(GL_TEXTURE_2D, outputTexId);
-    
+
     const void *pixelBufferAddr = lockBufferAndGetPtr(BUF_TYPE_OUTPUT);
     delegate({outputW, outputH}, pixelBufferAddr, bytesPerRow());
 
     unlockBuffer(BUF_TYPE_OUTPUT);
 }
 
-size_t MemTransferIOS::bytesPerRow()
-{
+size_t MemTransferIOS::bytesPerRow() {
     return CVPixelBufferGetBytesPerRow(outputPixelBuffer);
 }
 

@@ -8,26 +8,26 @@ BEGIN_OGLES_GPGPU
 /**
  * Inteface for common multi filter modules: MultiPass, FIFO, etc
  */
-    
+
 class MultiProcInterface : public ProcInterface {
-  
+
 public:
-    
+
     // ######## First/last filter access:
     MultiProcInterface() {}
     virtual ~MultiProcInterface() {}
-    
+
     virtual ProcInterface* getInputFilter() const = 0;
     virtual ProcInterface* getOutputFilter() const = 0;
     virtual ProcInterface * operator[](int i) const = 0;
     virtual size_t size() const = 0;
     virtual void printInfo();
-    
+
     // ######## Default implementations for
 
     virtual void setOutputRenderOrientation(RenderOrientation o);
-    virtual RenderOrientation getOutputRenderOrientation() const;    
-    
+    virtual RenderOrientation getOutputRenderOrientation() const;
+
     virtual void setExternalInputDataFormat(GLenum fmt);
     virtual void setExternalInputData(const unsigned char *data);
     virtual GLuint getTextureUnit() const;
@@ -49,4 +49,4 @@ public:
 END_OGLES_GPGPU
 
 #endif
-    
+

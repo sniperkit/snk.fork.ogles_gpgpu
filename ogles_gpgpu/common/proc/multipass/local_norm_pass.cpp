@@ -1,11 +1,10 @@
- //
-// ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 //
-// Author: Markus Konrad <post@mkonrad.net>, Winter 2014/2015, http://www.mkonrad.net
-//         David Hirvonen
+// ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 //
 // See LICENSE file in project repository root for the license.
 //
+
+// Copyright (c) 2016-2017, David Hirvonen (this file)
 
 #include "../../common_includes.h"
 #include "local_norm_pass.h"
@@ -13,17 +12,16 @@
 using namespace ogles_gpgpu;
 
 const char *LocalNormPass::fshaderLocalNormPass1Src = OG_TO_STR
-(
+        (
 #if defined(OGLES_GPGPU_OPENGLES)
-precision highp float;
+            precision highp float;
 #endif
 
-uniform sampler2D uInputTex;
-uniform float uPxD;
-varying vec2 vTexCoord;
+            uniform sampler2D uInputTex;
+            uniform float uPxD;
+            varying vec2 vTexCoord;
 // 7x1 Gauss kernel
-void main()
-{
+void main() {
     vec4 pxC  = texture2D(uInputTex, vTexCoord);
     float pxL1 = texture2D(uInputTex, vTexCoord - vec2(uPxD, 0.0)).r;
     float pxL2 = texture2D(uInputTex, vTexCoord - vec2(2.0 * uPxD, 0.0)).r;
@@ -37,18 +35,17 @@ void main()
 });
 
 const char *LocalNormPass::fshaderLocalNormPass2Src = OG_TO_STR
-(
+        (
 #if defined(OGLES_GPGPU_OPENGLES)
-precision highp float;
+            precision highp float;
 #endif
 
-uniform sampler2D uInputTex;
-uniform float uPxD;
-uniform float normConst;
-varying vec2 vTexCoord;
+            uniform sampler2D uInputTex;
+            uniform float uPxD;
+            uniform float normConst;
+            varying vec2 vTexCoord;
 // 7x1 Gauss kernel
-void main()
-{
+void main() {
     vec4 pxC  = texture2D(uInputTex, vTexCoord);
     float pxL1 = texture2D(uInputTex, vTexCoord - vec2(uPxD, 0.0)).a;
     float pxL2 = texture2D(uInputTex, vTexCoord - vec2(2.0 * uPxD, 0.0)).a;
@@ -57,9 +54,9 @@ void main()
     float pxR2 = texture2D(uInputTex, vTexCoord + vec2(2.0 * uPxD, 0.0)).a;
     float pxR3 = texture2D(uInputTex, vTexCoord + vec2(3.0 * uPxD, 0.0)).a;
     float val = 0.006 * (pxL3 + pxR3) + 0.061 * (pxL2 + pxR2) + 0.242 * (pxL1 + pxR1) + 0.382 * pxC.a;
-    
+
     float rNorm = pxC.r/(val + normConst);
-    
+
     gl_FragColor = vec4(clamp(0.5 * rNorm, 0.0, 1.0), pxC.g, pxC.r, val); // {r_norm,g,r,r_mean}
 });
 
@@ -75,7 +72,7 @@ int LocalNormPass::init(int inW, int inH, unsigned int order, bool prepareForExt
     // calculate pixel delta values
     pxDx = 1.0f / (float)outFrameW;
     pxDy = 1.0f / (float)outFrameH;
-    
+
     // get necessary fragment shader source
     const char *shSrc = renderPass == 1 ? fshaderLocalNormPass1Src : fshaderLocalNormPass2Src;
 
@@ -85,7 +82,7 @@ int LocalNormPass::init(int inW, int inH, unsigned int order, bool prepareForExt
     if(renderPass == 2) {
         shParamUNormConst = shader->getParam(UNIF, "normConst");
     }
-    
+
     // get additional shader params
     shParamUPxD = shader->getParam(UNIF, "uPxD");
 
@@ -126,6 +123,6 @@ int LocalNormPass::render(int position) {
 
     filterRenderCleanup();
     Tools::checkGLErr(getProcName(), "render cleanup");
-    
+
     return 0;
 }

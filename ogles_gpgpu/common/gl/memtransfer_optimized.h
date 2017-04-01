@@ -45,7 +45,15 @@ public:
      * Unlock the input or output buffer.
      */
     virtual void unlockBuffer(BufType bufType) = 0;
+
+    /**
+     * flush command: allows os specific optimizations which may be faster than glFinish()
+     */
+    virtual void flush(uint32_t us = 2000000000) {
+        glFlush();
+    }
 };
 
 }
+
 #endif

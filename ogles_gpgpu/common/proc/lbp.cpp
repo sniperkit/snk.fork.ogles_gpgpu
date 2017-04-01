@@ -1,11 +1,10 @@
 //
 // ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 //
-// Author: Markus Konrad <post@mkonrad.net>, Winter 2014/2015
-// http://www.mkonrad.net
-//
 // See LICENSE file in project repository root for the license.
 //
+
+// Copyright (c) 2016-2017, David Hirvonen (this file)
 
 #include "../common_includes.h"
 #include "lbp.h"
@@ -13,6 +12,7 @@
 using namespace std;
 using namespace ogles_gpgpu;
 
+// *INDENT-OFF*
 const char *LbpProc::fshaderLbpSrc = OG_TO_STR(
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -44,7 +44,7 @@ void main()
    OGLES_GPGPU_LOWP float rightIntensity = texture2D(inputImageTexture, rightTextureCoordinate).r;
    OGLES_GPGPU_LOWP float bottomIntensity = texture2D(inputImageTexture, bottomTextureCoordinate).r;
    OGLES_GPGPU_LOWP float topIntensity = texture2D(inputImageTexture, topTextureCoordinate).r;
-   
+
    OGLES_GPGPU_LOWP float byteTally = 1.0 / 255.0 * step(centerIntensity, topRightIntensity);
    byteTally += 2.0 / 255.0 * step(centerIntensity, topIntensity);
    byteTally += 4.0 / 255.0 * step(centerIntensity, topLeftIntensity);
@@ -53,13 +53,14 @@ void main()
    byteTally += 32.0 / 255.0 * step(centerIntensity, bottomIntensity);
    byteTally += 64.0 / 255.0 * step(centerIntensity, bottomRightIntensity);
    byteTally += 128.0 / 255.0 * step(centerIntensity, rightIntensity);
-   
+
    // TODO: Replace the above with a dot product and two vec4s
    // TODO: Apply step to a matrix, rather than individually
-   
+
     //gl_FragColor = vec4(centerIntensity, centerIntensity, centerIntensity, 1.0);
     gl_FragColor = vec4(byteTally, byteTally, byteTally, 1.0);
 });
+// *INDENT-ON*
 
 LbpProc::LbpProc() {
 

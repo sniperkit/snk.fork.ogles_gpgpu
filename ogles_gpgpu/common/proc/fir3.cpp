@@ -1,8 +1,17 @@
+//
+// ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
+//
+// See LICENSE file in project repository root for the license.
+//
+
+// Copyright (c) 2016-2017, David Hirvonen (this file)
+
 #include "../common_includes.h"
 #include "fir3.h"
 
 using namespace ogles_gpgpu;
 
+// *INDENT-OFF*
 const char *Fir3Proc::fshaderFir3Src = OG_TO_STR
 (
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -16,14 +25,16 @@ const char *Fir3Proc::fshaderFir3Src = OG_TO_STR
  uniform sampler2D inputImageTexture3;
 
  uniform vec3 weights;
- 
+ uniform float alpha;
+ uniform float beta;
+
  void main()
  {
      vec3 textureColor = texture2D(inputImageTexture, textureCoordinate).rgb;
      vec3 textureColor2 = texture2D(inputImageTexture2, textureCoordinate).rgb;
      vec3 textureColor3 = texture2D(inputImageTexture3, textureCoordinate).rgb;
      vec3 response = (textureColor * weights.x) + (textureColor2 * weights.y) + (textureColor3 * weights.z);
-     gl_FragColor = vec4(abs(response) * 40.0, 1.0);
+     gl_FragColor = vec4(response * alpha + beta, 1.0);
  });
 
 const char *Fir3Proc::fshaderFir3RGBSrc = OG_TO_STR
@@ -31,17 +42,19 @@ const char *Fir3Proc::fshaderFir3RGBSrc = OG_TO_STR
 #if defined(OGLES_GPGPU_OPENGLES)
  precision highp float;
 #endif
- 
+
  varying vec2 textureCoordinate;
- 
+
  uniform sampler2D inputImageTexture;
  uniform sampler2D inputImageTexture2;
  uniform sampler2D inputImageTexture3;
- 
+
  uniform vec3 weights1;
  uniform vec3 weights2;
  uniform vec3 weights3;
- 
+ uniform float alpha;
+ uniform float beta;
+
  void main()
  {
      vec3 textureColor = texture2D(inputImageTexture, textureCoordinate).rgb;
@@ -49,60 +62,45 @@ const char *Fir3Proc::fshaderFir3RGBSrc = OG_TO_STR
      vec3 textureColor3 = texture2D(inputImageTexture3, textureCoordinate).rgb;
      vec3 response = (textureColor * weights1) + (textureColor2 * weights2) + (textureColor3 * weights3);
 
-     // (1)
-     //gl_FragColor = vec4(response * 40.0, 1.0);
-     
-     // (2)
-     response = response - ((response.r + response.g + response.b)/3.0);
-     float saturation = length(response);
-     float lower = min(min(response.r, response.g), response.b);
-     float upper = max(max(response.r, response.g), response.b);
-     response = (response - lower) / (upper - lower);
-     gl_FragColor = vec4(response * sqrt(saturation) * 10.0, 1.0);
-     
-     // (3)
-     //vec3 tmp = response * 40.0;
-     //float value = tmp.r * tmp.g * tmp.b;
-     //gl_FragColor = vec4(vec3(value), 1.0);
- });
+     gl_FragColor = vec4(response * alpha + beta, 1.0);
+});
+// *INDENT-ON*
 
-
-Fir3Proc::Fir3Proc(bool doRgb) : doRgb(doRgb)
-{
+Fir3Proc::Fir3Proc(bool doRgb)
+    : doRgb(doRgb) {
     Vec3f weights(0.333, 0.333, 0.333);
     setWeights(weights);
     setWeights(weights, weights, weights);
+
+    setAlpha(1.f);
+    setBeta(0.f);
 }
 
-void Fir3Proc::getUniforms()
-{
+void Fir3Proc::getUniforms() {
     ThreeInputProc::getUniforms();
-    
-    if(doRgb)
-    {
+
+    if(doRgb) {
         shParamUWeights1 = shader->getParam(UNIF, "weights1");
         shParamUWeights2 = shader->getParam(UNIF, "weights2");
         shParamUWeights3 = shader->getParam(UNIF, "weights3");
-    }
-    else
-    {
+    } else {
         shParamUWeights = shader->getParam(UNIF, "weights");
     }
-    
+
+    shParamUAlpha = shader->getParam(UNIF, "alpha");
+    shParamUBeta = shader->getParam(UNIF, "beta");
 }
 
-void Fir3Proc::setUniforms()
-{
+void Fir3Proc::setUniforms() {
     ThreeInputProc::setUniforms();
-    if(doRgb)
-    {
+    if(doRgb) {
         glUniform3fv(shParamUWeights1, 1, &weightsRGB[0].data[0]);
         glUniform3fv(shParamUWeights2, 1, &weightsRGB[1].data[0]);
         glUniform3fv(shParamUWeights3, 1, &weightsRGB[2].data[0]);
-    }
-    else
-    {
+    } else {
         glUniform3fv(shParamUWeights, 1, &weights.data[0]);
     }
-}
 
+    glUniform1f(shParamUAlpha, alpha);
+    glUniform1f(shParamUBeta, beta);
+}

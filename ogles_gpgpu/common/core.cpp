@@ -126,6 +126,8 @@ void Core::prepare(int inW, int inH, GLenum inFmt) {
 
     if (prepared && inputFrameW == inW && inputFrameH == inH) return;   // no change
 
+    if (!pipeline.size()) return; // satisfy static analyzer
+
     // set input frame size
     inputSizeIsPOT = Tools::isPOT(inW) && Tools::isPOT(inH);
     inputFrameW = inW;
@@ -135,7 +137,7 @@ void Core::prepare(int inW, int inH, GLenum inFmt) {
               inputFrameW, inputFrameH, inputSizeIsPOT, (unsigned int)pipeline.size());
 
     // initialize the pipeline
-    ProcInterface *prevProc = NULL;
+    ProcInterface *prevProc = nullptr;
     unsigned int num = 0;
     int numInitialized = 0;
     for (auto &it : pipeline) {
@@ -179,6 +181,11 @@ void Core::prepare(int inW, int inH, GLenum inFmt) {
         num += numInitialized;
     }
 
+    if(prevProc == nullptr) {
+        // Nothing to do here (static analyzer):
+        return;
+    }
+
     // create the FBO texture for the last processor, too
     prevProc->createFBOTex(false);
 
@@ -192,6 +199,11 @@ void Core::prepare(int inW, int inH, GLenum inFmt) {
 
         // set pointer to previous proc
         prevProc = it;
+    }
+
+    if(prevProc == nullptr) {
+        // Nothing to do here (static analyzer):
+        return;
     }
 
     // set last processor
@@ -279,7 +291,7 @@ void Core::setInputData(const unsigned char *data) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     }
-    
+
     Tools::checkGLErr("Core", "set texture parameters for input data");
 
     glFinish();
@@ -312,14 +324,14 @@ void Core::process() {
 
 void Core::getInputData(unsigned char *buf) {
     assert(initialized);
-    
+
 #ifdef OGLES_GPGPU_BENCHMARK
     Tools::startTimeMeasurement();
 #endif
-    
+
     // will copy the result data from the GPU's memory space to <buf>
     firstProc->getMemTransferObj()->fromGPU(buf);
-    
+
 #ifdef OGLES_GPGPU_BENCHMARK
     Tools::stopTimeMeasurement();
 #endif

@@ -47,31 +47,29 @@ GLint Shader::getParam(ShaderParamType type, const char *name) const {
 }
 
 GLuint
-Shader::create(const char *vshSrc, const char *fshSrc, GLuint *vshId, GLuint *fshId, const Attributes &attributes)
-{
+Shader::create(const char *vshSrc, const char *fshSrc, GLuint *vshId, GLuint *fshId, const Attributes &attributes) {
     *vshId = compile(GL_VERTEX_SHADER, vshSrc);
     *fshId = compile(GL_FRAGMENT_SHADER, fshSrc);
-    
+
     // create shader program
     GLuint programId = glCreateProgram();
-    
+
     if (programId == 0) {
         OG_LOGERR("Shader", "could not create shader program");
         return 0;
     }
-    
+
     glAttachShader(programId, *vshId);   // add the vertex shader to program
     glAttachShader(programId, *fshId);   // add the fragment shader to program
-    
+
     // Bind attribute locations
     // this needs to be done prior to linking
-    for(int i = 0; i < attributes.size(); i++)
-    {
+    for(int i = 0; i < attributes.size(); i++) {
         glBindAttribLocation(programId, attributes[i].first, attributes[i].second);
     }
-    
+
     glLinkProgram(programId);   // link both shaders to a full program
-    
+
     // check link status
     GLint linkStatus;
     glGetProgramiv(programId, GL_LINK_STATUS, &linkStatus);
@@ -81,12 +79,12 @@ Shader::create(const char *vshSrc, const char *fshSrc, GLuint *vshId, GLuint *fs
         GLsizei infoLogLen;
         glGetProgramInfoLog(programId, 1024, &infoLogLen, infoLogBuf);
         cerr << infoLogBuf << endl << endl;
-        
+
         glDeleteProgram(programId);
-        
+
         return 0;
     }
-    
+
     return programId;
 }
 

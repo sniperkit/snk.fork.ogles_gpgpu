@@ -1,15 +1,13 @@
 //
 // ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 //
-// Author: Markus Konrad <post@mkonrad.net>, Winter 2014/2015
-//         David Hirvonen <dhirvonen@elucideye.com>
-// http://www.mkonrad.net
-//
 // See LICENSE file in project repository root for the license.
 //
 
+// Copyright (c) 2016-2017, David Hirvonen (this file)
+
 /**
- * GPGPU transform processor.
+ * GPGPU pyramid processor.
  */
 #ifndef OGLES_GPGPU_COMMON_PROC_PYRAMID
 #define OGLES_GPGPU_COMMON_PROC_PYRAMID
@@ -32,7 +30,7 @@ public:
      * Constructor for pyramid.
      */
     PyramidProc(int levels = 4);
-    
+
     /**
      * Constructor for multiscale.
      */
@@ -42,11 +40,13 @@ public:
      * Render a flat pyramid
      */
     virtual int render(int position=0);
-    
+
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() { return "PyramidProc"; }
+    virtual const char *getProcName() {
+        return "PyramidProc";
+    }
 
     /**
      *
@@ -57,27 +57,27 @@ public:
      * Preset output scales
      */
     void setScales(const std::vector<Size2d> &scales);
-    
+
     /**
      * Set the # of pyramid levels.
      */
     void setLevels(int levels);
-    
+
     /**
      * Get level crops.
      */
     const std::vector<Rect2d> & getLevelCrops() const;
-    
+
 private:
-    
+
     virtual void setOutputSize(float scaleFactor);
 
     std::vector<Size2d> m_scales;
-    
+
     int m_levels = 4;
-    
+
     std::vector<Rect2d> m_crops;
-    
+
 };
 }
 

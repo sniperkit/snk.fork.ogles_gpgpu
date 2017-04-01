@@ -1,12 +1,10 @@
 //
 // ogles_gpgpu project - GPGPU for mobile devices and embedded systems using OpenGL ES 2.0
 //
-// Author: Markus Konrad <post@mkonrad.net>, Winter 2014/2015
-//         David Hirvonen <dhirvonen@elucideye.com>
-// http://www.mkonrad.net
-//
 // See LICENSE file in project repository root for the license.
 //
+
+// Copyright (c) 2016-2017, David Hirvonen (this file)
 
 /**
  * GPGPU transform processor.
@@ -25,22 +23,23 @@ namespace ogles_gpgpu {
  */
 class TransformProc : public FilterProcBase {
 public:
-    
-    enum Interpolation
-    {
+
+    enum Interpolation {
         BILINEAR,
         BICUBIC
     };
-    
+
     /**
      * Constructor.
      */
     TransformProc();
-    
+
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() { return "TransformProc"; }
+    virtual const char *getProcName() {
+        return "TransformProc";
+    }
 
     /**
      * Get the fragment shader source.
@@ -51,12 +50,12 @@ public:
      * Get the vertex shader source.
      */
     virtual const char *getVertexShaderSource();
-    
+
     /**
      * Set additional uniforms.
      */
     virtual void setUniforms();
-    
+
     /**
      * Get uniform indices.
      */
@@ -65,34 +64,40 @@ public:
     /**
      * Get the transformation matrix.
      */
-    const Mat44f & getTransformMatrix() const { return transformMatrix; }
+    const Mat44f & getTransformMatrix() const {
+        return transformMatrix;
+    }
 
     /**
      * Set the transformation matrix.
      */
     void setTransformMatrix(const Mat44f & matrix);
-    
+
     /**
      * Set interpolation mode.
      */
-    void setInterpolation(Interpolation kind) { interpolation = kind; }
-    
+    void setInterpolation(Interpolation kind) {
+        interpolation = kind;
+    }
+
     /**
      * Get interpolation mode.
      */
-    Interpolation getInterpolation() const { return interpolation; }
- 
+    Interpolation getInterpolation() const {
+        return interpolation;
+    }
+
 protected:
-    
+
     static const char *vshaderTransformSrc;   // fragment shader source
     static const char *fshaderTransformSrc;   // fragment shader source
     static const char *fshaderTransformBicubicSrc; // bicubic shader
-    
+
     Interpolation interpolation = BILINEAR;
-    
+
     GLint shParamUTransform;        // shader uniform transformation matrix
     Mat44f transformMatrix;         // currently set weighted channel grayscale conversion vector
-    
+
     GLint shParamUTransformSize=0;  // texture size (for bicubic warp)
 };
 }

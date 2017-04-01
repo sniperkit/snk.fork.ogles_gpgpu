@@ -7,6 +7,8 @@
 // See LICENSE file in project repository root for the license.
 //
 
+// Copyright (c) 2016-2017, David Hirvonen (this file)
+
 /**
  * GPGPU simple thresholding processor.
  */
