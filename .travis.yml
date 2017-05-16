@@ -8,33 +8,32 @@ language:
 sudo:
   - false
 
+dist:
+  - trusty
+
 # Install packages differs for container-based infrastructure
 # * https://docs.travis-ci.com/user/migrating-from-legacy/#How-do-I-install-APT-sources-and-packages%3F
-# * http://stackoverflow.com/a/30925448/2288008
 addons:
   apt:
-    sources:
-      - ubuntu-toolchain-r-test
     packages:
-      - python3
+      # For Qt
+      - libegl1-mesa-dev
 
-      # python3-pip package is not available, use 'easy_install3':
-      # * https://github.com/travis-ci/apt-package-whitelist/issues/768
-      - python3-setuptools # easy_install3
+      # xorg-macros: https://github.com/BlueDragonX/xf86-input-mtrack/issues/27#issuecomment-186871891
+      - xutils-dev
 
-      # https://github.com/travis-ci-tester/travis-test-clang-cxx-11
-      - libstdc++-4.8-dev
-
-      # https://github.com/travis-ci-tester/travis-test-gcc-cxx-11
-      - g++-4.8
+      # Packages for Android development: http://superuser.com/a/360398/252568
+      - libncurses5:i386
+      - libstdc++6:i386
+      - zlib1g:i386
   
 matrix:
   include:
     # Linux {
     - os: linux
-      env: CONFIG=Release TOOLCHAIN=gcc-4-8-pic-hid-sections INSTALL=--strip
+      env: CONFIG=Release TOOLCHAIN=gcc-pic-hid-sections INSTALL=
     # - os: linux
-    #   env: CONFIG=Debug TOOLCHAIN=gcc-4-8-pic-hid-sections INSTALL=--strip
+    #   env: CONFIG=Debug TOOLCHAIN=gcc-pic-hid-sections INSTALL=--strip
     - os: linux
       env: CONFIG=Release TOOLCHAIN=android-ndk-r10e-api-19-armeabi-v7a-neon-hid-sections INSTALL=--strip
     # - os: linux
@@ -76,7 +75,7 @@ install:
   # Install Python package 'requests'
   # 'easy_install3' is not installed by 'brew install python3' on OS X 10.9 Maverick
   - if [[ "`uname`" == "Darwin" ]]; then pip3 install requests; fi
-  - if [[ "`uname`" == "Linux" ]]; then travis_retry easy_install3 --user requests==2.10.0; fi  
+  - if [[ "`uname`" == "Linux" ]]; then travis_retry pip3 install --user requests; fi  
 
   # Install latest Polly toolchains and scripts
   - wget https://github.com/ruslo/polly/archive/master.zip
@@ -94,7 +93,17 @@ install:
   - export ANDROID_NDK_r10e="`pwd`/_ci/android-ndk-r10e"
 
 script:
-    - polly.py --toolchain ${TOOLCHAIN} --config ${CONFIG} --verbose --fwd HUNTER_CONFIGURATION_TYPES=${CONFIG} --discard 10 --tail 100
+  
+  - >
+    polly.py
+    --toolchain ${TOOLCHAIN}
+    --config ${CONFIG}
+    --verbose
+    --fwd HUNTER_CONFIGURATION_TYPES=${CONFIG}
+    OGLES_GPGPU_BUILD_TESTS=ON
+    --test
+    --discard 10
+    --tail 100
 
 branches:
   except:

@@ -14,12 +14,11 @@ using namespace std;
 using namespace ogles_gpgpu;
 
 // *INDENT-OFF*
-const char *Disp::fshaderDispSrc = OG_TO_STR(
-
+const char *Disp::fshaderDispSrc =
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
 varying vec2 vTexCoord;
 uniform sampler2D uInputTex;
 void main()

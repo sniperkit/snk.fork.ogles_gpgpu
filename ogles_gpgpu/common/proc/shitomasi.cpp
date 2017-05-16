@@ -12,15 +12,13 @@
 using namespace std;
 using namespace ogles_gpgpu;
 
-
-
 // *INDENT-OFF*
-const char *ShiTomasiProc::fshaderShiTomasiSrc = OG_TO_STR(
+const char *ShiTomasiProc::fshaderShiTomasiSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
 varying vec2 textureCoordinate;
 
 uniform sampler2D inputImageTexture;

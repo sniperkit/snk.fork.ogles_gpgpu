@@ -30,12 +30,12 @@ void main()
 // *INDENT-ON*
 
 // *INDENT-OFF*
-const char *TransformProc::fshaderTransformSrc = OG_TO_STR(
+const char *TransformProc::fshaderTransformSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
 varying vec2 vTexCoord;
 uniform sampler2D uInputTex;
 void main()
@@ -46,13 +46,13 @@ void main()
 // *INDENT-ON*
 
 // *INDENT-OFF*
-const char *TransformProc::fshaderTransformBicubicSrc = OG_TO_STR(
+const char *TransformProc::fshaderTransformBicubicSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
-vec4 cubic(OGLES_GPGPU_HIGHP float v)
+OG_TO_STR(
+vec4 cubic(float v)
 {
     vec4 n = vec4(1.0, 2.0, 3.0, 4.0) - v;
     vec4 s = n * n * n;
@@ -64,7 +64,7 @@ vec4 cubic(OGLES_GPGPU_HIGHP float v)
     return result;
 }
 
-vec4 textureBicubic(sampler2D sampler, OGLES_GPGPU_HIGHP vec2 texCoords, OGLES_GPGPU_HIGHP vec2 texSize)
+vec4 textureBicubic(sampler2D sampler, vec2 texCoords, vec2 texSize)
 {
     vec2 invTexSize = 1.0 / texSize;
 

@@ -12,12 +12,11 @@
 using namespace ogles_gpgpu;
 
 // *INDENT-OFF*
-const char *Fir3Proc::fshaderFir3Src = OG_TO_STR
-(
+const char *Fir3Proc::fshaderFir3Src =
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
 
  uniform sampler2D inputImageTexture;
@@ -37,12 +36,11 @@ const char *Fir3Proc::fshaderFir3Src = OG_TO_STR
      gl_FragColor = vec4(response * alpha + beta, 1.0);
  });
 
-const char *Fir3Proc::fshaderFir3RGBSrc = OG_TO_STR
-(
+const char *Fir3Proc::fshaderFir3RGBSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
 
  uniform sampler2D inputImageTexture;

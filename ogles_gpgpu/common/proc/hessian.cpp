@@ -41,12 +41,12 @@ using namespace ogles_gpgpu;
 // Source: GPUImageXYDerivativeFilter.m
 
 // *INDENT-OFF*
-const char *HessianProc::fshaderHessianAndDeterminantSrc = OG_TO_STR(
+const char *HessianProc::fshaderHessianAndDeterminantSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
 varying vec2 textureCoordinate;
 varying vec2 leftTextureCoordinate;
 varying vec2 rightTextureCoordinate;
@@ -105,12 +105,12 @@ void main()
 // *INDENT-ON*
 
 // *INDENT-OFF*
-const char *HessianProc::fshaderDeterminantSrc = OG_TO_STR(
+const char *HessianProc::fshaderDeterminantSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+ OG_TO_STR(precision highp float;)
 #endif
-
+ OG_TO_STR(
  varying vec2 textureCoordinate;
  varying vec2 leftTextureCoordinate;
  varying vec2 rightTextureCoordinate;

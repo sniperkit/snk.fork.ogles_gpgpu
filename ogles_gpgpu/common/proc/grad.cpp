@@ -13,12 +13,11 @@ using namespace std;
 using namespace ogles_gpgpu;
 
 // *INDENT-OFF*
-const char *GradProc::fshaderGradSrc = OG_TO_STR
-(
+const char *GradProc::fshaderGradSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
  varying vec2 leftTextureCoordinate;
  varying vec2 rightTextureCoordinate;

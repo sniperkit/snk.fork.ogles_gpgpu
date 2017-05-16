@@ -27,11 +27,11 @@ const char *RemapProc::vshaderRemapSrc = OG_TO_STR
 // *INDENT-ON*
 
 // *INDENT-OFF*
-const char *RemapProc::fshaderRemapSrc = OG_TO_STR
-(
+const char *RemapProc::fshaderRemapSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
+OG_TO_STR(    
  varying vec2 textureCoordinate;
  uniform sampler2D inputImageTexture;  // IMAGE
  uniform sampler2D inputImageTexture2; // FLOW

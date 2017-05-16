@@ -15,12 +15,12 @@ using namespace ogles_gpgpu;
 // Source: GPUImageXYDerivativeFilter.m
 
 // *INDENT-OFF*
-const char *TensorProc::fshaderTensorSrc = OG_TO_STR(
+const char *TensorProc::fshaderTensorSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
 varying vec2 textureCoordinate;
 varying vec2 leftTextureCoordinate;
 varying vec2 rightTextureCoordinate;

@@ -3,10 +3,12 @@
 
 cmake_minimum_required(VERSION 3.0)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/modules")
+
 include("cmake/HunterGate.cmake")
 HunterGate(
-  URL "https://github.com/ruslo/hunter/archive/v0.18.29.tar.gz"
-  SHA1 "ebea5d2fa4aa70de1234b05c4bf1b69705abb1ba"
+  URL "https://github.com/ruslo/hunter/archive/v0.18.55.tar.gz"
+  SHA1 "0dcfb305e43e492bec485b7404827b3b5dd4d2e6"
   LOCAL
   )
 
@@ -35,40 +37,34 @@ option(OGLES_GPGPU_INSTALL "Perform installation" ON)
 option(OGLES_GPGPU_VERBOSE "Perform per filter logging" OFF)
 
 ## #################################################################
-## Dependencies - OpenGL stuff
-## #################################################################
-
-if(MSVC)
-  hunter_add_package(glew)
-  find_package(glew CONFIG REQUIRED)
-endif()
-
-## #################################################################
 ## Testing: 
 ## #################################################################
 
-if(NOT (IOS OR ANDROID OR MSVC))
+# Tests can be compiled for all platforms (to tests exe linking),
+# but they may only be run on platforms where an OpenGL context
+# is available
   
-  option(OGLES_GPGPU_BUILD_TESTS "Build shader unit tests" OFF)  
-  if(OGLES_GPGPU_BUILD_TESTS)
+option(OGLES_GPGPU_BUILD_TESTS "Build shader unit tests" OFF)
+if(OGLES_GPGPU_BUILD_TESTS)
 
-    enable_testing()    
+  enable_testing()    
 
-    hunter_add_package(GTest)
-    find_package(GTest CONFIG REQUIRED)
-    list(APPEND OGLES_GPGPU_TEST_LIBS GTest::gtest)
+  hunter_add_package(GTest)
+  find_package(GTest CONFIG REQUIRED)
+  list(APPEND OGLES_GPGPU_TEST_LIBS GTest::gtest)
 
-    # Include glfw for lightweight hidden window opengl context:
-    # Alternatives: boost or glm for iOS and Android
+  # Include glfw for lightweight hidden window opengl context:
+  # Alternatives: boost or glm for iOS and Android
+  if(NOT (IOS OR ANDROID))
     hunter_add_package(glfw)
     find_package(glfw3 REQUIRED)
     list(APPEND OGLES_GPGPU_TEST_LIBS glfw)
-    
-    hunter_add_package(OpenCV)
-    find_package(OpenCV REQUIRED)
-    list(APPEND OGLES_GPGPU_TEST_LIBS "${OpenCV_LIBS}")
-    
+    set(ogles_gpgpug_has_glfw TRUE)
   endif()
+  
+  hunter_add_package(OpenCV)
+  find_package(OpenCV REQUIRED)
+  list(APPEND OGLES_GPGPU_TEST_LIBS "${OpenCV_LIBS}")
 endif()
 
 ## #################################################################

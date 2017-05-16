@@ -18,12 +18,12 @@ using namespace ogles_gpgpu;
 // Requires a grayscale image as input!
 
 // *INDENT-OFF*
-const char *AdaptThreshProcPass::fshaderAdaptThreshPass1Src = OG_TO_STR(
+const char *AdaptThreshProcPass::fshaderAdaptThreshPass1Src = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
 varying vec2 vTexCoord;
 uniform vec2 uPxD;
 uniform sampler2D uInputTex;
@@ -49,12 +49,12 @@ void main() {
 // the final binarization
 
 // *INDENT-OFF*
-const char *AdaptThreshProcPass::fshaderAdaptThreshPass2Src = OG_TO_STR(
+const char *AdaptThreshProcPass::fshaderAdaptThreshPass2Src = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
 varying vec2 vTexCoord;
 uniform vec2 uPxD;
 uniform sampler2D uInputTex;

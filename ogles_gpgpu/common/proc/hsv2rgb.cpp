@@ -12,12 +12,11 @@
 
 BEGIN_OGLES_GPGPU
 // *INDENT-OFF*
-const char * Hsv2RgbProc::fshaderHsv2RgbSrc = OG_TO_STR
-(
+const char * Hsv2RgbProc::fshaderHsv2RgbSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
   vec3 hsv2rgb(vec3 c)
   {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -27,7 +26,6 @@ const char * Hsv2RgbProc::fshaderHsv2RgbSrc = OG_TO_STR
 
  varying vec2 vTexCoord;
  uniform sampler2D uInputTex;
- uniform float gain;
  void main()
  {
      vec4 val = texture2D(uInputTex, vTexCoord);

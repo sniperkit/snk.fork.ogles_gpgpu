@@ -17,8 +17,7 @@ using namespace ogles_gpgpu;
 // #### 7 tap filters ####
 
 // *INDENT-OFF*
-const char *GaussProcPass::vshaderGauss7Src = OG_TO_STR
-(
+const char *GaussProcPass::vshaderGauss7Src = OG_TO_STR(
  attribute vec4 position;
  attribute vec4 inputTextureCoordinate;
 
@@ -52,12 +51,11 @@ const char *GaussProcPass::vshaderGauss7Src = OG_TO_STR
 // *INDENT-ON*
 
 // *INDENT-OFF*
-const char *GaussProcPass::fshaderGauss7Src = OG_TO_STR
-(
+const char *GaussProcPass::fshaderGauss7Src = 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
  uniform sampler2D inputImageTexture;
 
  varying vec2 textureCoordinateN3;
@@ -92,12 +90,11 @@ void main()
 // 1/64 = 0.015625
 
 // *INDENT-OFF*
-const char *GaussProcPass::fshaderGauss7SrcR = OG_TO_STR
-(
+const char *GaussProcPass::fshaderGauss7SrcR =
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
  uniform sampler2D inputImageTexture;
 
  varying vec2 textureCoordinateN3;
@@ -127,8 +124,7 @@ void main()
 // #### 5 tap filters ####
 
 // *INDENT-OFF*
-const char *GaussProcPass::vshaderGauss5Src = OG_TO_STR
-(
+const char *GaussProcPass::vshaderGauss5Src = OG_TO_STR(
  attribute vec4 position;
  attribute vec4 inputTextureCoordinate;
 
@@ -158,13 +154,12 @@ const char *GaussProcPass::vshaderGauss5Src = OG_TO_STR
 // *INDENT-ON*
 
 // *INDENT-OFF*
-const char *GaussProcPass::fshaderGauss5Src = OG_TO_STR
-(
+const char *GaussProcPass::fshaderGauss5Src = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+ OG_TO_STR(precision highp float;)
 #endif
-
+ OG_TO_STR(
  uniform sampler2D inputImageTexture;
 
  varying vec2 textureCoordinateN2;
@@ -194,12 +189,11 @@ const char *GaussProcPass::fshaderGauss5Src = OG_TO_STR
 // 1/16 = 0.0625
 
 // *INDENT-OFF*
-const char *GaussProcPass::fshaderGauss5SrcR = OG_TO_STR
-(
+const char *GaussProcPass::fshaderGauss5SrcR = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
  uniform sampler2D inputImageTexture;
 
  varying vec2 textureCoordinateN2;

@@ -53,11 +53,11 @@ BEGIN_OGLES_GPGPU
 MedianProc::MedianProc() : Filter3x3Proc() {}
 
 // *INDENT-OFF*
-const char *MedianProc::fshaderMedianSrc = OG_TO_STR
-(
+const char *MedianProc::fshaderMedianSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
+OG_TO_STR(
 
  varying vec2 textureCoordinate;
  varying vec2 leftTextureCoordinate;
@@ -76,7 +76,6 @@ const char *MedianProc::fshaderMedianSrc = OG_TO_STR
 #define s2(a, b)				temp = a; a = min(a, b); b = max(temp, b);
 #define mn3(a, b, c)			s2(a, b); s2(a, c);
 #define mx3(a, b, c)			s2(b, c); s2(a, c);
-
 #define mnmx3(a, b, c)			mx3(a, b, c); s2(a, b);                                   // 3 exchanges
 #define mnmx4(a, b, c, d)		s2(a, b); s2(c, d); s2(a, c); s2(b, d);                   // 4 exchanges
 #define mnmx5(a, b, c, d, e)	s2(a, b); s2(c, d); mn3(a, c, e); mx3(b, d, e);           // 6 exchanges
@@ -85,15 +84,12 @@ const char *MedianProc::fshaderMedianSrc = OG_TO_STR
  void main()
  {
      vec3 v[6];
-
      v[0] = texture2D(inputImageTexture, bottomLeftTextureCoordinate).rgb;
      v[1] = texture2D(inputImageTexture, topRightTextureCoordinate).rgb;
      v[2] = texture2D(inputImageTexture, topLeftTextureCoordinate).rgb;
      v[3] = texture2D(inputImageTexture, bottomRightTextureCoordinate).rgb;
      v[4] = texture2D(inputImageTexture, leftTextureCoordinate).rgb;
      v[5] = texture2D(inputImageTexture, rightTextureCoordinate).rgb;
-//     v[6] = texture2D(inputImageTexture, bottomTextureCoordinate).rgb;
-//     v[7] = texture2D(inputImageTexture, topTextureCoordinate).rgb;
      vec3 temp;
 
      mnmx6(v[0], v[1], v[2], v[3], v[4], v[5]);

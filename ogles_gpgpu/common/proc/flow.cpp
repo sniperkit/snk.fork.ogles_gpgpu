@@ -100,12 +100,11 @@ void FlowProc::setUniforms() {
 // -------------
 
 // *INDENT-OFF*
-const char *FlowProc::fshaderFlowSrc = OG_TO_STR
-(
+const char *FlowProc::fshaderFlowSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
  uniform sampler2D inputImageTexture;
 
@@ -249,12 +248,11 @@ void FlowImplProc::setUniforms() {
 }
 
 // *INDENT-OFF*
-const char * FlowImplProc::fshaderFlowXSrc = OG_TO_STR
-(
+const char * FlowImplProc::fshaderFlowXSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
  uniform sampler2D inputImageTexture;
  uniform float strength;
@@ -270,12 +268,11 @@ const char * FlowImplProc::fshaderFlowXSrc = OG_TO_STR
 // *INDENT-ON*
 
 // *INDENT-OFF*
-const char *FlowImplProc::fshaderFlowYSrc = OG_TO_STR
-(
+const char *FlowImplProc::fshaderFlowYSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
  uniform sampler2D inputImageTexture;
  uniform float strength;
@@ -317,12 +314,11 @@ void Flow2Proc::setUniforms() {
 }
 
 // *INDENT-OFF*
-const char *Flow2Proc::fshaderFlowSrc = OG_TO_STR
-(
+const char *Flow2Proc::fshaderFlowSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
  uniform sampler2D inputImageTexture;
  uniform sampler2D inputImageTexture2;

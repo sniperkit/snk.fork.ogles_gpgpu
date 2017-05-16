@@ -15,13 +15,13 @@ using namespace ogles_gpgpu;
 // Try Harris:
 
 // *INDENT-OFF*
-const char *HarrisProc::fshaderHarrisSrc = OG_TO_STR(
+const char *HarrisProc::fshaderHarrisSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
-varying OGLES_GPGPU_HIGHP vec2 textureCoordinate;
+OG_TO_STR(
+varying vec2 textureCoordinate;
 
 uniform sampler2D inputImageTexture;
 uniform float sensitivity;
