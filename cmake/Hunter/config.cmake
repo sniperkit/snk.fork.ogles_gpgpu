@@ -1,4 +1,4 @@
-=set(OPENCV_CMAKE_ARGS
+set(OPENCV_CMAKE_ARGS
 
   BUILD_opencv_imgcodecs=ON  
   BUILD_opencv_imgproc=ON
