@@ -30,12 +30,13 @@ const GLfloat GrayscaleProc::grayscaleConvVecNone[3] = {
 };
 
 // *INDENT-OFF*
-const char *GrayscaleProc::fshaderGrayscaleSrc = OG_TO_STR(
+const char *GrayscaleProc::fshaderGrayscaleSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
 
+OG_TO_STR(
 uniform sampler2D uInputTex;
 uniform vec3 uInputConvVec;
 varying vec2 vTexCoord;
@@ -49,12 +50,13 @@ void main()
 // *INDENT-ON*
 
 // *INDENT-OFF*
-const char *GrayscaleProc::fshaderNoopSrc = OG_TO_STR(
+const char *GrayscaleProc::fshaderNoopSrc =
 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
 
+OG_TO_STR(
  varying vec2 vTexCoord;
  uniform sampler2D uInputTex;
  void main()

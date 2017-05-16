@@ -11,15 +11,15 @@
 
 using namespace ogles_gpgpu;
 
-const char *LocalNormPass::fshaderLocalNormPass1Src = OG_TO_STR
-        (
+// *INDENT-OFF*
+const char *LocalNormPass::fshaderLocalNormPass1Src = 
 #if defined(OGLES_GPGPU_OPENGLES)
-            precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
-            uniform sampler2D uInputTex;
-            uniform float uPxD;
-            varying vec2 vTexCoord;
+OG_TO_STR(
+uniform sampler2D uInputTex;
+uniform float uPxD;
+varying vec2 vTexCoord;
 // 7x1 Gauss kernel
 void main() {
     vec4 pxC  = texture2D(uInputTex, vTexCoord);
@@ -33,17 +33,18 @@ void main() {
 
     gl_FragColor = vec4(pxC.rgb, val); // {r,g,b,r_mean}
 });
+// *INDENT-ON*
 
-const char *LocalNormPass::fshaderLocalNormPass2Src = OG_TO_STR
-        (
+// *INDENT-OFF*
+const char *LocalNormPass::fshaderLocalNormPass2Src =
 #if defined(OGLES_GPGPU_OPENGLES)
-            precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
-            uniform sampler2D uInputTex;
-            uniform float uPxD;
-            uniform float normConst;
-            varying vec2 vTexCoord;
+OG_TO_STR(
+uniform sampler2D uInputTex;
+uniform float uPxD;
+uniform float normConst;
+varying vec2 vTexCoord;
 // 7x1 Gauss kernel
 void main() {
     vec4 pxC  = texture2D(uInputTex, vTexCoord);
@@ -59,6 +60,7 @@ void main() {
 
     gl_FragColor = vec4(clamp(0.5 * rNorm, 0.0, 1.0), pxC.g, pxC.r, val); // {r_norm,g,r,r_mean}
 });
+// *INDENT-ON*
 
 int LocalNormPass::init(int inW, int inH, unsigned int order, bool prepareForExternalInput) {
     OG_LOGINF(getProcName(), "render pass %d", renderPass);

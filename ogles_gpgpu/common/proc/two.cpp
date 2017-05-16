@@ -13,12 +13,12 @@ using namespace std;
 using namespace ogles_gpgpu;
 
 // *INDENT-OFF*
-const char *TwoInputProc::vshaderTwoInputSrc = OG_TO_STR(
+const char *TwoInputProc::vshaderTwoInputSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
  attribute vec4 position;
  attribute vec4 inputTextureCoordinate;
 
@@ -32,12 +32,12 @@ precision mediump float;
 // *INDENT-ON*
 
 // *INDENT-OFF*
-const char *TwoInputProc::fshaderTwoInputSrc = OG_TO_STR(
+const char *TwoInputProc::fshaderTwoInputSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
 
  uniform sampler2D inputImageTexture;

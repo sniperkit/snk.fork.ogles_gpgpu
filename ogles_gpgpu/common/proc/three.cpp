@@ -12,12 +12,12 @@ using namespace std;
 using namespace ogles_gpgpu;
 
 // *INDENT-OFF*
-const char *ThreeInputProc::vshaderThreeInputSrc = OG_TO_STR(
+const char *ThreeInputProc::vshaderThreeInputSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
  attribute vec4 position;
  attribute vec4 inputTextureCoordinate;
 
@@ -29,12 +29,12 @@ precision mediump float;
      textureCoordinate = inputTextureCoordinate.xy;
  });
 
-const char *ThreeInputProc::fshaderThreeInputSrc = OG_TO_STR(
+const char *ThreeInputProc::fshaderThreeInputSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
 
  uniform sampler2D inputImageTexture;

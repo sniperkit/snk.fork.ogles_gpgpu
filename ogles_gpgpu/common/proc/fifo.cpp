@@ -35,11 +35,11 @@ private:
 };
 
 // *INDENT-OFF*
-const char * NoopProc::fshaderNoopSrc = OG_TO_STR
-(
+const char * NoopProc::fshaderNoopSrc =
 #if defined(OGLES_GPGPU_OPENGLES)
- precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
+OG_TO_STR( 
  varying vec2 vTexCoord;
  uniform sampler2D uInputTex;
  uniform float gain;

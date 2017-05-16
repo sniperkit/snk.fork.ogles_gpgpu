@@ -33,9 +33,7 @@ public:
     /**
      * Set the gain coefficient.
      */
-    void setGain(float value) {
-        gain = value;
-    }
+    void setGain(float value);
 
 private:
 
@@ -49,16 +47,12 @@ private:
     /**
      * Get shader uniform id.
      */
-    virtual void getUniforms() {
-        shParamUGain = shader->getParam(UNIF, "gain");
-    }
+    virtual void getUniforms();
 
     /**
      * Set shader uniform values.
      */
-    virtual void setUniforms() {
-        glUniform1f(shParamUGain, gain);
-    }
+    virtual void setUniforms();
 
     static const char *fshaderGainSrc; // fragment shader source
     float gain = 1.f;

@@ -15,12 +15,11 @@ using namespace std;
 using namespace ogles_gpgpu;
 
 // *INDENT-OFF*
-const char *NmsProc::fshaderNmsSrc = OG_TO_STR
-(
+const char *NmsProc::fshaderNmsSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision OGLES_GPGPU_HIGHP float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  uniform sampler2D inputImageTexture;
 
  varying vec2 textureCoordinate;

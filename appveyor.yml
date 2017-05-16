@@ -50,7 +50,7 @@ install:
   - cmd: set MSYS_PATH=C:\msys64\usr\bin    
 
 build_script:
-  - cmd: python %POLLY_SOURCE_DIR%\bin\polly.py --toolchain "%TOOLCHAIN%" --config "%CONFIG%" --verbose --test
+  - cmd: python %POLLY_SOURCE_DIR%\bin\polly.py --toolchain "%TOOLCHAIN%" --config "%CONFIG%" --verbose --fwd OGLES_GPGPU_BUILD_TESTS=ON
   
 branches:
   except:

@@ -53,76 +53,80 @@ void setColorConversion709( GLfloat conversionMatrix[9] ) {
 }
 
 // *INDENT-OFF*
-const char *kGPUImageYUVVideoRangeConversionForRGFragmentShaderString = OG_TO_STR(
+const char *kGPUImageYUVVideoRangeConversionForRGFragmentShaderString = 
 
-#if defined(OGLES_GPGPU_OPENGLES)
-  precision mediump float;
-#endif
-
- varying OGLES_GPGPU_HIGHP vec2 vTexCoord;
+//#if defined(OGLES_GPGPU_OPENGLES)
+//OG_TO_STR(precision mediump float;)
+//#endif
+OG_TO_STR(
+          
+ precision mediump float;
+          
+ varying vec2 vTexCoord;
 
  uniform sampler2D luminanceTexture;
  uniform sampler2D chrominanceTexture;
- uniform OGLES_GPGPU_MEDIUMP mat3 colorConversionMatrix;
+ uniform mat3 colorConversionMatrix;
 
  void main()
  {
-     OGLES_GPGPU_MEDIUMP vec3 yuv;
-     OGLES_GPGPU_LOWP vec3 rgb;
+     vec3 yuv;
+     vec3 rgb;
 
      yuv.x = texture2D(luminanceTexture, vTexCoord).r;
      yuv.yz = texture2D(chrominanceTexture, vTexCoord).rg - vec2(0.5, 0.5);
      rgb = colorConversionMatrix * yuv;
 
      gl_FragColor = vec4(rgb, 1);
- }
-);
+ });
 // *INDENT-ON*
 
 // *INDENT-OFF*
 const char *kGPUImageYUVFullRangeConversionForLAFragmentShaderString = OG_TO_STR(
-
- varying OGLES_GPGPU_HIGHP vec2 vTexCoord;
+                        
+ precision mediump float;
+                                                                                 
+ varying vec2 vTexCoord;
 
  uniform sampler2D luminanceTexture;
  uniform sampler2D chrominanceTexture;
- uniform OGLES_GPGPU_MEDIUMP mat3 colorConversionMatrix;
+ uniform mat3 colorConversionMatrix;
 
  void main()
  {
-     OGLES_GPGPU_MEDIUMP vec3 yuv;
-     OGLES_GPGPU_LOWP vec3 rgb;
+     vec3 yuv;
+     vec3 rgb;
 
      yuv.x = texture2D(luminanceTexture, vTexCoord).r;
      yuv.yz = texture2D(chrominanceTexture, vTexCoord).ra - vec2(0.5, 0.5);
      rgb = colorConversionMatrix * yuv;
 
      gl_FragColor = vec4(rgb, 1);
- }
-);
+ });
 // *INDENT-ON*
 
 // *INDENT-OFF*
 const char *kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = OG_TO_STR(
 
- varying OGLES_GPGPU_HIGHP vec2 vTexCoord;
+ precision mediump float;
+                                                                                  
+ varying vec2 vTexCoord;
 
  uniform sampler2D luminanceTexture;
  uniform sampler2D chrominanceTexture;
- uniform OGLES_GPGPU_MEDIUMP mat3 colorConversionMatrix;
+ uniform mat3 colorConversionMatrix;
 
  void main()
  {
-     OGLES_GPGPU_MEDIUMP vec3 yuv;
-     OGLES_GPGPU_LOWP vec3 rgb;
+     vec3 yuv;
+     vec3 rgb;
 
      yuv.x = texture2D(luminanceTexture, vTexCoord).r - (16.0/255.0);
      yuv.yz = texture2D(chrominanceTexture, vTexCoord).ra - vec2(0.5, 0.5);
      rgb = colorConversionMatrix * yuv;
 
      gl_FragColor = vec4(rgb, 1);
- }
-);
+ });
 // *INDENT-ON*
 
 // =================================================================================
