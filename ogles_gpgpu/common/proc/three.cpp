@@ -51,13 +51,12 @@ OG_TO_STR(
 // clang-format on
 
 ThreeInputProc::ThreeInputProc() {
-
 }
 
 int ThreeInputProc::render(int position) {
     int result = 1;
 
-    switch(position) {
+    switch (position) {
     case 0:
         hasTex1 = true;
         break;
@@ -71,7 +70,7 @@ int ThreeInputProc::render(int position) {
         assert(false);
     }
 
-    if((hasTex1 || !waitForFirstTexture) && (hasTex2 || !waitForSecondTexture) && (hasTex3 || !waitForThirdTexture)) {
+    if ((hasTex1 || !waitForFirstTexture) && (hasTex2 || !waitForSecondTexture) && (hasTex3 || !waitForThirdTexture)) {
         result = FilterProcBase::render(position);
         hasTex1 = hasTex2 = hasTex3 = false;
     }
@@ -83,7 +82,7 @@ int ThreeInputProc::render(int position) {
  */
 
 void ThreeInputProc::useTexture(GLuint id, GLuint useTexUnit, GLenum target, int position) {
-    switch(position) {
+    switch (position) {
     case 0:
         FilterProcBase::useTexture(id, useTexUnit, target, position);
         break;
@@ -136,7 +135,7 @@ void ThreeInputProc::filterRenderPrepare() {
     glUniform1i(shParamUInputTex3, texUnit3);
 }
 
-void ThreeInputProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void ThreeInputProc::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     // create shader object
     FilterProcBase::createShader(vShaderSrc, fShaderSrc, target);
 
@@ -158,5 +157,3 @@ void ThreeInputProc::getUniforms() {
 void ThreeInputProc::setUniforms() {
     FilterProcBase::setUniforms();
 }
-
-

@@ -23,7 +23,7 @@ Shader::~Shader() {
     }
 }
 
-bool Shader::buildFromSrc(const char *vshSrc, const char *fshSrc, const std::vector<Attribute> &attributes) {
+bool Shader::buildFromSrc(const char* vshSrc, const char* fshSrc, const std::vector<Attribute>& attributes) {
     programId = create(vshSrc, fshSrc, &vshId, &fshId, attributes);
 
     return (programId > 0);
@@ -33,11 +33,9 @@ void Shader::use() {
     glUseProgram(programId);
 }
 
-GLint Shader::getParam(ShaderParamType type, const char *name) const {
+GLint Shader::getParam(ShaderParamType type, const char* name) const {
     // get position according to type and name
-    GLint id = (type == ATTR) ?
-               glGetAttribLocation(programId, name) :
-               glGetUniformLocation(programId, name);
+    GLint id = (type == ATTR) ? glGetAttribLocation(programId, name) : glGetUniformLocation(programId, name);
 
     if (id < 0) {
         OG_LOGERR("Shader", "could not get parameter id for param %s", name);
@@ -47,7 +45,7 @@ GLint Shader::getParam(ShaderParamType type, const char *name) const {
 }
 
 GLuint
-Shader::create(const char *vshSrc, const char *fshSrc, GLuint *vshId, GLuint *fshId, const Attributes &attributes) {
+Shader::create(const char* vshSrc, const char* fshSrc, GLuint* vshId, GLuint* fshId, const Attributes& attributes) {
     *vshId = compile(GL_VERTEX_SHADER, vshSrc);
     *fshId = compile(GL_FRAGMENT_SHADER, fshSrc);
 
@@ -59,16 +57,16 @@ Shader::create(const char *vshSrc, const char *fshSrc, GLuint *vshId, GLuint *fs
         return 0;
     }
 
-    glAttachShader(programId, *vshId);   // add the vertex shader to program
-    glAttachShader(programId, *fshId);   // add the fragment shader to program
+    glAttachShader(programId, *vshId); // add the vertex shader to program
+    glAttachShader(programId, *fshId); // add the fragment shader to program
 
     // Bind attribute locations
     // this needs to be done prior to linking
-    for(int i = 0; i < attributes.size(); i++) {
+    for (int i = 0; i < attributes.size(); i++) {
         glBindAttribLocation(programId, attributes[i].first, attributes[i].second);
     }
 
-    glLinkProgram(programId);   // link both shaders to a full program
+    glLinkProgram(programId); // link both shaders to a full program
 
     // check link status
     GLint linkStatus;
@@ -78,7 +76,8 @@ Shader::create(const char *vshSrc, const char *fshSrc, GLuint *vshId, GLuint *fs
         GLchar infoLogBuf[1024];
         GLsizei infoLogLen;
         glGetProgramInfoLog(programId, 1024, &infoLogLen, infoLogBuf);
-        cerr << infoLogBuf << endl << endl;
+        cerr << infoLogBuf << endl
+             << endl;
 
         glDeleteProgram(programId);
 
@@ -88,7 +87,7 @@ Shader::create(const char *vshSrc, const char *fshSrc, GLuint *vshId, GLuint *fs
     return programId;
 }
 
-GLuint Shader::compile(GLenum type, const char *src) {
+GLuint Shader::compile(GLenum type, const char* src) {
     // create a shader
     GLuint shId = glCreateShader(type);
 
@@ -112,9 +111,11 @@ GLuint Shader::compile(GLenum type, const char *src) {
         GLchar infoLogBuf[1024];
         GLsizei infoLogLen;
         glGetShaderInfoLog(shId, 1024, &infoLogLen, infoLogBuf);
-        cerr << infoLogBuf << endl << endl;
+        cerr << infoLogBuf << endl
+             << endl;
         OG_LOGERR("Shader", "could not compile shader program. shader source:");
-        cerr << src << endl << endl;
+        cerr << src << endl
+             << endl;
 
         glDeleteShader(shId);
 

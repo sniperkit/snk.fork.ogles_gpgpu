@@ -7,8 +7,8 @@
 // See LICENSE file in project repository root for the license.
 //
 
-#include "../common_includes.h"
 #include "disp.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
@@ -44,7 +44,7 @@ int Disp::render(int position) {
     OG_LOGINF(getProcName(), "input tex %d, target %d, framebuffer of size %dx%d", texId, texTarget, outFrameW, outFrameH);
 
     filterRenderPrepare();
-    glViewport(0, 0, outFrameW*resolutionX, outFrameH*resolutionY); // override
+    glViewport(0, 0, outFrameW * resolutionX, outFrameH * resolutionY); // override
     Tools::checkGLErr(getProcName(), "render prepare");
 
     filterRenderSetCoords();

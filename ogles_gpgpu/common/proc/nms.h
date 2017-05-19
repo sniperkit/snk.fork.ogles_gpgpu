@@ -29,7 +29,7 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "NmsProc";
     }
 
@@ -47,14 +47,13 @@ public:
         return threshold;
     }
 
-    void swizzle(int channelIn, int channelOut=-1);
+    void swizzle(int channelIn, int channelOut = -1);
 
 private:
-
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return fshaderNmsSwizzleSrc.empty() ? fshaderNmsSrc : fshaderNmsSwizzleSrc.c_str();
     }
 
@@ -68,7 +67,7 @@ private:
      */
     virtual void setUniforms();
 
-    static const char *fshaderNmsSrc;   // fragment shader source
+    static const char* fshaderNmsSrc; // fragment shader source
 
     std::string fshaderNmsSwizzleSrc;
 

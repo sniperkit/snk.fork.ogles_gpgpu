@@ -23,9 +23,9 @@
 namespace ogles_gpgpu {
 class GaussProc : public MultiPassProc {
 public:
-    GaussProc(GaussProcPass::KernelSize kernel=GaussProcPass::k5Tap, bool doR=false) {
-        GaussProcPass *gaussPass1 = new GaussProcPass(1, kernel, doR);
-        GaussProcPass *gaussPass2 = new GaussProcPass(2, kernel, doR);
+    GaussProc(GaussProcPass::KernelSize kernel = GaussProcPass::k5Tap, bool doR = false) {
+        GaussProcPass* gaussPass1 = new GaussProcPass(1, kernel, doR);
+        GaussProcPass* gaussPass2 = new GaussProcPass(2, kernel, doR);
 
         procPasses.push_back(gaussPass1);
         procPasses.push_back(gaussPass2);
@@ -34,7 +34,7 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "GaussProc";
     }
 };

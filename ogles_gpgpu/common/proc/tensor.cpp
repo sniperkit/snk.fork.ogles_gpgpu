@@ -6,8 +6,8 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "tensor.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
@@ -67,7 +67,6 @@ void main()
 // clang-format on
 
 TensorProc::TensorProc() {
-
 }
 
 void TensorProc::setUniforms() {
@@ -80,4 +79,3 @@ void TensorProc::getUniforms() {
     shParamUInputTex = shader->getParam(UNIF, "inputImageTexture");
     shParamUEdgeStrength = shader->getParam(UNIF, "edgeStrength");
 }
-

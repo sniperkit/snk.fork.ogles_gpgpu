@@ -14,13 +14,17 @@
 #define OG_TO_STR(x) OG_TO_STR_(x)
 
 #if defined(OGLES_GPGPU_VERBOSE)
-#  define OG_LOGINF(class_tag, fmt, ...) \
-	do { fprintf(stderr, "ogles_gpgpu::%s - %s:%d:%s(): " fmt "\n", class_tag, __FILE__, __LINE__, __func__, ##__VA_ARGS__); } while (0)
+#define OG_LOGINF(class_tag, fmt, ...)                                                                                      \
+    do {                                                                                                                    \
+        fprintf(stderr, "ogles_gpgpu::%s - %s:%d:%s(): " fmt "\n", class_tag, __FILE__, __LINE__, __func__, ##__VA_ARGS__); \
+    } while (0)
 #else
-#  define OG_LOGINF(class_tag, fmt, ...)
+#define OG_LOGINF(class_tag, fmt, ...)
 #endif
 
-#define OG_LOGERR(class_tag, fmt, ...) \
-	do { fprintf(stderr, "ogles_gpgpu::%s - %s:%d:%s(): " fmt "\n", class_tag, __FILE__, __LINE__, __func__, ##__VA_ARGS__); } while (0)
+#define OG_LOGERR(class_tag, fmt, ...)                                                                                      \
+    do {                                                                                                                    \
+        fprintf(stderr, "ogles_gpgpu::%s - %s:%d:%s(): " fmt "\n", class_tag, __FILE__, __LINE__, __func__, ##__VA_ARGS__); \
+    } while (0)
 
 #endif

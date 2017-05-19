@@ -7,9 +7,8 @@
 // See LICENSE file in project repository root for the license.
 //
 
-
-#include "../../common_includes.h"
 #include "adapt_thresh_pass.h"
+#include "../../common_includes.h"
 
 using namespace ogles_gpgpu;
 
@@ -92,7 +91,7 @@ int AdaptThreshProcPass::init(int inW, int inH, unsigned int order, bool prepare
     pxDy = 1.0f / (float)outFrameH;
 
     // get necessary fragment shader source
-    const char *shSrc = renderPass == 1 ? fshaderAdaptThreshPass1Src : fshaderAdaptThreshPass2Src;
+    const char* shSrc = renderPass == 1 ? fshaderAdaptThreshPass1Src : fshaderAdaptThreshPass2Src;
 
     // FilterProcBase init - create shaders, get shader params, set buffers for OpenGL
     filterInit(vshaderDefault, shSrc, RenderOrientationDiagonal);
@@ -107,7 +106,7 @@ void AdaptThreshProcPass::createFBOTex(bool genMipmap) {
     assert(fbo);
 
     if (renderPass == 1) {
-        fbo->createAttachedTex(outFrameH, outFrameW, genMipmap);   // swapped
+        fbo->createAttachedTex(outFrameH, outFrameW, genMipmap); // swapped
     } else {
         fbo->createAttachedTex(outFrameW, outFrameH, genMipmap);
     }
@@ -122,7 +121,7 @@ int AdaptThreshProcPass::render(int position) {
 
     filterRenderPrepare();
 
-    glUniform2f(shParamUPxD, pxDx, pxDy);	// texture pixel delta values
+    glUniform2f(shParamUPxD, pxDx, pxDy); // texture pixel delta values
 
     Tools::checkGLErr(getProcName(), "render prepare");
 

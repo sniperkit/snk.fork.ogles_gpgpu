@@ -6,8 +6,8 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "harris.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
@@ -42,12 +42,10 @@ void main()
 // clang-format on
 
 HarrisProc::HarrisProc() {
-
 }
 
-
 // TODO: We need to override this if we are using the GPUImage shaders
-void HarrisProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void HarrisProc::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     // create shader object
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
 
@@ -60,10 +58,10 @@ void HarrisProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSr
 void HarrisProc::getUniforms() {
     FilterProcBase::getUniforms();
     shParamUInputTex = shader->getParam(UNIF, "inputImageTexture");
-    shParamUInputSensitivity =  shader->getParam(UNIF, "sensitivity");
+    shParamUInputSensitivity = shader->getParam(UNIF, "sensitivity");
 }
 
 void HarrisProc::setUniforms() {
     FilterProcBase::setUniforms();
-    glUniform1f (shParamUInputSensitivity, sensitivity);   // set additional uniforms
+    glUniform1f(shParamUInputSensitivity, sensitivity); // set additional uniforms
 }

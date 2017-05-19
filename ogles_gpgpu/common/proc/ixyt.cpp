@@ -6,8 +6,8 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "ixyt.h"
+#include "../common_includes.h"
 
 using namespace ogles_gpgpu;
 
@@ -20,8 +20,8 @@ void IxytProc::getUniforms() {
 
 void IxytProc::setUniforms() {
     TwoInputProc::setUniforms();
-    glUniform1f(texelWidthUniform, (1.0f/ float(outFrameW)));
-    glUniform1f(texelHeightUniform, (1.0f/ float(outFrameH)));
+    glUniform1f(texelWidthUniform, (1.0f / float(outFrameW)));
+    glUniform1f(texelHeightUniform, (1.0f / float(outFrameH)));
     glUniform1f(shParamUStrength, strength);
 }
 

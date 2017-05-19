@@ -25,7 +25,6 @@ namespace ogles_gpgpu {
  */
 class Disp : public FilterProcBase {
 public:
-
     /**
      * Output resolution of display.
      *
@@ -40,7 +39,7 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "Disp";
     }
 
@@ -65,33 +64,31 @@ public:
     /**
      * Not implemented - no output is returned because Disp renders on screen.
      */
-    virtual void getResultData(unsigned char *data) const {
+    virtual void getResultData(unsigned char* data) const {
         assert(false);
     }
 
     /**
      * Not implemented - no output is returned because Disp renders on screen.
      */
-    virtual void getResultData(FrameDelegate &frameDelegate) const {
+    virtual void getResultData(FrameDelegate& frameDelegate) const {
         assert(false);
     }
 
     /**
      * Not implemented - no MemTransferObj for output is set because Disp renders on screen.
      */
-    virtual MemTransfer *getMemTransferObj() const {
+    virtual MemTransfer* getMemTransferObj() const {
         assert(false);
         return NULL;
     }
 
 private:
-
     float resolutionX = 1.f;
     float resolutionY = 1.f;
 
-    static const char *fshaderDispSrc;         // fragment shader source
+    static const char* fshaderDispSrc; // fragment shader source
 };
-
 }
 
 #endif

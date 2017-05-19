@@ -9,8 +9,8 @@
 
 // Modifications: Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../../common_includes.h"
 #include "gauss_pass.h"
+#include "../../common_includes.h"
 
 using namespace ogles_gpgpu;
 
@@ -216,7 +216,7 @@ OG_TO_STR(
 });
 // clang-format on
 
-void GaussProcPass::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void GaussProcPass::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     // create shader object
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
 
@@ -246,8 +246,8 @@ void GaussProcPass::getUniforms() {
     shParamUInputTex = shader->getParam(UNIF, "inputImageTexture");
 }
 
-const char *GaussProcPass::getFragmentShaderSource() {
-    switch(kernel) {
+const char* GaussProcPass::getFragmentShaderSource() {
+    switch (kernel) {
     case k5Tap:
         return doR ? fshaderGauss5SrcR : fshaderGauss5Src;
     case k7Tap:
@@ -257,8 +257,8 @@ const char *GaussProcPass::getFragmentShaderSource() {
     }
 }
 
-const char *GaussProcPass::getVertexShaderSource() {
-    switch(kernel) {
+const char* GaussProcPass::getVertexShaderSource() {
+    switch (kernel) {
     case k5Tap:
         return vshaderGauss5Src;
     case k7Tap:

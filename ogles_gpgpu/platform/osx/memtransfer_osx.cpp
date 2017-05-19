@@ -81,29 +81,29 @@ void MemTransferOSX::init() {
 
     CFDictionaryRef empty;
     empty = CFDictionaryCreate(kCFAllocatorDefault, // our empty OSXurface properties dictionary
-                               NULL,
-                               NULL,
-                               0,
-                               &kCFTypeDictionaryKeyCallBacks,
-                               &kCFTypeDictionaryValueCallBacks);
+        NULL,
+        NULL,
+        0,
+        &kCFTypeDictionaryKeyCallBacks,
+        &kCFTypeDictionaryValueCallBacks);
     bufferAttr = CFDictionaryCreateMutable(kCFAllocatorDefault,
-                                           1,
-                                           &kCFTypeDictionaryKeyCallBacks,
-                                           &kCFTypeDictionaryValueCallBacks);
+        1,
+        &kCFTypeDictionaryKeyCallBacks,
+        &kCFTypeDictionaryValueCallBacks);
 
     CFDictionarySetValue(bufferAttr, kCVPixelBufferIOSurfacePropertiesKey, empty);
 
     // create texture cache
-    CGLContextObj glCtxPtr = (CGLContextObj) Core::getInstance()->getGLContextPtr();
+    CGLContextObj glCtxPtr = (CGLContextObj)Core::getInstance()->getGLContextPtr();
     OG_LOGINF("MemTransferOSX", "OpenGL ES context at %p", glCtxPtr);
 
     assert(glCtxPtr);
-    CVReturn res = CVOpenGLTextureCacheCreate((CFAllocatorRef) kCFAllocatorDefault,
-                   (CFDictionaryRef) NULL,
-                   (CGLContextObj) glCtxPtr,
-                   CGLGetPixelFormat(glCtxPtr),
-                   (CFDictionaryRef) NULL,
-                   &textureCache);
+    CVReturn res = CVOpenGLTextureCacheCreate((CFAllocatorRef)kCFAllocatorDefault,
+        (CFDictionaryRef)NULL,
+        (CGLContextObj)glCtxPtr,
+        CGLGetPixelFormat(glCtxPtr),
+        (CFDictionaryRef)NULL,
+        &textureCache);
 
     if (res != kCVReturnSuccess) {
         OG_LOGERR("MemTransferOSX", "CVOpenGLTextureCacheCreate error %d", res);
@@ -113,14 +113,14 @@ void MemTransferOSX::init() {
     MemTransfer::init();
 }
 
-GLuint MemTransferOSX::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat, void *inputDataPtr) {
+GLuint MemTransferOSX::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat, void* inputDataPtr) {
     assert(initialized && inTexW > 0 && inTexH > 0);
 
     if (inputDataPtr == NULL && inputW == inTexW && inputH == inTexH && inputPixelFormat == inputPxFormat) {
         return inputTexId; // no change
     }
 
-    if (preparedInput) {    // already prepared -- release buffers!
+    if (preparedInput) { // already prepared -- release buffers!
         releaseInput();
     }
 
@@ -147,11 +147,11 @@ GLuint MemTransferOSX::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat
     // create input pixel buffer if necessary
     if (!bufRef) {
         res = CVPixelBufferCreate(kCFAllocatorDefault,
-                                  inputW,
-                                  inputH,
-                                  pxBufFmt,
-                                  bufferAttr,
-                                  &bufRef);
+            inputW,
+            inputH,
+            pxBufFmt,
+            bufferAttr,
+            &bufRef);
 
         if (res != kCVReturnSuccess) {
             OG_LOGERR("MemTransferOSX", "CVPixelBufferCreate error %d (input)", res);
@@ -167,10 +167,10 @@ GLuint MemTransferOSX::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat
     // create input texture
     //error = CVOpenGLTextureCacheCreateTextureFromImage(kCFAllocatorDefault, textureCache, renderTarget, NULL, &renderTexture);
     res = CVOpenGLTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
-            textureCache,
-            bufRef,
-            NULL, // texture attributes
-            &texRef);
+        textureCache,
+        bufRef,
+        NULL, // texture attributes
+        &texRef);
 
     if (res != kCVReturnSuccess) {
         OG_LOGERR("MemTransferOSX", "CVOpenGLTextureCacheCreateTextureFromImage error %d (input)", res);
@@ -190,7 +190,7 @@ GLuint MemTransferOSX::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat
 
     // set member variables
     if (inputDataPtr == NULL) {
-        inputPixelBuffer = bufRef;  // only necessary if we did not specify our own pixel buffer via <inputDataPtr>
+        inputPixelBuffer = bufRef; // only necessary if we did not specify our own pixel buffer via <inputDataPtr>
     }
     inputTexture = texRef;
     preparedInput = true;
@@ -205,7 +205,7 @@ GLuint MemTransferOSX::prepareOutput(int outTexW, int outTexH) {
         return outputTexId; // no change
     }
 
-    if (preparedOutput) {    // already prepared -- release buffers!
+    if (preparedOutput) { // already prepared -- release buffers!
         releaseOutput();
     }
 
@@ -220,10 +220,10 @@ GLuint MemTransferOSX::prepareOutput(int outTexW, int outTexH) {
 
     // create output pixel buffer
     res = CVPixelBufferCreate(kCFAllocatorDefault,
-                              outputW, outputH,
-                              kCVPixelFormatType_32BGRA,    // !
-                              bufferAttr,
-                              &bufRef);
+        outputW, outputH,
+        kCVPixelFormatType_32BGRA, // !
+        bufferAttr,
+        &bufRef);
 
     if (res != kCVReturnSuccess) {
         OG_LOGERR("MemTransferOSX", "CVPixelBufferCreate error %d (output)", res);
@@ -235,10 +235,10 @@ GLuint MemTransferOSX::prepareOutput(int outTexW, int outTexH) {
 
     // create output texture
     res = CVOpenGLTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
-            textureCache,
-            bufRef,
-            NULL, // texture attributes
-            &texRef);
+        textureCache,
+        bufRef,
+        NULL, // texture attributes
+        &texRef);
 
     if (res != kCVReturnSuccess) {
         OG_LOGERR("MemTransferOSX", "CVOpenGLTextureCacheCreateTextureFromImage error %d (output)", res);
@@ -264,11 +264,11 @@ GLuint MemTransferOSX::prepareOutput(int outTexW, int outTexH) {
     return outputTexId;
 }
 
-void MemTransferOSX::toGPU(const unsigned char *buf) {
+void MemTransferOSX::toGPU(const unsigned char* buf) {
     assert(preparedInput && inputPixelBuffer && inputTexId > 0 && buf);
 
     // copy data to pixel buffer
-    void *pixelBufferAddr = lockBufferAndGetPtr(BUF_TYPE_INPUT);
+    void* pixelBufferAddr = lockBufferAndGetPtr(BUF_TYPE_INPUT);
     memcpy(pixelBufferAddr, buf, inputPixelBufferSize);
     unlockBuffer(BUF_TYPE_INPUT);
 
@@ -276,20 +276,20 @@ void MemTransferOSX::toGPU(const unsigned char *buf) {
     glBindTexture(GL_TEXTURE_2D, inputTexId);
 }
 
-void MemTransferOSX::fromGPU(unsigned char *buf) {
+void MemTransferOSX::fromGPU(unsigned char* buf) {
     assert(preparedOutput && outputPixelBuffer && outputTexId > 0 && buf);
 
     // bind the texture
     glBindTexture(GL_TEXTURE_2D, outputTexId);
 
-    const void *pixelBufferAddr = lockBufferAndGetPtr(BUF_TYPE_OUTPUT);
+    const void* pixelBufferAddr = lockBufferAndGetPtr(BUF_TYPE_OUTPUT);
     memcpy(buf, pixelBufferAddr, outputPixelBufferSize);
     unlockBuffer(BUF_TYPE_OUTPUT);
 }
 
 #pragma mark private methods
 
-void *MemTransferOSX::lockBufferAndGetPtr(BufType bufType) {
+void* MemTransferOSX::lockBufferAndGetPtr(BufType bufType) {
     // get the buffer reference and lock options
     CVPixelBufferRef buf;
     CVOptionFlags lockOpt;
@@ -321,10 +321,10 @@ void MemTransferOSX::unlockBuffer(BufType bufType) {
     }
 }
 
-void MemTransferOSX::getPixelBufferAndLockFlags(BufType bufType, CVPixelBufferRef *buf, CVOptionFlags *lockOpt) {
+void MemTransferOSX::getPixelBufferAndLockFlags(BufType bufType, CVPixelBufferRef* buf, CVOptionFlags* lockOpt) {
     if (bufType == BUF_TYPE_INPUT) {
         *buf = inputPixelBuffer;
-        *lockOpt = 0;                           // read and write
+        *lockOpt = 0; // read and write
     } else {
         *buf = outputPixelBuffer;
         *lockOpt = kCVPixelBufferLock_ReadOnly; // read only

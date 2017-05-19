@@ -7,18 +7,18 @@
 // Original: https://github.com/BradLarson/GPUImage/blob/master/framework/Source/GPUImageGaussianBlurFilter.m
 // Adapted: Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../../common_includes.h"
 #include "gauss_opt_pass.h"
+#include "../../common_includes.h"
 
 #include <cmath>
 
 using namespace ogles_gpgpu;
 
-void getOptimizedGaussian(int blurRadius, float sigma, std::vector<GLfloat> &weights, std::vector<GLfloat> &offsets) {
+void getOptimizedGaussian(int blurRadius, float sigma, std::vector<GLfloat>& weights, std::vector<GLfloat>& offsets) {
     std::vector<GLfloat> standardGaussianWeights(blurRadius + 1);
     GLfloat sumOfWeights = 0.0;
 
-    GLfloat sigma2 = sigma*sigma;
+    GLfloat sigma2 = sigma * sigma;
     GLfloat norm = (1.0 / std::sqrt(2.0 * M_PI * sigma2));
     for (int currentGaussianWeightIndex = 0; currentGaussianWeightIndex < (blurRadius + 1); currentGaussianWeightIndex++) {
         standardGaussianWeights[currentGaussianWeightIndex] = norm * std::exp(-std::pow(currentGaussianWeightIndex, 2.0) / (2.0 * sigma2));
@@ -39,23 +39,23 @@ void getOptimizedGaussian(int blurRadius, float sigma, std::vector<GLfloat> &wei
 
     std::vector<GLfloat> optimizedGaussianOffsets(numberOfOptimizedOffsets);
     for (int currentOptimizedOffset = 0; currentOptimizedOffset < numberOfOptimizedOffsets; currentOptimizedOffset++) {
-        GLfloat firstWeight = standardGaussianWeights[currentOptimizedOffset*2 + 1];
-        GLfloat secondWeight = standardGaussianWeights[currentOptimizedOffset*2 + 2];
+        GLfloat firstWeight = standardGaussianWeights[currentOptimizedOffset * 2 + 1];
+        GLfloat secondWeight = standardGaussianWeights[currentOptimizedOffset * 2 + 2];
         GLfloat optimizedWeight = firstWeight + secondWeight;
-        optimizedGaussianOffsets[currentOptimizedOffset] = (firstWeight * (currentOptimizedOffset*2 + 1) + secondWeight * (currentOptimizedOffset*2 + 2)) / optimizedWeight;
+        optimizedGaussianOffsets[currentOptimizedOffset] = (firstWeight * (currentOptimizedOffset * 2 + 1) + secondWeight * (currentOptimizedOffset * 2 + 2)) / optimizedWeight;
     }
 
     weights = standardGaussianWeights;
     offsets = optimizedGaussianOffsets;
 }
 
-std::string fragmentShaderForOptimizedBlur(int blurRadius, float sigma, bool doNorm = false, int pass = 1, float normConst=0.005f) {
+std::string fragmentShaderForOptimizedBlur(int blurRadius, float sigma, bool doNorm = false, int pass = 1, float normConst = 0.005f) {
     std::vector<GLfloat> standardGaussianWeights;
     std::vector<GLfloat> optimizedGaussianOffsets;
     getOptimizedGaussian(blurRadius, sigma, standardGaussianWeights, optimizedGaussianOffsets);
 
     // From these weights we calculate the offsets to read interpolated values from
-    int numberOfOptimizedOffsets =  std::min(blurRadius / 2 + (blurRadius % 2), 7);
+    int numberOfOptimizedOffsets = std::min(blurRadius / 2 + (blurRadius % 2), 7);
     int trueNumberOfOptimizedOffsets = blurRadius / 2 + (blurRadius % 2);
 
     std::stringstream ss;
@@ -79,8 +79,8 @@ std::string fragmentShaderForOptimizedBlur(int blurRadius, float sigma, bool doN
         GLfloat optimizedWeight = firstWeight + secondWeight;
         int index1 = (unsigned long)((currentBlurCoordinateIndex * 2) + 1);
         int index2 = (unsigned long)((currentBlurCoordinateIndex * 2) + 2);
-        ss << "   sum += texture2D(inputImageTexture, blurCoordinates[" << index1 << "]) * " << optimizedWeight <<";\n";
-        ss << "   sum += texture2D(inputImageTexture, blurCoordinates[" << index2 << "]) * " << optimizedWeight <<";\n";
+        ss << "   sum += texture2D(inputImageTexture, blurCoordinates[" << index1 << "]) * " << optimizedWeight << ";\n";
+        ss << "   sum += texture2D(inputImageTexture, blurCoordinates[" << index2 << "]) * " << optimizedWeight << ";\n";
     }
 
     // If the number of required samples exceeds the amount we can pass in via varyings, we have to do dependent texture reads in the fragment shader
@@ -98,8 +98,8 @@ std::string fragmentShaderForOptimizedBlur(int blurRadius, float sigma, bool doN
         }
     }
 
-    if(doNorm) {
-        if(pass == 1) {
+    if (doNorm) {
+        if (pass == 1) {
             ss << "   gl_FragColor = vec4(center.rgb, sum.r);\n";
         } else {
             ss << "   gl_FragColor = vec4( center.r/(sum.a + " << std::fixed << normConst << "), center.gb, 1.0);\n";
@@ -125,7 +125,7 @@ std::string vertexShaderForOptimizedBlur(int blurRadius, float sigma) {
     ss << "attribute vec4 inputTextureCoordinate;\n";
     ss << "uniform float texelWidthOffset;\n";
     ss << "uniform float texelHeightOffset;\n\n";
-    ss << "varying vec2 blurCoordinates[" << (unsigned long)(1 + (numberOfOptimizedOffsets * 2)) <<  "];\n\n";
+    ss << "varying vec2 blurCoordinates[" << (unsigned long)(1 + (numberOfOptimizedOffsets * 2)) << "];\n\n";
     ss << "void main()\n";
     ss << "{\n";
     ss << "   gl_Position = position;\n";
@@ -134,7 +134,7 @@ std::string vertexShaderForOptimizedBlur(int blurRadius, float sigma) {
     for (int currentOptimizedOffset = 0; currentOptimizedOffset < numberOfOptimizedOffsets; currentOptimizedOffset++) {
         int x1 = (unsigned long)((currentOptimizedOffset * 2) + 1);
         int x2 = (unsigned long)((currentOptimizedOffset * 2) + 2);
-        const auto &optOffset = optimizedGaussianOffsets[currentOptimizedOffset];
+        const auto& optOffset = optimizedGaussianOffsets[currentOptimizedOffset];
 
         ss << "   blurCoordinates[" << x1 << "] = inputTextureCoordinate.xy + singleStepOffset * " << optOffset << ";\n";
         ss << "   blurCoordinates[" << x2 << "] = inputTextureCoordinate.xy - singleStepOffset * " << optOffset << ";\n";
@@ -144,7 +144,6 @@ std::string vertexShaderForOptimizedBlur(int blurRadius, float sigma) {
     return ss.str();
 }
 
-
 void GaussOptProcPass::setRadius(float newValue) {
     if (round(newValue) != _blurRadiusInPixels) {
         _blurRadiusInPixels = round(newValue); // For now, only do integral sigmas
@@ -152,8 +151,8 @@ void GaussOptProcPass::setRadius(float newValue) {
         int calculatedSampleRadius = 0;
         if (_blurRadiusInPixels >= 1) { // Avoid a divide-by-zero error here
             // Calculate the number of pixels to sample from by setting a bottom limit for the contribution of the outermost pixel
-            float minimumWeightToFindEdgeOfSamplingArea = 1.0/256.0;
-            float radius2 = std::pow(_blurRadiusInPixels, 2.0) ;
+            float minimumWeightToFindEdgeOfSamplingArea = 1.0 / 256.0;
+            float radius2 = std::pow(_blurRadiusInPixels, 2.0);
             calculatedSampleRadius = std::floor(std::sqrt(-2.0 * radius2 * std::log(minimumWeightToFindEdgeOfSamplingArea * std::sqrt(2.0 * M_PI * radius2))));
             calculatedSampleRadius += calculatedSampleRadius % 2; // There's nothing to gain from handling odd radius sizes, due to the optimizations I use
         }
@@ -170,7 +169,7 @@ void GaussOptProcPass::setRadius(float newValue) {
 }
 
 // TODO: We need to override this if we are using the GPUImage shaders
-void GaussOptProcPass::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void GaussOptProcPass::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     // create shader object
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
 
@@ -199,13 +198,10 @@ void GaussOptProcPass::getUniforms() {
     shParamUTexelHeightOffset = shader->getParam(UNIF, "texelHeightOffset");
 }
 
-const char *GaussOptProcPass::getFragmentShaderSource() {
+const char* GaussOptProcPass::getFragmentShaderSource() {
     return fshaderGaussSrc.c_str();
 }
 
-const char *GaussOptProcPass::getVertexShaderSource() {
+const char* GaussOptProcPass::getVertexShaderSource() {
     return vshaderGaussSrc.c_str();
 }
-
-
-

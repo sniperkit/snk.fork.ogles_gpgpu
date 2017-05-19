@@ -39,15 +39,17 @@ public:
     /**
      * Constructor. Set defaults.
      */
-    MemTransferIOS() :  MemTransfer(),
-        bufferAttr(NULL),
-        inputPixelBuffer(NULL),
-        outputPixelBuffer(NULL),
-        inputTexture(NULL),
-        outputTexture(NULL),
-        textureCache(NULL),
-        inputPixelBufferSize(0),
-        outputPixelBufferSize(0) { }
+    MemTransferIOS()
+        : MemTransfer()
+        , bufferAttr(NULL)
+        , inputPixelBuffer(NULL)
+        , outputPixelBuffer(NULL)
+        , inputTexture(NULL)
+        , outputTexture(NULL)
+        , textureCache(NULL)
+        , inputPixelBufferSize(0)
+        , outputPixelBufferSize(0) {
+    }
 
     /**
      * Deconstructor. Release in- and outputs.
@@ -62,7 +64,7 @@ public:
     /**
      * Prepare for input frames of size <inTexW>x<inTexH>. Return a texture id for the input frames.
      */
-    virtual GLuint prepareInput(int inTexW, int inTexH, GLenum inputPxFormat = GL_RGBA, void *inputDataPtr = NULL);
+    virtual GLuint prepareInput(int inTexW, int inTexH, GLenum inputPxFormat = GL_RGBA, void* inputDataPtr = NULL);
 
     /**
      * Prepare for output frames of size <outTexW>x<outTexH>. Return a texture id for the output frames.
@@ -82,12 +84,12 @@ public:
     /**
      * Map data in <buf> to GPU.
      */
-    virtual void toGPU(const unsigned char *buf);
+    virtual void toGPU(const unsigned char* buf);
 
     /**
      * Map data from GPU to <buf>
      */
-    virtual void fromGPU(unsigned char *buf);
+    virtual void fromGPU(unsigned char* buf);
 
     /**
      * Inidcates whether or not this MemTransfer implementation
@@ -100,7 +102,7 @@ public:
     /**
      * Apply callback to FBO texture.
      */
-    virtual void fromGPU(FrameDelegate &delegate);
+    virtual void fromGPU(FrameDelegate& delegate);
 
     /**
      * Get bytes per row in underlying FBO.
@@ -112,7 +114,7 @@ public:
      * The input buffer will be locked for reading AND writing, while the
      * output buffer will be locked for reading only.
      */
-    virtual void *lockBufferAndGetPtr(BufType bufType);
+    virtual void* lockBufferAndGetPtr(BufType bufType);
 
     /**
      * Unlock the input or output buffer.
@@ -123,27 +125,25 @@ private:
     /**
      * Sets <buf> and <lockOpt> to the necessary pointers/values according to <bufType>.
      */
-    void getPixelBufferAndLockFlags(BufType bufType, CVPixelBufferRef *buf, CVOptionFlags *lockOpt);
+    void getPixelBufferAndLockFlags(BufType bufType, CVPixelBufferRef* buf, CVOptionFlags* lockOpt);
 
+    CFMutableDictionaryRef bufferAttr; // buffer attributes
 
-    CFMutableDictionaryRef bufferAttr;  // buffer attributes
-
-    CVPixelBufferRef inputPixelBuffer;  // input pixel buffer
+    CVPixelBufferRef inputPixelBuffer; // input pixel buffer
     CVPixelBufferRef outputPixelBuffer; // output pixel buffer
 
     CVOpenGLESTextureRef lumaTexture = 0;
     CVOpenGLESTextureRef chromaTexture = 0;
 
-    CVOpenGLESTextureRef inputTexture = 0;  // input texture reference
+    CVOpenGLESTextureRef inputTexture = 0; // input texture reference
     CVOpenGLESTextureRef outputTexture = 0; // output texture reference
 
     CVOpenGLESTextureCacheRef textureCache; // common texture cache
 
-    size_t inputPixelBufferSize;    // input pixel buffer size in bytes
-    size_t outputPixelBufferSize;   // output pixel buffer size in bytes
+    size_t inputPixelBufferSize; // input pixel buffer size in bytes
+    size_t outputPixelBufferSize; // output pixel buffer size in bytes
 
     std::shared_ptr<Yuv2RgbProc> yuv2rgb;
 };
-
 }
 #endif

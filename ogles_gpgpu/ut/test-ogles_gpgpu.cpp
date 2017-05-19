@@ -1,11 +1,15 @@
+// clang-format off
 #if defined(_WIN32) || defined(_WIN64)
 #  include <windows.h> // CMakeLists.txt defines NOMINMAX
 #  include <gl/glew.h>
 #endif
+// clang-format on
 
+// clang-format off
 #if defined(OGLES_GPGPU_HAS_GLFW)
 #  include <GLFW/glfw3.h>
 #endif
+// clang-format on
 
 #include <gtest/gtest.h>
 
@@ -14,14 +18,17 @@
 #include <opencv2/highgui.hpp>
 
 // NOTE: GL_BGRA is absent in Android NDK
+// clang-format off
 #ifdef ANDROID
 #  define TEXTURE_FORMAT GL_RGBA
 #else
 #  define TEXTURE_FORMAT GL_BGRA
 #endif
+// clang-format off
 
 #include "../common/gl/memtransfer_optimized.h"
 
+// clang-format off
 #include "../common/proc/yuv2rgb.h"      // [0]
 #include "../common/proc/lnorm.h"        // [0]
 #include "../common/proc/video.h"        // [0]
@@ -54,6 +61,7 @@
 #include "../common/proc/rgb2hsv.h"      // [0]
 #include "../common/proc/hsv2rgb.h"      // [0]
 #include "../common/proc/remap.h"        // [ ] (needs work)
+// clang-format on
 
 // virtual (tested indirectly)
 //#include "../common/proc/filter3x3.h"
@@ -63,37 +71,37 @@
 // NA:
 //#include "../common/proc/disp.h"
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
     auto code = RUN_ALL_TESTS();
-	return code;
+    return code;
 }
 
 // Provide skeleton context when !defined(OGLES_GPGPU_HAS_GLFW)
 // This supports end-to-end link tests.
 struct GLFWContext {
     GLFWContext() {
-#if defined(OGLES_GPGPU_HAS_GLFW)        
+#if defined(OGLES_GPGPU_HAS_GLFW)
         // initialize glfw context
         glfwInit();
 
-		//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-		//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-		//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
+        //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+        //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+        //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
 
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         context = glfwCreateWindow(640, 480, "", NULL, NULL);
         glfwMakeContextCurrent(context);
 #if defined(_WIN32) || defined(_WIN64)
-		int code = glewInit();
+        int code = glewInit();
 #endif
         glActiveTexture(GL_TEXTURE0);
 #endif
     }
 
     operator bool() const {
-#if defined(OGLES_GPGPU_HAS_GLFW)                
+#if defined(OGLES_GPGPU_HAS_GLFW)
         return (context != nullptr);
 #else
         return false;
@@ -101,19 +109,19 @@ struct GLFWContext {
     }
 
     ~GLFWContext() {
-#if defined(OGLES_GPGPU_HAS_GLFW)             
+#if defined(OGLES_GPGPU_HAS_GLFW)
         glfwDestroyWindow(context);
         glfwTerminate();
 #endif
     }
 
-#if defined(OGLES_GPGPU_HAS_GLFW)     
-    GLFWwindow *context = nullptr;
+#if defined(OGLES_GPGPU_HAS_GLFW)
+    GLFWwindow* context = nullptr;
 #endif
 };
 
 struct GLTexture {
-    GLTexture(std::size_t width, std::size_t height, GLenum texType, void *data) {
+    GLTexture(std::size_t width, std::size_t height, GLenum texType, void* data) {
         glGenTextures(1, &texId);
         glBindTexture(GL_TEXTURE_2D, texId);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -136,9 +144,9 @@ struct GLTexture {
     GLuint texId;
 };
 
-static cv::Mat getImage(ogles_gpgpu::ProcInterface &proc, cv::Mat &frame) {
-    if(dynamic_cast<ogles_gpgpu::MemTransferOptimized*>(proc.getMemTransferObj())) {
-        ogles_gpgpu::MemTransfer::FrameDelegate delegate = [&](const ogles_gpgpu::Size2d &size, const void *pixels, size_t bytesPerRow) {
+static cv::Mat getImage(ogles_gpgpu::ProcInterface& proc, cv::Mat& frame) {
+    if (dynamic_cast<ogles_gpgpu::MemTransferOptimized*>(proc.getMemTransferObj())) {
+        ogles_gpgpu::MemTransfer::FrameDelegate delegate = [&](const ogles_gpgpu::Size2d& size, const void* pixels, size_t bytesPerRow) {
             frame = cv::Mat(size.height, size.width, CV_8UC4, (void*)pixels, bytesPerRow).clone();
         };
         proc.getResultData(delegate);
@@ -152,12 +160,12 @@ static cv::Mat getImage(ogles_gpgpu::ProcInterface &proc, cv::Mat &frame) {
 static cv::Mat getTestImage(int width, int height, int stripe, bool alpha) {
     // Create a test image:
     cv::Mat test(480, 640, CV_8UC3, cv::Scalar::all(0));
-    cv::Point center(test.cols/2, test.rows/2);
-    for(int i = test.cols/2; i > 0; i -= stripe) {
-        cv::circle(test, center, i, cv::Scalar(rand()%255, rand()%255, rand()%255), -1, 8);
+    cv::Point center(test.cols / 2, test.rows / 2);
+    for (int i = test.cols / 2; i > 0; i -= stripe) {
+        cv::circle(test, center, i, cv::Scalar(rand() % 255, rand() % 255, rand() % 255), -1, 8);
     }
 
-    if(alpha) {
+    if (alpha) {
         cv::cvtColor(test, test, cv::COLOR_BGR2BGRA); // add alpha
     }
     return test;
@@ -172,46 +180,46 @@ static cv::Mat getTestImage(int width, int height, int stripe, bool alpha) {
 // > could not compile shader program.  error log:
 // > 0:1(380): preprocessor error: syntax error, unexpected HASH_TOKEN
 TEST(OGLESGPGPUTest, MedianProc) {
-	GLFWContext context;
+    GLFWContext context;
     ASSERT_TRUE(context);
-	if (context) {
-		cv::Mat test = getTestImage(480, 640, 20, true);
+    if (context) {
+        cv::Mat test = getTestImage(480, 640, 20, true);
 
-		glActiveTexture(GL_TEXTURE0);
-		ogles_gpgpu::VideoSource video;
-		ogles_gpgpu::MedianProc median;
+        glActiveTexture(GL_TEXTURE0);
+        ogles_gpgpu::VideoSource video;
+        ogles_gpgpu::MedianProc median;
 
-		video.set(&median);
+        video.set(&median);
 
-		cv::Mat noise = cv::Mat::zeros(test.rows, test.cols, CV_8UC1);
-		cv::randu(noise, 0, 255);
-		test.setTo(0, noise < 30);
-		test.setTo(255, noise > 225);
+        cv::Mat noise = cv::Mat::zeros(test.rows, test.cols, CV_8UC1);
+        cv::randu(noise, 0, 255);
+        test.setTo(0, noise < 30);
+        test.setTo(255, noise > 225);
 
-		video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
-		cv::Mat result;
-		getImage(median, result);
-		ASSERT_FALSE(result.empty());
-	}
+        cv::Mat result;
+        getImage(median, result);
+        ASSERT_FALSE(result.empty());
+    }
 }
 #endif
 
 TEST(OGLESGPGPUTest, Yuv2RgbProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         static const int width = 640, height = 480;
 
-        cv::Mat green(1, 1, CV_8UC3, cv::Scalar(0,255,0)), yuv;
+        cv::Mat green(1, 1, CV_8UC3, cv::Scalar(0, 255, 0)), yuv;
         cv::cvtColor(green, yuv, cv::COLOR_BGR2YUV);
-        cv::Vec3b &value = yuv.at<cv::Vec3b>(0,0);
+        cv::Vec3b& value = yuv.at<cv::Vec3b>(0, 0);
 
         // Create constant color buffers:
-        std::vector<std::uint8_t> y(width*height, value[0]), uv(width*height/2);
-        for(int i = 0; i < uv.size(); i += 2) {
-            uv[i+0] = value[1];
-            uv[i+1] = value[2];
+        std::vector<std::uint8_t> y(width * height, value[0]), uv(width * height / 2);
+        for (int i = 0; i < uv.size(); i += 2) {
+            uv[i + 0] = value[1];
+            uv[i + 1] = value[2];
         }
 
         // Luminance texture:
@@ -219,7 +227,7 @@ TEST(OGLESGPGPUTest, Yuv2RgbProc) {
         ASSERT_EQ(glGetError(), GL_NO_ERROR);
 
         // Chrominance texture (interleaved):
-        GLTexture chrominanceTexture(width/2, height/2, GL_LUMINANCE_ALPHA, uv.data());
+        GLTexture chrominanceTexture(width / 2, height / 2, GL_LUMINANCE_ALPHA, uv.data());
         ASSERT_EQ(glGetError(), GL_NO_ERROR);
 
         ogles_gpgpu::Yuv2RgbProc yuv2rgb;
@@ -244,14 +252,14 @@ TEST(OGLESGPGPUTest, Yuv2RgbProc) {
 TEST(OGLESGPGPUTest, GrayScaleProc) {
     GLFWContext context;
     ASSERT_TRUE(context);
-    if(context) {
+    if (context) {
         cv::Mat test = getTestImage(640, 480, 10, true);
         glActiveTexture(GL_TEXTURE0);
         ogles_gpgpu::VideoSource video;
         ogles_gpgpu::GrayscaleProc gray;
 
         video.set(&gray);
-        video({{test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT});
+        video({ { test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT });
 
         cv::Mat result;
         getImage(gray, result);
@@ -261,15 +269,15 @@ TEST(OGLESGPGPUTest, GrayScaleProc) {
 
 TEST(OGLESGPGPUTest, AdaptThreshProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(640, 480, 10, true);
         glActiveTexture(GL_TEXTURE0);
         ogles_gpgpu::VideoSource video;
         ogles_gpgpu::AdaptThreshProc thresh;
 
         video.set(&thresh);
-        video({{test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT});
+        video({ { test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT });
 
         cv::Mat result;
         getImage(thresh, result);
@@ -279,17 +287,17 @@ TEST(OGLESGPGPUTest, AdaptThreshProc) {
 
 TEST(OGLESGPGPUTest, GainProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         static const int value = 1, g = 10;
-        cv::Mat test(640, 480, CV_8UC4, cv::Scalar(value,value,value,255));
+        cv::Mat test(640, 480, CV_8UC4, cv::Scalar(value, value, value, 255));
 
         glActiveTexture(GL_TEXTURE0);
         ogles_gpgpu::VideoSource video;
         ogles_gpgpu::GainProc gain(g);
 
         video.set(&gain);
-        video({{test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT});
+        video({ { test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT });
 
         cv::Mat result;
         getImage(gain, result);
@@ -300,11 +308,11 @@ TEST(OGLESGPGPUTest, GainProc) {
 TEST(OGLESGPGPUTest, BlendProc) {
     GLFWContext context;
     ASSERT_TRUE(context);
-    if(context) {
+    if (context) {
         const float alpha = 0.5f;
         const int value = 2;
         const int a = 1, b = 10;
-        cv::Mat test(640, 480, CV_8UC4, cv::Scalar(value,value,value,255));
+        cv::Mat test(640, 480, CV_8UC4, cv::Scalar(value, value, value, 255));
 
         glActiveTexture(GL_TEXTURE0);
         ogles_gpgpu::VideoSource video;
@@ -316,7 +324,7 @@ TEST(OGLESGPGPUTest, BlendProc) {
         gain10.add(&blend, 1);
 
         video.set(&gain1);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(blend, result);
@@ -326,19 +334,19 @@ TEST(OGLESGPGPUTest, BlendProc) {
 
 TEST(OGLESGPGPUTest, FIFOProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         glActiveTexture(GL_TEXTURE0);
         ogles_gpgpu::VideoSource video;
         ogles_gpgpu::FIFOPRoc fifo(3);
         video.set(&fifo);
 
-        for(int i = 0; i<3; i++) {
-            cv::Mat test(640, 480, CV_8UC4, cv::Scalar(i,i,i,255));
-            video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        for (int i = 0; i < 3; i++) {
+            cv::Mat test(640, 480, CV_8UC4, cv::Scalar(i, i, i, 255));
+            video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
         }
 
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             cv::Mat result;
             getImage(*fifo[i], result);
             ASSERT_EQ(cv::mean(result)[0], i);
@@ -348,8 +356,8 @@ TEST(OGLESGPGPUTest, FIFOProc) {
 
 TEST(OGLESGPGPUTest, TransformProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         glActiveTexture(GL_TEXTURE0);
         ogles_gpgpu::VideoSource video;
         ogles_gpgpu::GainProc gain(1.f);
@@ -359,8 +367,8 @@ TEST(OGLESGPGPUTest, TransformProc) {
         gain.add(&transform);
 
         ogles_gpgpu::Mat44f matrix;
-        for(int y = 0; y < 4; y++) {
-            for(int x = 0; x < 4; x++) {
+        for (int y = 0; y < 4; y++) {
+            for (int x = 0; x < 4; x++) {
                 matrix.data[y][x] = 0;
             }
             matrix.data[y][y] = 1.f;
@@ -370,7 +378,7 @@ TEST(OGLESGPGPUTest, TransformProc) {
         transform.setTransformMatrix(matrix);
 
         cv::Mat test = getTestImage(640, 480, 10, true);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(transform, result);
@@ -380,11 +388,11 @@ TEST(OGLESGPGPUTest, TransformProc) {
 
 TEST(OGLESGPGPUTest, DiffProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         const int value = 2;
         const int a = 1, b = 10;
-        cv::Mat test(640, 480, CV_8UC4, cv::Scalar(value,value,value,255));
+        cv::Mat test(640, 480, CV_8UC4, cv::Scalar(value, value, value, 255));
 
         glActiveTexture(GL_TEXTURE0);
         ogles_gpgpu::VideoSource video;
@@ -396,7 +404,7 @@ TEST(OGLESGPGPUTest, DiffProc) {
         gain10.add(&diff, 0);
 
         video.set(&gain1);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(diff, result);
@@ -406,8 +414,8 @@ TEST(OGLESGPGPUTest, DiffProc) {
 
 TEST(OGLESGPGPUTest, GaussianProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(640, 480, 1, true);
 
         glActiveTexture(GL_TEXTURE0);
@@ -416,7 +424,7 @@ TEST(OGLESGPGPUTest, GaussianProc) {
 
         video.set(&gauss1);
         gauss1.add(&gauss2);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(gauss2, result);
@@ -426,8 +434,8 @@ TEST(OGLESGPGPUTest, GaussianProc) {
 
 TEST(OGLESGPGPUTest, GaussianOptProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(640, 480, 1, true);
 
         glActiveTexture(GL_TEXTURE0);
@@ -435,7 +443,7 @@ TEST(OGLESGPGPUTest, GaussianOptProc) {
         ogles_gpgpu::GaussOptProc gauss;
 
         video.set(&gauss);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(gauss, result);
@@ -445,8 +453,8 @@ TEST(OGLESGPGPUTest, GaussianOptProc) {
 
 TEST(OGLESGPGPUTest, BoxOptProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(640, 480, 1, true);
 
         glActiveTexture(GL_TEXTURE0);
@@ -454,7 +462,7 @@ TEST(OGLESGPGPUTest, BoxOptProc) {
         ogles_gpgpu::BoxOptProc box;
 
         video.set(&box);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(box, result);
@@ -464,17 +472,17 @@ TEST(OGLESGPGPUTest, BoxOptProc) {
 
 TEST(OGLESGPGPUTest, HessianProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test(480, 640, CV_8UC1, cv::Scalar::all(0));
 
         static const int tic = 20;
-        for(int y = tic; y <= test.rows-tic; y+=tic) {
-            for(int x = tic; x <= test.cols-tic; x+=tic) {
-                cv::circle(test, {x,y}, 1, 255, -1, 8);
+        for (int y = tic; y <= test.rows - tic; y += tic) {
+            for (int x = tic; x <= test.cols - tic; x += tic) {
+                cv::circle(test, { x, y }, 1, 255, -1, 8);
             }
         }
-        cv::GaussianBlur(test, test, {7,7}, 1.0);
+        cv::GaussianBlur(test, test, { 7, 7 }, 1.0);
         cv::cvtColor(test, test, cv::COLOR_GRAY2BGR);
         cv::cvtColor(test, test, cv::COLOR_BGR2BGRA);
 
@@ -483,7 +491,7 @@ TEST(OGLESGPGPUTest, HessianProc) {
         ogles_gpgpu::HessianProc hessian(100.f);
 
         video.set(&hessian);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result, alpha;
         getImage(hessian, result);
@@ -494,8 +502,8 @@ TEST(OGLESGPGPUTest, HessianProc) {
 
 TEST(OGLESGPGPUTest, LbpProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(480, 640, 1, true);
 
         glActiveTexture(GL_TEXTURE0);
@@ -503,7 +511,7 @@ TEST(OGLESGPGPUTest, LbpProc) {
         ogles_gpgpu::LbpProc lbp;
 
         video.set(&lbp);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(lbp, result);
@@ -513,17 +521,17 @@ TEST(OGLESGPGPUTest, LbpProc) {
 
 TEST(OGLESGPGPUTest, Fir3Proc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         const cv::Size size(640, 480);
-        const cv::Point center(size.width/2, size.height/2);
-        const float radius = size.height/2;
+        const cv::Point center(size.width / 2, size.height / 2);
+        const float radius = size.height / 2;
 
         std::vector<cv::Mat> test(3);
-        std::vector<int> values { 64, 128, 64 };
+        std::vector<int> values{ 64, 128, 64 };
 
-        for(int i = 0; i < 3; i++) {
-            auto &value = values[i];
+        for (int i = 0; i < 3; i++) {
+            auto& value = values[i];
             cv::Mat canvas(size, CV_8UC3, cv::Scalar(value, value, value, 255));
             cv::circle(canvas, center, radius, values[i], -1, 4);
             cv::cvtColor(canvas, canvas, cv::COLOR_BGR2BGRA);
@@ -537,7 +545,7 @@ TEST(OGLESGPGPUTest, Fir3Proc) {
         ogles_gpgpu::GainProc gain(1.f); // noop
         ogles_gpgpu::FifoProc fifo(3);
         ogles_gpgpu::Fir3Proc fir3(doRgb);
-        fir3.setWeights( {-0.25f, -0.25f, -0.25f}, {+0.50f, +0.50f, +0.50f}, {-0.25f, -0.25f, -0.25f} );
+        fir3.setWeights({ -0.25f, -0.25f, -0.25f }, { +0.50f, +0.50f, +0.50f }, { -0.25f, -0.25f, -0.25f });
 
         video.set(&gain);
         gain.add(&fifo);
@@ -545,8 +553,8 @@ TEST(OGLESGPGPUTest, Fir3Proc) {
         fifo.addWithDelay(&fir3, 1, 1);
         fifo.addWithDelay(&fir3, 2, 2);
 
-        for(int i = 0; i < 3; i++) {
-            video({test[i].cols, test[i].rows}, test[i].ptr<void>(), true, 0, TEXTURE_FORMAT);
+        for (int i = 0; i < 3; i++) {
+            video({ test[i].cols, test[i].rows }, test[i].ptr<void>(), true, 0, TEXTURE_FORMAT);
         }
 
         cv::Mat result;
@@ -557,8 +565,8 @@ TEST(OGLESGPGPUTest, Fir3Proc) {
 
 TEST(OGLESGPGPUTest, GradProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(640, 480, 2, true);
 
         glActiveTexture(GL_TEXTURE0);
@@ -566,7 +574,7 @@ TEST(OGLESGPGPUTest, GradProc) {
         ogles_gpgpu::GradProc grad;
 
         video.set(&grad);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(grad, result);
@@ -574,14 +582,13 @@ TEST(OGLESGPGPUTest, GradProc) {
     }
 }
 
-
 TEST(OGLESGPGPUTest, LowPassProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
-        std::vector<cv::Mat> images {
-            cv::Mat(480, 640, CV_8UC4, cv::Scalar(0,0,0,255)),
-            cv::Mat(480, 640, CV_8UC4, cv::Scalar(255,255,255,255))
+    ASSERT_TRUE(context);
+    if (context) {
+        std::vector<cv::Mat> images{
+            cv::Mat(480, 640, CV_8UC4, cv::Scalar(0, 0, 0, 255)),
+            cv::Mat(480, 640, CV_8UC4, cv::Scalar(255, 255, 255, 255))
         };
 
         glActiveTexture(GL_TEXTURE0);
@@ -589,9 +596,9 @@ TEST(OGLESGPGPUTest, LowPassProc) {
         ogles_gpgpu::LowPassFilterProc low;
         video.set(&low);
 
-        for(int i = 0; i < 5; i++) {
-            cv::Mat &test = images[i%2];
-            video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        for (int i = 0; i < 5; i++) {
+            cv::Mat& test = images[i % 2];
+            video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
         }
 
         cv::Mat result;
@@ -602,11 +609,11 @@ TEST(OGLESGPGPUTest, LowPassProc) {
 
 TEST(OGLESGPGPUTest, HighPassProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
-        std::vector<cv::Mat> images {
-            cv::Mat(480, 640, CV_8UC4, cv::Scalar(0,0,0,255)),
-            cv::Mat(480, 640, CV_8UC4, cv::Scalar(255,255,255,255))
+    ASSERT_TRUE(context);
+    if (context) {
+        std::vector<cv::Mat> images{
+            cv::Mat(480, 640, CV_8UC4, cv::Scalar(0, 0, 0, 255)),
+            cv::Mat(480, 640, CV_8UC4, cv::Scalar(255, 255, 255, 255))
         };
 
         glActiveTexture(GL_TEXTURE0);
@@ -614,9 +621,9 @@ TEST(OGLESGPGPUTest, HighPassProc) {
         ogles_gpgpu::HighPassFilterProc high;
         video.set(&high);
 
-        for(int i = 0; i < 5; i++) {
-            cv::Mat &test = images[i%2];
-            video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        for (int i = 0; i < 5; i++) {
+            cv::Mat& test = images[i % 2];
+            video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
         }
 
         cv::Mat result;
@@ -627,8 +634,8 @@ TEST(OGLESGPGPUTest, HighPassProc) {
 
 TEST(OGLESGPGPUTest, ThreshProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(640, 480, 2, true);
 
         glActiveTexture(GL_TEXTURE0);
@@ -636,7 +643,7 @@ TEST(OGLESGPGPUTest, ThreshProc) {
         ogles_gpgpu::ThreshProc thresh;
 
         video.set(&thresh);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(thresh, result);
@@ -646,8 +653,8 @@ TEST(OGLESGPGPUTest, ThreshProc) {
 
 TEST(OGLESGPGPUTest, PyramidProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(640, 480, 2, true);
 
         glActiveTexture(GL_TEXTURE0);
@@ -655,7 +662,7 @@ TEST(OGLESGPGPUTest, PyramidProc) {
         ogles_gpgpu::PyramidProc pyramid(10);
         video.set(&pyramid);
 
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(pyramid, result);
@@ -666,7 +673,7 @@ TEST(OGLESGPGPUTest, PyramidProc) {
 TEST(OGLESGPGPUTest, IxytProc) {
     GLFWContext context;
     ASSERT_TRUE(context);
-    if(context) {
+    if (context) {
         glActiveTexture(GL_TEXTURE0);
         ogles_gpgpu::VideoSource video;
         ogles_gpgpu::GainProc gain(1.f);
@@ -679,9 +686,9 @@ TEST(OGLESGPGPUTest, IxytProc) {
         fifo.addWithDelay(&ixyt, 1, 1);
         fifo.addWithDelay(&ixyt, 0, 0);
 
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             cv::Mat test = getTestImage(640, 480, 2, true);
-            video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+            video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
         }
 
         cv::Mat result;
@@ -696,8 +703,8 @@ TEST(OGLESGPGPUTest, IxytProc) {
 
 TEST(OGLESGPGPUTest, TensorProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(640, 480, 2, true);
 
         glActiveTexture(GL_TEXTURE0);
@@ -705,7 +712,7 @@ TEST(OGLESGPGPUTest, TensorProc) {
         ogles_gpgpu::TensorProc tensor;
 
         video.set(&tensor);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(tensor, result);
@@ -715,13 +722,13 @@ TEST(OGLESGPGPUTest, TensorProc) {
 
 TEST(OGLESGPGPUTest, ShiTomasiProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(640, 480, 2, true);
-        for(int i = 0; i < 100; i++) {
-            cv::Point p0(rand()%test.cols, rand()%test.rows);
-            cv::Point p1(rand()%test.cols, rand()%test.rows);
-            cv::line(test, p0, p1, {0,255,0}, 2, 8);
+        for (int i = 0; i < 100; i++) {
+            cv::Point p0(rand() % test.cols, rand() % test.rows);
+            cv::Point p1(rand() % test.cols, rand() % test.rows);
+            cv::line(test, p0, p1, { 0, 255, 0 }, 2, 8);
         }
 
         glActiveTexture(GL_TEXTURE0);
@@ -737,7 +744,7 @@ TEST(OGLESGPGPUTest, ShiTomasiProc) {
         gauss.add(&tensor);
         tensor.add(&shiTomasi);
 
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(shiTomasi, result);
@@ -747,13 +754,13 @@ TEST(OGLESGPGPUTest, ShiTomasiProc) {
 
 TEST(OGLESGPGPUTest, HarrisProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(640, 480, 2, true);
-        for(int i = 0; i < 100; i++) {
-            cv::Point p0(rand()%test.cols, rand()%test.rows);
-            cv::Point p1(rand()%test.cols, rand()%test.rows);
-            cv::line(test, p0, p1, {0,255,0}, 2, 8);
+        for (int i = 0; i < 100; i++) {
+            cv::Point p0(rand() % test.cols, rand() % test.rows);
+            cv::Point p1(rand() % test.cols, rand() % test.rows);
+            cv::line(test, p0, p1, { 0, 255, 0 }, 2, 8);
         }
 
         glActiveTexture(GL_TEXTURE0);
@@ -769,7 +776,7 @@ TEST(OGLESGPGPUTest, HarrisProc) {
         gauss.add(&tensor);
         tensor.add(&harris);
 
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(harris, result);
@@ -779,17 +786,17 @@ TEST(OGLESGPGPUTest, HarrisProc) {
 
 TEST(OGLESGPGPUTest, NmsProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test(480, 640, CV_8UC1, cv::Scalar::all(0));
 
         static const int tic = 20;
-        for(int y = tic; y <= test.rows-tic; y+=tic) {
-            for(int x = tic; x <= test.cols-tic; x+=tic) {
-                cv::circle(test, {x,y}, 1, 255, -1, 8);
+        for (int y = tic; y <= test.rows - tic; y += tic) {
+            for (int x = tic; x <= test.cols - tic; x += tic) {
+                cv::circle(test, { x, y }, 1, 255, -1, 8);
             }
         }
-        cv::GaussianBlur(test, test, {7,7}, 1.0);
+        cv::GaussianBlur(test, test, { 7, 7 }, 1.0);
         cv::cvtColor(test, test, cv::COLOR_GRAY2BGR);
         cv::cvtColor(test, test, cv::COLOR_BGR2BGRA);
 
@@ -800,7 +807,7 @@ TEST(OGLESGPGPUTest, NmsProc) {
 
         video.set(&hessian);
         hessian.add(&nms);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result, alpha;
         getImage(nms, result);
@@ -811,8 +818,8 @@ TEST(OGLESGPGPUTest, NmsProc) {
 
 TEST(OGLESGPGPUTest, FlowProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(480, 640, 3, true);
 
         glActiveTexture(GL_TEXTURE0);
@@ -823,11 +830,11 @@ TEST(OGLESGPGPUTest, FlowProc) {
         video.set(&gain);
         gain.add(&flow);
 
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             cv::Mat shifted;
-            cv::Matx23f M(1,0,i*4,0,1,i*4);
+            cv::Matx23f M(1, 0, i * 4, 0, 1, i * 4);
             cv::warpAffine(test, shifted, M, test.size());
-            video({shifted.cols, shifted.rows}, shifted.ptr<void>(), true, 0, TEXTURE_FORMAT);
+            video({ shifted.cols, shifted.rows }, shifted.ptr<void>(), true, 0, TEXTURE_FORMAT);
         }
 
         cv::Mat result;
@@ -838,8 +845,8 @@ TEST(OGLESGPGPUTest, FlowProc) {
 
 TEST(OGLESGPGPUTest, Rgb2HsvProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(480, 640, 3, true);
 
         glActiveTexture(GL_TEXTURE0);
@@ -847,7 +854,7 @@ TEST(OGLESGPGPUTest, Rgb2HsvProc) {
         ogles_gpgpu::Rgb2HsvProc rgb2hsv;
 
         video.set(&rgb2hsv);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(rgb2hsv, result);
@@ -857,8 +864,8 @@ TEST(OGLESGPGPUTest, Rgb2HsvProc) {
 
 TEST(OGLESGPGPUTest, Hsv2RgbProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(480, 640, 3, true);
 
         glActiveTexture(GL_TEXTURE0);
@@ -866,7 +873,7 @@ TEST(OGLESGPGPUTest, Hsv2RgbProc) {
         ogles_gpgpu::Hsv2RgbProc hsv2rgb;
 
         video.set(&hsv2rgb);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(hsv2rgb, result);
@@ -876,8 +883,8 @@ TEST(OGLESGPGPUTest, Hsv2RgbProc) {
 
 TEST(OGLESGPGPUTest, LNormProc) {
     GLFWContext context;
-    ASSERT_TRUE(context);    
-    if(context) {
+    ASSERT_TRUE(context);
+    if (context) {
         cv::Mat test = getTestImage(480, 640, 3, true);
 
         glActiveTexture(GL_TEXTURE0);
@@ -887,7 +894,7 @@ TEST(OGLESGPGPUTest, LNormProc) {
 
         video.set(&gainProc);
         gainProc.add(&normProc);
-        video({test.cols, test.rows}, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
+        video({ test.cols, test.rows }, test.ptr<void>(), true, 0, TEXTURE_FORMAT);
 
         cv::Mat result;
         getImage(normProc, result);

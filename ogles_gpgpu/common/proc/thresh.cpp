@@ -9,8 +9,8 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "thresh.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
@@ -63,7 +63,7 @@ int ThreshProc::render(int position) {
 
     filterRenderPrepare();
 
-    glUniform1f(shParamUThresh, threshVal);	// thresholding value for simple thresholding
+    glUniform1f(shParamUThresh, threshVal); // thresholding value for simple thresholding
 
     Tools::checkGLErr("ThreshProc", "render prepare");
 

@@ -6,8 +6,8 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "blend.h"
+#include "../common_includes.h"
 
 using namespace ogles_gpgpu;
 
@@ -32,8 +32,8 @@ OG_TO_STR(
  });
 // clang-format on
 
-BlendProc::BlendProc(float alpha) : alpha(alpha) {
-
+BlendProc::BlendProc(float alpha)
+    : alpha(alpha) {
 }
 
 void BlendProc::getUniforms() {

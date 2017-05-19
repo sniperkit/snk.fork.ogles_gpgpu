@@ -29,10 +29,9 @@ typedef enum {
     RenderOrientationDiagonalMirrored
 } RenderOrientation;
 
-
 // Map camera orientation (in degrees) to RenderOrientation enum
 inline RenderOrientation degreesToOrientation(int degrees) {
-    switch(degrees) {
+    switch (degrees) {
     case 360:
     case 0:
         return ogles_gpgpu::RenderOrientationStd;
@@ -64,7 +63,12 @@ inline bool operator!=(const Size2d& lhs, const Size2d& rhs) {
 
 struct Rect2d {
     Rect2d() {}
-    Rect2d(int x, int y, int width, int height) : x(x), y(y), width(width), height(height) {}
+    Rect2d(int x, int y, int width, int height)
+        : x(x)
+        , y(y)
+        , width(width)
+        , height(height) {
+    }
     int x = 0, y = 0, width = 0, height = 0;
 };
 
@@ -81,7 +85,6 @@ struct Vec3f {
 struct Mat44f {
     GLfloat data[4][4];
 };
-
 }
 
 #endif

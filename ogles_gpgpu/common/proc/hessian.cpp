@@ -6,8 +6,8 @@
 
 // Copyright (c) 2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "hessian.h"
+#include "../common_includes.h"
 
 //>> fx=[-1 1; -1 1]; fy=[-1 -1; 1 1];
 //
@@ -170,7 +170,6 @@ const char *HessianProc::fshaderDeterminantSrc =
 HessianProc::HessianProc(float edgeStrength, bool doHessian)
     : doHessian(doHessian)
     , edgeStrength(edgeStrength) {
-
 }
 
 void HessianProc::setUniforms() {
@@ -183,4 +182,3 @@ void HessianProc::getUniforms() {
     shParamUInputTex = shader->getParam(UNIF, "inputImageTexture");
     shParamUEdgeStrength = shader->getParam(UNIF, "edgeStrength");
 }
-

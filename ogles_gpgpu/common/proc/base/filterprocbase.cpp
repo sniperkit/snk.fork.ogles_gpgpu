@@ -93,9 +93,9 @@ void FilterProcBase::useTexture(GLuint id, GLuint useTexUnit, GLenum target, int
     texId = id;
     texUnit = useTexUnit;
 
-    if (target != texTarget) {	// changed
-        if (fragShaderSrcForCompilation) {	// recreate shader with new texture target
-            auto vShaderSrc  = vertexShaderSrcForCompilation ? vertexShaderSrcForCompilation : vshaderDefault;
+    if (target != texTarget) { // changed
+        if (fragShaderSrcForCompilation) { // recreate shader with new texture target
+            auto vShaderSrc = vertexShaderSrcForCompilation ? vertexShaderSrcForCompilation : vshaderDefault;
             filterShaderSetup(vShaderSrc, fragShaderSrcForCompilation, target);
         }
         texTarget = target;
@@ -104,7 +104,7 @@ void FilterProcBase::useTexture(GLuint id, GLuint useTexUnit, GLenum target, int
 
 #pragma mark protected methods
 
-void FilterProcBase::filterInit(const char *vShaderSrc, const char *fShaderSrc, RenderOrientation o) {
+void FilterProcBase::filterInit(const char* vShaderSrc, const char* fShaderSrc, RenderOrientation o) {
     // create shader object
     filterShaderSetup(vShaderSrc, fShaderSrc, texTarget);
 
@@ -115,7 +115,7 @@ void FilterProcBase::filterInit(const char *vShaderSrc, const char *fShaderSrc, 
     initTexCoordBuf(o);
 }
 
-void FilterProcBase::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void FilterProcBase::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     // create shader object
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
 
@@ -130,7 +130,6 @@ void FilterProcBase::filterShaderSetup(const char *vShaderSrc, const char *fShad
 }
 
 void FilterProcBase::getUniforms() {
-
 }
 
 /**
@@ -162,8 +161,8 @@ int FilterProcBase::render(int position) {
  * Initialize texture coordinate buffer according to member variable
  * <renderOrientation> or override member variable by <overrideRenderOrientation>.
  */
-const GLfloat * FilterProcBase::getTexCoordBuf(RenderOrientation o) {
-    const GLfloat *coordsPtr;
+const GLfloat* FilterProcBase::getTexCoordBuf(RenderOrientation o) {
+    const GLfloat* coordsPtr;
 
     switch (o) {
     default:
@@ -211,7 +210,7 @@ void FilterProcBase::filterRenderPrepare() {
 
     // set input texture
     glActiveTexture(GL_TEXTURE0 + texUnit);
-    glBindTexture(texTarget, texId);	// bind input texture
+    glBindTexture(texTarget, texId); // bind input texture
 
     // set common uniforms
     glUniform1i(shParamUInputTex, texUnit);
@@ -219,23 +218,24 @@ void FilterProcBase::filterRenderPrepare() {
 
 void FilterProcBase::filterRenderSetCoords() {
     // render to FBO
-    if (fbo) fbo->bind();
+    if (fbo)
+        fbo->bind();
 
     // set geometry
     glEnableVertexAttribArray(shParamAPos);
     glVertexAttribPointer(shParamAPos,
-                          OGLES_GPGPU_QUAD_COORDS_PER_VERTEX,
-                          GL_FLOAT,
-                          GL_FALSE,
-                          0,
-                          vertexBuf);
+        OGLES_GPGPU_QUAD_COORDS_PER_VERTEX,
+        GL_FLOAT,
+        GL_FALSE,
+        0,
+        vertexBuf);
 
     glVertexAttribPointer(shParamATexCoord,
-                          OGLES_GPGPU_QUAD_TEXCOORDS_PER_VERTEX,
-                          GL_FLOAT,
-                          GL_FALSE,
-                          0,
-                          texCoordBuf);
+        OGLES_GPGPU_QUAD_TEXCOORDS_PER_VERTEX,
+        GL_FLOAT,
+        GL_FALSE,
+        0,
+        texCoordBuf);
     glEnableVertexAttribArray(shParamATexCoord);
 }
 
@@ -249,7 +249,8 @@ void FilterProcBase::filterRenderCleanup() {
     glDisableVertexAttribArray(shParamAPos);
     glDisableVertexAttribArray(shParamATexCoord);
 
-    if (fbo) fbo->unbind();
+    if (fbo)
+        fbo->unbind();
 }
 
 int FilterProcBase::init(int inW, int inH, unsigned int order, bool prepareForExternalInput) {
@@ -269,4 +270,3 @@ int FilterProcBase::init(int inW, int inH, unsigned int order, bool prepareForEx
 
     return 1;
 }
-

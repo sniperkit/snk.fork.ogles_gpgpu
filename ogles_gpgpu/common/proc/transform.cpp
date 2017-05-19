@@ -7,8 +7,8 @@
 // Original shader: theagentd/Myomyomyo http://www.java-gaming.org/index.php?topic=35123.0
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "transform.h"
+#include "../common_includes.h"
 
 #include <memory.h>
 
@@ -107,24 +107,23 @@ void main()
 
 TransformProc::TransformProc() {
     memset(transformMatrix.data, 0, sizeof(transformMatrix.data));
-    for(int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         transformMatrix.data[i][i] = 1;
     }
 }
 
-
-const char *TransformProc::getFragmentShaderSource() {
+const char* TransformProc::getFragmentShaderSource() {
     return (interpolation == BILINEAR) ? fshaderTransformSrc : fshaderTransformBicubicSrc;
 }
 
-const char *TransformProc::getVertexShaderSource() {
+const char* TransformProc::getVertexShaderSource() {
     return vshaderTransformSrc;
 }
 
 void TransformProc::setUniforms() {
     FilterProcBase::setUniforms();
     glUniformMatrix4fv(shParamUTransform, 1, 0, &transformMatrix.data[0][0]);
-    if(interpolation == BICUBIC) {
+    if (interpolation == BICUBIC) {
         glUniform2f(shParamUTransformSize, inFrameW, inFrameH);
     }
 }
@@ -132,12 +131,11 @@ void TransformProc::setUniforms() {
 void TransformProc::getUniforms() {
     FilterProcBase::getUniforms();
     shParamUTransform = shader->getParam(UNIF, "transformMatrix");
-    if(interpolation == BICUBIC) {
+    if (interpolation == BICUBIC) {
         shParamUTransformSize = shader->getParam(UNIF, "texSize");
     }
 }
 
-void TransformProc::setTransformMatrix(const Mat44f &matrix) {
+void TransformProc::setTransformMatrix(const Mat44f& matrix) {
     transformMatrix = matrix;
 }
-

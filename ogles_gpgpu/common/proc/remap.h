@@ -18,27 +18,27 @@ namespace ogles_gpgpu {
 class RemapProc : public TwoInputProc {
 public:
     RemapProc();
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "RemapProc";
     }
-private:
 
-    void filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target);
+private:
+    void filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target);
     void getUniforms();
     void setUniforms();
 
     GLint texelWidthUniform;
     GLint texelHeightUniform;
 
-    virtual const char *getVertexShaderSource() {
+    virtual const char* getVertexShaderSource() {
         return vshaderRemapSrc;
     }
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return fshaderRemapSrc;
     }
 
-    static const char *vshaderRemapSrc;
-    static const char *fshaderRemapSrc;
+    static const char* vshaderRemapSrc;
+    static const char* fshaderRemapSrc;
 };
 }
 

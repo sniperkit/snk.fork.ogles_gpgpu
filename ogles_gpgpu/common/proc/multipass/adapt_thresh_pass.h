@@ -28,17 +28,18 @@ public:
     /**
      * Construct as render pass <pass> (1 or 2).
      */
-    AdaptThreshProcPass(int pass) : FilterProcBase(),
-        renderPass(pass),
-        pxDx(0.0f),
-        pxDy(0.0f) {
+    AdaptThreshProcPass(int pass)
+        : FilterProcBase()
+        , renderPass(pass)
+        , pxDx(0.0f)
+        , pxDy(0.0f) {
         assert(renderPass == 1 || renderPass == 2);
     }
 
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "AdaptThreshProcPass";
     }
 
@@ -58,18 +59,18 @@ public:
     /**
      * Render the output.
      */
-    virtual int render(int position=0);
+    virtual int render(int position = 0);
 
 private:
     int renderPass; // render pass number. must be 1 or 2
 
-    GLint shParamUPxD;		// pixel delta values for texture lookup in the fragment shader. only used for adapt. thresholding
+    GLint shParamUPxD; // pixel delta values for texture lookup in the fragment shader. only used for adapt. thresholding
 
-    float pxDx;	// pixel delta value for texture access. only used for adapt. thresholding
-    float pxDy;	// pixel delta value for texture access. only used for adapt. thresholding
+    float pxDx; // pixel delta value for texture access. only used for adapt. thresholding
+    float pxDy; // pixel delta value for texture access. only used for adapt. thresholding
 
-    static const char *fshaderAdaptThreshPass1Src;  // fragment shader source for adaptive thresholding pass 1
-    static const char *fshaderAdaptThreshPass2Src;  // fragment shader source for adaptive thresholding pass 2
+    static const char* fshaderAdaptThreshPass1Src; // fragment shader source for adaptive thresholding pass 1
+    static const char* fshaderAdaptThreshPass2Src; // fragment shader source for adaptive thresholding pass 2
 };
 }
 

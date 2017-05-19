@@ -6,8 +6,8 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "lbp.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
@@ -63,7 +63,6 @@ void main()
 // clang-format on
 
 LbpProc::LbpProc() {
-
 }
 
 void LbpProc::getUniforms() {

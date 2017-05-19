@@ -35,7 +35,7 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "ThreshProc";
     }
 
@@ -43,7 +43,7 @@ public:
      * Set threshold as 8 bit value [0..255] <v> for simple thresholding.
      */
     void setThreshVal8Bit(int v) {
-        threshVal = (float)v  / 255.0f;
+        threshVal = (float)v / 255.0f;
     }
 
     /**
@@ -69,14 +69,14 @@ public:
     /**
      * Render the output.
      */
-    virtual int render(int position=0);
+    virtual int render(int position = 0);
 
 private:
-    float threshVal;            // thresholding value [0.0 .. 1.0]
+    float threshVal; // thresholding value [0.0 .. 1.0]
 
-    GLint shParamUThresh;	// fixed threshold value
+    GLint shParamUThresh; // fixed threshold value
 
-    static const char *fshaderSimpleThreshSrc;      // fragment shader source for simple thresholding
+    static const char* fshaderSimpleThreshSrc; // fragment shader source for simple thresholding
 };
 }
 

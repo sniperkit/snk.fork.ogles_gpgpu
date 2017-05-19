@@ -15,9 +15,11 @@ BEGIN_OGLES_GPGPU
 
 class HighPassFilterProc : public IirFilterProc {
 public:
-    HighPassFilterProc(float alpha=0.5) : IirFilterProc(IirFilterProc::kHighPass, alpha) {}
+    HighPassFilterProc(float alpha = 0.5)
+        : IirFilterProc(IirFilterProc::kHighPass, alpha) {
+    }
     ~HighPassFilterProc() {}
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "HighPassFilterProc";
     }
 };

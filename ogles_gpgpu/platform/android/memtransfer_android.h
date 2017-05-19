@@ -34,7 +34,6 @@
 // "Really I have no idea, but this should be big enough"
 #define OG_ANDROID_GRAPHIC_BUFFER_SIZE 1024
 
-
 // TODO: Disable for now, try cmake build test for availability:
 //
 // typedef EGLint eglDupNativeFenceFDANDROID(EGLDisplay dpy, EGLSyncKHR sync);
@@ -50,32 +49,32 @@ namespace ogles_gpgpu {
  */
 
 // constructor
-typedef void (*GraphicBufferFnCtor)(void *graphicBufHndl, uint32_t w, uint32_t h, uint32_t format, uint32_t usage);
+typedef void (*GraphicBufferFnCtor)(void* graphicBufHndl, uint32_t w, uint32_t h, uint32_t format, uint32_t usage);
 
 // deconstructor
-typedef void (*GraphicBufferFnDtor)(void *graphicBufHndl);
+typedef void (*GraphicBufferFnDtor)(void* graphicBufHndl);
 
 // getNativeBuffer
-typedef void* (*GraphicBufferFnGetNativeBuffer)(void *graphicBufHndl);
+typedef void* (*GraphicBufferFnGetNativeBuffer)(void* graphicBufHndl);
 
 // lock
-typedef int (*GraphicBufferFnLock)(void *graphicBufHndl, uint32_t usage, unsigned char **addr);
+typedef int (*GraphicBufferFnLock)(void* graphicBufHndl, uint32_t usage, unsigned char** addr);
 
 // unlock
-typedef int (*GraphicBufferFnUnlock)(void *graphicBufHndl);
+typedef int (*GraphicBufferFnUnlock)(void* graphicBufHndl);
 
 /**
  * typedefs to EGL extension functions for ImageKHR extension
  */
 
 // create ImageKHR
-typedef EGLImageKHR (*EGLExtFnCreateImage)(EGLDisplay dpy, EGLContext ctx, EGLenum target, EGLClientBuffer buffer, const EGLint *attribList);
+typedef EGLImageKHR (*EGLExtFnCreateImage)(EGLDisplay dpy, EGLContext ctx, EGLenum target, EGLClientBuffer buffer, const EGLint* attribList);
 
 // destroy ImageKHR
 typedef EGLBoolean (*EGLExtFnDestroyImage)(EGLDisplay dpy, EGLImageKHR image);
 
 //typedef EGLSyncKHR eglCreateSyncKHR(EGLDisplay py, EGLenum condition, const EGLint * attrib_list);
-typedef EGLSyncKHR (*EGLExtFnCreateSyncKHR)(EGLDisplay py, EGLenum condition, const EGLint * attrib_list);
+typedef EGLSyncKHR (*EGLExtFnCreateSyncKHR)(EGLDisplay py, EGLenum condition, const EGLint* attrib_list);
 
 //typedef EGLBoolean glDestroySyncKHR(EGLDisplay dpy, EGLSyncKHR sync);
 typedef EGLBoolean (*EGLExtFnDestroySyncKHR)(EGLDisplay dpy, EGLSyncKHR sync);
@@ -101,13 +100,14 @@ public:
     /**
      * Constructor. Set defaults.
      */
-    MemTransferAndroid() :  MemTransfer(),
-        inputGraBufHndl(NULL),
-        outputGraBufHndl(NULL),
-        inputNativeBuf(NULL),
-        outputNativeBuf(NULL),
-        inputImage(NULL),
-        outputImage(NULL) {
+    MemTransferAndroid()
+        : MemTransfer()
+        , inputGraBufHndl(NULL)
+        , outputGraBufHndl(NULL)
+        , inputNativeBuf(NULL)
+        , outputNativeBuf(NULL)
+        , inputImage(NULL)
+        , outputImage(NULL) {
     }
 
     /**
@@ -123,7 +123,7 @@ public:
     /**
      * Prepare for input frames of size <inTexW>x<inTexH>. Return a texture id for the input frames.
      */
-    virtual GLuint prepareInput(int inTexW, int inTexH, GLenum inputPxFormat = GL_RGBA, void *inputDataPtr = NULL);
+    virtual GLuint prepareInput(int inTexW, int inTexH, GLenum inputPxFormat = GL_RGBA, void* inputDataPtr = NULL);
 
     /**
      * Prepare for output frames of size <outTexW>x<outTexH>. Return a texture id for the output frames.
@@ -143,12 +143,12 @@ public:
     /**
      * Map data in <buf> to GPU.
      */
-    virtual void toGPU(const unsigned char *buf);
+    virtual void toGPU(const unsigned char* buf);
 
     /**
      * Map data from GPU to <buf>
      */
-    virtual void fromGPU(unsigned char *buf);
+    virtual void fromGPU(unsigned char* buf);
 
     /**
      * Inidcates whether or not this MemTransfer implementation
@@ -161,7 +161,7 @@ public:
     /**
      * Apply callback to FBO texture.
      */
-    virtual void fromGPU(FrameDelegate &delegate);
+    virtual void fromGPU(FrameDelegate& delegate);
 
     /**
      * Get bytes per row in underlying FBO.
@@ -173,7 +173,7 @@ public:
      * The input buffer will be locked for reading AND writing, while the
      * output buffer will be locked for reading only.
      */
-    virtual void *lockBufferAndGetPtr(BufType bufType);
+    virtual void* lockBufferAndGetPtr(BufType bufType);
 
     /**
      * Unlock the input or output buffer.
@@ -183,17 +183,17 @@ public:
     /**
      * EGL flush command: possibly faster alternative to glFinish() prior to GraphicBuffer use
      */
-    virtual void flush(uint32_t us = 2000000000 /* 2 sec */ );
+    virtual void flush(uint32_t us = 2000000000 /* 2 sec */);
 
 private:
-    static GraphicBufferFnCtor graBufCreate;        // function pointer to GraphicBufferFnCtor
-    static GraphicBufferFnDtor graBufDestroy;       // function pointer to GraphicBufferFnDtor
-    static GraphicBufferFnGetNativeBuffer graBufGetNativeBuffer;  // function pointer to GraphicBufferFnGetNativeBuffer
-    static GraphicBufferFnLock graBufLock;          // function pointer to GraphicBufferFnLock
-    static GraphicBufferFnUnlock graBufUnlock;      // function pointer to GraphicBufferFnUnlock
+    static GraphicBufferFnCtor graBufCreate; // function pointer to GraphicBufferFnCtor
+    static GraphicBufferFnDtor graBufDestroy; // function pointer to GraphicBufferFnDtor
+    static GraphicBufferFnGetNativeBuffer graBufGetNativeBuffer; // function pointer to GraphicBufferFnGetNativeBuffer
+    static GraphicBufferFnLock graBufLock; // function pointer to GraphicBufferFnLock
+    static GraphicBufferFnUnlock graBufUnlock; // function pointer to GraphicBufferFnUnlock
 
-    static EGLExtFnCreateImage  imageKHRCreate;     // function pointer to EGLExtFnCreateImage
-    static EGLExtFnDestroyImage  imageKHRDestroy;   // function pointer to EGLExtFnDestroyImage
+    static EGLExtFnCreateImage imageKHRCreate; // function pointer to EGLExtFnCreateImage
+    static EGLExtFnDestroyImage imageKHRDestroy; // function pointer to EGLExtFnDestroyImage
 
     static EGLExtFnCreateSyncKHR createKHRSync;
     static EGLExtFnDestroySyncKHR destroyKHRSync;
@@ -203,17 +203,16 @@ private:
     static EGLExtFnDupNativeFenceFDANDROID dupNativeFenceFDANDROID;
 #endif
 
-    void *inputGraBufHndl;      // Android GraphicBuffer handle for input
-    void *outputGraBufHndl;     // Android GraphicBuffer handle for output
+    void* inputGraBufHndl; // Android GraphicBuffer handle for input
+    void* outputGraBufHndl; // Android GraphicBuffer handle for output
 
-    ANativeWindowBuffer *inputNativeBuf;     // pointer to native window buffer for input (weak ref - do not free()!)
-    ANativeWindowBuffer *outputNativeBuf;	// pointer to native window buffer for output (weak ref - do not free()!)
+    ANativeWindowBuffer* inputNativeBuf; // pointer to native window buffer for input (weak ref - do not free()!)
+    ANativeWindowBuffer* outputNativeBuf; // pointer to native window buffer for output (weak ref - do not free()!)
 
-    EGLImageKHR inputImage;     // ImageKHR handle for input
-    EGLImageKHR outputImage;    // ImageKHR handle for output
+    EGLImageKHR inputImage; // ImageKHR handle for input
+    EGLImageKHR outputImage; // ImageKHR handle for output
 
-    EGLDisplay mEGLDisplay;  // active display
+    EGLDisplay mEGLDisplay; // active display
 };
-
 }
 #endif

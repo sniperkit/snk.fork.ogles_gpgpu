@@ -17,9 +17,9 @@
 namespace ogles_gpgpu {
 class LocalNormProc : public MultiPassProc {
 public:
-    LocalNormProc(float normConst=0.005) {
-        LocalNormPass *localNormPass1 = new LocalNormPass(1);
-        LocalNormPass *localNormPass2 = new LocalNormPass(2, normConst);
+    LocalNormProc(float normConst = 0.005) {
+        LocalNormPass* localNormPass1 = new LocalNormPass(1);
+        LocalNormPass* localNormPass2 = new LocalNormPass(2, normConst);
 
         procPasses.push_back(localNormPass1);
         procPasses.push_back(localNormPass2);
@@ -28,7 +28,7 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "LocalNormProc";
     }
 };

@@ -50,7 +50,7 @@ OG_TO_STR(
 
 RemapProc::RemapProc() {}
 
-void RemapProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void RemapProc::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     // create shader object
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
 
@@ -64,12 +64,10 @@ void RemapProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc
 }
 
 void RemapProc::getUniforms() {
-
 }
 
 void RemapProc::setUniforms() {
     // Set texel width/height uniforms:
-    glUniform1f(texelWidthUniform, (1.0f/ float(outFrameW)));
-    glUniform1f(texelHeightUniform, (1.0f/ float(outFrameH)));
+    glUniform1f(texelWidthUniform, (1.0f / float(outFrameW)));
+    glUniform1f(texelHeightUniform, (1.0f / float(outFrameH)));
 }
-

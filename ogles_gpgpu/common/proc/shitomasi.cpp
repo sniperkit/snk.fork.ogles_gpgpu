@@ -6,8 +6,8 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "shitomasi.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
@@ -39,12 +39,10 @@ void main()
 // clang-format on
 
 ShiTomasiProc::ShiTomasiProc() {
-
 }
 
-
 // TODO: We need to override this if we are using the GPUImage shaders
-void ShiTomasiProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void ShiTomasiProc::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     // create shader object
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
 
@@ -57,10 +55,10 @@ void ShiTomasiProc::filterShaderSetup(const char *vShaderSrc, const char *fShade
 void ShiTomasiProc::getUniforms() {
     FilterProcBase::getUniforms();
     shParamUInputTex = shader->getParam(UNIF, "inputImageTexture");
-    shParamUInputSensitivity =  shader->getParam(UNIF, "sensitivity");
+    shParamUInputSensitivity = shader->getParam(UNIF, "sensitivity");
 }
 
 void ShiTomasiProc::setUniforms() {
     FilterProcBase::setUniforms();
-    glUniform1f (shParamUInputSensitivity, sensitivity);   // set additional uniforms
+    glUniform1f(shParamUInputSensitivity, sensitivity); // set additional uniforms
 }

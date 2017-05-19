@@ -25,7 +25,6 @@ namespace ogles_gpgpu {
  */
 class PyramidProc : public TransformProc {
 public:
-
     /**
      * Constructor for pyramid.
      */
@@ -34,17 +33,17 @@ public:
     /**
      * Constructor for multiscale.
      */
-    PyramidProc(const std::vector<Size2d> &scales);
+    PyramidProc(const std::vector<Size2d>& scales);
 
     /**
      * Render a flat pyramid
      */
-    virtual int render(int position=0);
+    virtual int render(int position = 0);
 
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "PyramidProc";
     }
 
@@ -56,7 +55,7 @@ public:
     /**
      * Preset output scales
      */
-    void setScales(const std::vector<Size2d> &scales);
+    void setScales(const std::vector<Size2d>& scales);
 
     /**
      * Set the # of pyramid levels.
@@ -66,10 +65,9 @@ public:
     /**
      * Get level crops.
      */
-    const std::vector<Rect2d> & getLevelCrops() const;
+    const std::vector<Rect2d>& getLevelCrops() const;
 
 private:
-
     virtual void setOutputSize(float scaleFactor);
 
     std::vector<Size2d> m_scales;
@@ -77,7 +75,6 @@ private:
     int m_levels = 4;
 
     std::vector<Rect2d> m_crops;
-
 };
 }
 

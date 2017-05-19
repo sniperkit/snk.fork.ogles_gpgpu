@@ -29,7 +29,7 @@ public:
     /**
      * Create a new MemTransfer instance.
      */
-    static MemTransfer *createInstance();
+    static MemTransfer* createInstance();
 
     /**
      * Try to enable platform optimizations. Returns true on success, else false.
@@ -37,9 +37,8 @@ public:
     static bool tryEnablePlatformOptimizations();
 
 private:
-    static bool usePlatformOptimizations;   // is true if tryEnablePlatformOptimizations() was called and succeeded
+    static bool usePlatformOptimizations; // is true if tryEnablePlatformOptimizations() was called and succeeded
 };
-
 }
 
 #endif

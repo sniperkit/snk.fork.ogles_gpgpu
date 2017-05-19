@@ -6,8 +6,8 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "diff.h"
+#include "../common_includes.h"
 
 using namespace ogles_gpgpu;
 
@@ -31,8 +31,9 @@ OG_TO_STR(
  });
 // clang-format on
 
-DiffProc::DiffProc(float strength, float offset) : strength(strength), offset(offset) {
-
+DiffProc::DiffProc(float strength, float offset)
+    : strength(strength)
+    , offset(offset) {
 }
 
 void DiffProc::getUniforms() {

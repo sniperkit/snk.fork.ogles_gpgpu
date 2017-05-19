@@ -21,21 +21,20 @@ public:
     /**
      * Constructor.
      */
-    GradProc(float strength=1.f);
+    GradProc(float strength = 1.f);
 
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "GradProc";
     }
 
 private:
-
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return fshaderGradSrc;
     }
 
@@ -49,7 +48,7 @@ private:
      */
     virtual void setUniforms();
 
-    static const char *fshaderGradSrc;   // fragment shader source
+    static const char* fshaderGradSrc; // fragment shader source
 
     GLint shParamUStrength;
 

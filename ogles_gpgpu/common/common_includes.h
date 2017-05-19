@@ -11,11 +11,12 @@
  * Common header includes
  */
 
-#include <iostream>
 #include <cassert>
+#include <iostream>
 
 // Need initial preprocessor pass for nested includes
 
+// clang-format off
 #if __APPLE__
 #  include "TargetConditionals.h"
 #  if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
@@ -46,6 +47,7 @@
 #  include "../platform/opengl/gl_includes.h"
 #  include "macros.h"
 #endif
+// clang-format on
 
 /* #ifdef __APPLE__ */
 /*     #include "../platform/ios/gl_includes.h" */

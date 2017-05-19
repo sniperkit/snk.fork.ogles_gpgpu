@@ -50,7 +50,9 @@
 
 BEGIN_OGLES_GPGPU
 
-MedianProc::MedianProc() : Filter3x3Proc() {}
+MedianProc::MedianProc()
+    : Filter3x3Proc() {
+}
 
 // clang-format off
 const char *MedianProc::fshaderMedianSrc = 

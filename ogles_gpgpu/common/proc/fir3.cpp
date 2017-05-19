@@ -6,8 +6,8 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "fir3.h"
+#include "../common_includes.h"
 
 using namespace ogles_gpgpu;
 
@@ -77,7 +77,7 @@ Fir3Proc::Fir3Proc(bool doRgb)
 void Fir3Proc::getUniforms() {
     ThreeInputProc::getUniforms();
 
-    if(doRgb) {
+    if (doRgb) {
         shParamUWeights1 = shader->getParam(UNIF, "weights1");
         shParamUWeights2 = shader->getParam(UNIF, "weights2");
         shParamUWeights3 = shader->getParam(UNIF, "weights3");
@@ -91,7 +91,7 @@ void Fir3Proc::getUniforms() {
 
 void Fir3Proc::setUniforms() {
     ThreeInputProc::setUniforms();
-    if(doRgb) {
+    if (doRgb) {
         glUniform3fv(shParamUWeights1, 1, &weightsRGB[0].data[0]);
         glUniform3fv(shParamUWeights2, 1, &weightsRGB[1].data[0]);
         glUniform3fv(shParamUWeights3, 1, &weightsRGB[2].data[0]);

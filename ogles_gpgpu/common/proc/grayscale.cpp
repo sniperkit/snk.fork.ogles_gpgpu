@@ -9,8 +9,8 @@
 
 // Modifications: Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "grayscale.h"
+#include "../common_includes.h"
 
 #include <memory.h>
 
@@ -73,17 +73,16 @@ GrayscaleProc::GrayscaleProc() {
 }
 
 void GrayscaleProc::setIdentity() {
-
 }
 
 void GrayscaleProc::setUniforms() {
-    if(inputConvType != GRAYSCALE_INPUT_CONVERSION_NONE) {
-        glUniform3fv(shParamUInputConvVec, 1, grayscaleConvVec);  // set additional uniforms
+    if (inputConvType != GRAYSCALE_INPUT_CONVERSION_NONE) {
+        glUniform3fv(shParamUInputConvVec, 1, grayscaleConvVec); // set additional uniforms
     }
 }
 
 void GrayscaleProc::getUniforms() {
-    if(inputConvType != GRAYSCALE_INPUT_CONVERSION_NONE) {
+    if (inputConvType != GRAYSCALE_INPUT_CONVERSION_NONE) {
         shParamUInputConvVec = shader->getParam(UNIF, "uInputConvVec");
     }
 }
@@ -94,11 +93,12 @@ void GrayscaleProc::setGrayscaleConvVec(const GLfloat v[3]) {
 }
 
 void GrayscaleProc::setGrayscaleConvType(GrayscaleInputConversionType type) {
-    if (inputConvType == type) return;  // no change
+    if (inputConvType == type)
+        return; // no change
 
-    const GLfloat *v = NULL;
+    const GLfloat* v = NULL;
 
-    switch(type) {
+    switch (type) {
     case GRAYSCALE_INPUT_CONVERSION_RGB:
         v = &grayscaleConvVecRGB[0];
         break;

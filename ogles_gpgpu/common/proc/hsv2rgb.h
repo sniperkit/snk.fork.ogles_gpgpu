@@ -19,15 +19,16 @@ BEGIN_OGLES_GPGPU
 class Hsv2RgbProc : public ogles_gpgpu::FilterProcBase {
 public:
     Hsv2RgbProc() {}
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "Hsv2RgbProc";
     }
+
 private:
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return fshaderHsv2RgbSrc;
     }
 
-    static const char *fshaderHsv2RgbSrc; // fragment shader source
+    static const char* fshaderHsv2RgbSrc; // fragment shader source
 };
 
 END_OGLES_GPGPU

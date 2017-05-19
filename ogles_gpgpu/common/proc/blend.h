@@ -17,7 +17,7 @@ BEGIN_OGLES_GPGPU
 class BlendProc : public TwoInputProc {
 public:
     BlendProc(float alpha = 1.0f);
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "BlendProc";
     }
     virtual void getUniforms();
@@ -28,14 +28,13 @@ public:
     virtual int render(int position = 0);
 
 private:
-
     GLint shParamUAlpha;
     GLfloat alpha = 0.5f;
 
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return fshaderBlendSrc;
     }
-    static const char *fshaderBlendSrc;   // fragment shader source
+    static const char* fshaderBlendSrc; // fragment shader source
 };
 
 END_OGLES_GPGPU

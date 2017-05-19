@@ -6,8 +6,8 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "grad.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
@@ -71,15 +71,15 @@ OG_TO_STR(
  );
 // clang-format on
 
-GradProc::GradProc(float strength) : strength(strength) {
-
+GradProc::GradProc(float strength)
+    : strength(strength) {
 }
 
 void GradProc::setUniforms() {
     Filter3x3Proc::setUniforms();
 
-    glUniform1f(texelWidthUniform, (1.0f/ float(outFrameW)));
-    glUniform1f(texelHeightUniform, (1.0f/ float(outFrameH)));
+    glUniform1f(texelWidthUniform, (1.0f / float(outFrameW)));
+    glUniform1f(texelHeightUniform, (1.0f / float(outFrameH)));
 
     glUniform1f(shParamUStrength, strength);
 }

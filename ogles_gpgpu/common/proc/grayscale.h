@@ -25,10 +25,10 @@ namespace ogles_gpgpu {
  * Define grayscale conversion types
  */
 typedef enum {
-    GRAYSCALE_INPUT_CONVERSION_NONE     = -2,
-    GRAYSCALE_INPUT_CONVERSION_CUSTOM   = -1,
-    GRAYSCALE_INPUT_CONVERSION_RGB      = 0,
-    GRAYSCALE_INPUT_CONVERSION_BGR      = 1,
+    GRAYSCALE_INPUT_CONVERSION_NONE = -2,
+    GRAYSCALE_INPUT_CONVERSION_CUSTOM = -1,
+    GRAYSCALE_INPUT_CONVERSION_RGB = 0,
+    GRAYSCALE_INPUT_CONVERSION_BGR = 1,
 } GrayscaleInputConversionType;
 
 /**
@@ -45,7 +45,7 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "GrayscaleProc";
     }
 
@@ -62,7 +62,7 @@ public:
     /**
      * Get weighted channel grayscale conversion vector.
      */
-    const GLfloat *getGrayscaleConvVec() const {
+    const GLfloat* getGrayscaleConvVec() const {
         return grayscaleConvVec;
     }
 
@@ -79,11 +79,10 @@ public:
     }
 
 private:
-
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return inputConvType == GRAYSCALE_INPUT_CONVERSION_NONE ? fshaderNoopSrc : fshaderGrayscaleSrc;
     }
 
@@ -97,15 +96,15 @@ private:
      */
     virtual void getUniforms();
 
-    static const char *fshaderNoopSrc;              // Noop pass through shader
-    static const char *fshaderGrayscaleSrc;         // fragment shader source
-    static const GLfloat grayscaleConvVecRGB[3];    // weighted channel grayscale conversion for RGB input (default)
-    static const GLfloat grayscaleConvVecBGR[3];    // weighted channel grayscale conversion for BGR input
-    static const GLfloat grayscaleConvVecNone[3];   // identity transformation for pass through shader behavior
+    static const char* fshaderNoopSrc; // Noop pass through shader
+    static const char* fshaderGrayscaleSrc; // fragment shader source
+    static const GLfloat grayscaleConvVecRGB[3]; // weighted channel grayscale conversion for RGB input (default)
+    static const GLfloat grayscaleConvVecBGR[3]; // weighted channel grayscale conversion for BGR input
+    static const GLfloat grayscaleConvVecNone[3]; // identity transformation for pass through shader behavior
 
     GLint shParamUInputConvVec; // shader uniform weighted channel grayscale conversion vector
 
-    GLfloat grayscaleConvVec[3];                // currently set weighted channel grayscale conversion vector
+    GLfloat grayscaleConvVec[3]; // currently set weighted channel grayscale conversion vector
     GrayscaleInputConversionType inputConvType; // grayscale conversion type
 };
 }

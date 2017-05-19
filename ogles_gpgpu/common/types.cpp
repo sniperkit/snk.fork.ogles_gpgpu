@@ -17,6 +17,8 @@ namespace ogles_gpgpu {
 
 Size2d::Size2d() {}
 
-Size2d::Size2d(int width, int height) : width(width), height(height) {}
-
+Size2d::Size2d(int width, int height)
+    : width(width)
+    , height(height) {
+}
 }

@@ -16,12 +16,12 @@ namespace ogles_gpgpu {
 
 // ######### Temporal derivative shader #################
 
-
 class IxytProc : public TwoInputProc {
 public:
-
-    IxytProc(float strength = 1.0f) : strength(strength) {}
-    virtual const char *getProcName() {
+    IxytProc(float strength = 1.0f)
+        : strength(strength) {
+    }
+    virtual const char* getProcName() {
         return "IxytProc";
     }
     virtual void getUniforms();
@@ -29,21 +29,21 @@ public:
     virtual void setStrength(float value) {
         strength = value;
     }
-private:
 
+private:
     GLint texelWidthUniform;
     GLint texelHeightUniform;
 
     GLint shParamUStrength;
     float strength = 1.f;
 
-    virtual const char *getVertexShaderSource() {
+    virtual const char* getVertexShaderSource() {
         return vshaderFilter3x3Src;
     }
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return fshaderIxytSrc;
     }
-    static const char *fshaderIxytSrc;   // fragment shader source
+    static const char* fshaderIxytSrc; // fragment shader source
 };
 }
 

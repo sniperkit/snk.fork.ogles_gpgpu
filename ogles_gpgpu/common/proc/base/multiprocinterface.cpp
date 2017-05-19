@@ -14,7 +14,7 @@ RenderOrientation MultiProcInterface::getOutputRenderOrientation() const {
 void MultiProcInterface::setExternalInputDataFormat(GLenum fmt) {
     return getInputFilter()->setExternalInputDataFormat(fmt);
 }
-void MultiProcInterface::setExternalInputData(const unsigned char *data) {
+void MultiProcInterface::setExternalInputData(const unsigned char* data) {
     return getInputFilter()->setExternalInputData(data);
 }
 GLuint MultiProcInterface::getTextureUnit() const {
@@ -41,16 +41,16 @@ int MultiProcInterface::getInFrameH() const {
 bool MultiProcInterface::getWillDownscale() const {
     return getInputFilter()->getWillDownscale();
 }
-void MultiProcInterface::getResultData(unsigned char *data) const {
+void MultiProcInterface::getResultData(unsigned char* data) const {
     getOutputFilter()->getResultData(data);
 }
-void MultiProcInterface::getResultData(FrameDelegate &delegate) const {
+void MultiProcInterface::getResultData(FrameDelegate& delegate) const {
     getOutputFilter()->getResultData(delegate);
 }
-MemTransfer *MultiProcInterface::getMemTransferObj() const {
+MemTransfer* MultiProcInterface::getMemTransferObj() const {
     return getOutputFilter()->getMemTransferObj();
 }
-MemTransfer *MultiProcInterface::getInputMemTransferObj() const {
+MemTransfer* MultiProcInterface::getInputMemTransferObj() const {
     return getInputFilter()->getMemTransferObj();
 }
 GLuint MultiProcInterface::getInputTexId() const {
@@ -61,7 +61,7 @@ GLuint MultiProcInterface::getOutputTexId() const {
 }
 void MultiProcInterface::printInfo() {
     OG_LOGINF(getProcName(), "begin info for %u passes", (unsigned int)size());
-    for(int i = 0; i < size(); i++) {
+    for (int i = 0; i < size(); i++) {
         (*this)[i]->printInfo();
     }
     OG_LOGINF(getProcName(), "end info");

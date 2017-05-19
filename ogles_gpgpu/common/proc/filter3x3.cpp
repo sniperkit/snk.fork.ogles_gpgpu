@@ -6,17 +6,16 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "filter3x3.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
 
 Filter3x3Proc::Filter3x3Proc() {
-
 }
 
-void Filter3x3Proc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void Filter3x3Proc::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     // create shader object
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
 
@@ -30,11 +29,10 @@ void Filter3x3Proc::filterShaderSetup(const char *vShaderSrc, const char *fShade
 }
 
 void Filter3x3Proc::getUniforms() {
-
 }
 
 void Filter3x3Proc::setUniforms() {
     // Set texel width/height uniforms:
-    glUniform1f(texelWidthUniform, (1.0f/ float(outFrameW)));
-    glUniform1f(texelHeightUniform, (1.0f/ float(outFrameH)));
+    glUniform1f(texelWidthUniform, (1.0f / float(outFrameW)));
+    glUniform1f(texelHeightUniform, (1.0f / float(outFrameH)));
 }

@@ -6,8 +6,8 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../../common_includes.h"
 #include "local_norm_pass.h"
+#include "../../common_includes.h"
 
 using namespace ogles_gpgpu;
 
@@ -76,12 +76,12 @@ int LocalNormPass::init(int inW, int inH, unsigned int order, bool prepareForExt
     pxDy = 1.0f / (float)outFrameH;
 
     // get necessary fragment shader source
-    const char *shSrc = renderPass == 1 ? fshaderLocalNormPass1Src : fshaderLocalNormPass2Src;
+    const char* shSrc = renderPass == 1 ? fshaderLocalNormPass1Src : fshaderLocalNormPass2Src;
 
     // FilterProcBase init - create shaders, get shader params, set buffers for OpenGL
     filterInit(vshaderDefault, shSrc, RenderOrientationDiagonal);
 
-    if(renderPass == 2) {
+    if (renderPass == 2) {
         shParamUNormConst = shader->getParam(UNIF, "normConst");
     }
 
@@ -95,7 +95,7 @@ void LocalNormPass::createFBOTex(bool genMipmap) {
     assert(fbo);
 
     if (renderPass == 1) {
-        fbo->createAttachedTex(outFrameH, outFrameW, genMipmap);   // swapped
+        fbo->createAttachedTex(outFrameH, outFrameW, genMipmap); // swapped
     } else {
         fbo->createAttachedTex(outFrameW, outFrameH, genMipmap);
     }
@@ -110,9 +110,9 @@ int LocalNormPass::render(int position) {
 
     filterRenderPrepare();
 
-    glUniform1f(shParamUPxD, renderPass == 1 ? pxDy : pxDx);	// texture pixel delta values
-    if(renderPass == 2) {
-        glUniform1f (shParamUNormConst, normConst);
+    glUniform1f(shParamUPxD, renderPass == 1 ? pxDy : pxDx); // texture pixel delta values
+    if (renderPass == 2) {
+        glUniform1f(shParamUNormConst, normConst);
     }
 
     Tools::checkGLErr(getProcName(), "render prepare");
@@ -121,7 +121,7 @@ int LocalNormPass::render(int position) {
     Tools::checkGLErr(getProcName(), "render set coords");
 
     filterRenderDraw();
-    Tools::checkGLErr(getProcName(),  "render draw");
+    Tools::checkGLErr(getProcName(), "render draw");
 
     filterRenderCleanup();
     Tools::checkGLErr(getProcName(), "render cleanup");
