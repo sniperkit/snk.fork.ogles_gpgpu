@@ -4,4 +4,4 @@
 #
 
 include(CommonFindMod)
-drishti_common_find_module(ANDROID android android/api-level.h android)
+ogles_gpgpu_common_find_module(ANDROID android android/api-level.h android)

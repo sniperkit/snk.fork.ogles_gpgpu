@@ -14,16 +14,16 @@
 using namespace ogles_gpgpu;
 using namespace std;
 
+// *INDENT-OFF*
 const char *FilterProcBase::vshaderGPUImage = OG_TO_STR(
-            attribute vec4 position;
-            attribute vec4 inputTextureCoordinate;
-
-            varying vec2 textureCoordinate;
+attribute vec4 position;
+attribute vec4 inputTextureCoordinate;
+varying vec2 textureCoordinate;
 void main() {
     gl_Position = position;
     textureCoordinate = inputTextureCoordinate.xy;
-}
-        );
+});
+// *INDENT-ON*
 
 // *INDENT-OFF*
 const char *FilterProcBase::vshaderFilter3x3Src = OG_TO_STR(

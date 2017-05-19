@@ -4,4 +4,4 @@
 #
 
 include(CommonFindMod)
-drishti_common_find_module(OpenGLES2 GLESv2 GLES2/gl2.h GLESv2)
+ogles_gpgpu_common_find_module(OpenGLES2 GLESv2 GLES2/gl2.h GLESv2)

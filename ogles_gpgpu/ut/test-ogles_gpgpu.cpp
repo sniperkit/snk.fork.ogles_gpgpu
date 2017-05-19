@@ -173,6 +173,7 @@ static cv::Mat getTestImage(int width, int height, int stripe, bool alpha) {
 // > 0:1(380): preprocessor error: syntax error, unexpected HASH_TOKEN
 TEST(OGLESGPGPUTest, MedianProc) {
 	GLFWContext context;
+    ASSERT_TRUE(context);
 	if (context) {
 		cv::Mat test = getTestImage(480, 640, 20, true);
 
@@ -198,6 +199,7 @@ TEST(OGLESGPGPUTest, MedianProc) {
 
 TEST(OGLESGPGPUTest, Yuv2RgbProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         static const int width = 640, height = 480;
 
@@ -241,6 +243,7 @@ TEST(OGLESGPGPUTest, Yuv2RgbProc) {
 
 TEST(OGLESGPGPUTest, GrayScaleProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);
     if(context) {
         cv::Mat test = getTestImage(640, 480, 10, true);
         glActiveTexture(GL_TEXTURE0);
@@ -258,6 +261,7 @@ TEST(OGLESGPGPUTest, GrayScaleProc) {
 
 TEST(OGLESGPGPUTest, AdaptThreshProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(640, 480, 10, true);
         glActiveTexture(GL_TEXTURE0);
@@ -275,6 +279,7 @@ TEST(OGLESGPGPUTest, AdaptThreshProc) {
 
 TEST(OGLESGPGPUTest, GainProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         static const int value = 1, g = 10;
         cv::Mat test(640, 480, CV_8UC4, cv::Scalar(value,value,value,255));
@@ -294,6 +299,7 @@ TEST(OGLESGPGPUTest, GainProc) {
 
 TEST(OGLESGPGPUTest, BlendProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);
     if(context) {
         const float alpha = 0.5f;
         const int value = 2;
@@ -320,6 +326,7 @@ TEST(OGLESGPGPUTest, BlendProc) {
 
 TEST(OGLESGPGPUTest, FIFOProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         glActiveTexture(GL_TEXTURE0);
         ogles_gpgpu::VideoSource video;
@@ -341,6 +348,7 @@ TEST(OGLESGPGPUTest, FIFOProc) {
 
 TEST(OGLESGPGPUTest, TransformProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         glActiveTexture(GL_TEXTURE0);
         ogles_gpgpu::VideoSource video;
@@ -372,6 +380,7 @@ TEST(OGLESGPGPUTest, TransformProc) {
 
 TEST(OGLESGPGPUTest, DiffProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         const int value = 2;
         const int a = 1, b = 10;
@@ -397,6 +406,7 @@ TEST(OGLESGPGPUTest, DiffProc) {
 
 TEST(OGLESGPGPUTest, GaussianProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(640, 480, 1, true);
 
@@ -416,6 +426,7 @@ TEST(OGLESGPGPUTest, GaussianProc) {
 
 TEST(OGLESGPGPUTest, GaussianOptProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(640, 480, 1, true);
 
@@ -434,6 +445,7 @@ TEST(OGLESGPGPUTest, GaussianOptProc) {
 
 TEST(OGLESGPGPUTest, BoxOptProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(640, 480, 1, true);
 
@@ -452,6 +464,7 @@ TEST(OGLESGPGPUTest, BoxOptProc) {
 
 TEST(OGLESGPGPUTest, HessianProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test(480, 640, CV_8UC1, cv::Scalar::all(0));
 
@@ -481,6 +494,7 @@ TEST(OGLESGPGPUTest, HessianProc) {
 
 TEST(OGLESGPGPUTest, LbpProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(480, 640, 1, true);
 
@@ -499,6 +513,7 @@ TEST(OGLESGPGPUTest, LbpProc) {
 
 TEST(OGLESGPGPUTest, Fir3Proc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         const cv::Size size(640, 480);
         const cv::Point center(size.width/2, size.height/2);
@@ -542,6 +557,7 @@ TEST(OGLESGPGPUTest, Fir3Proc) {
 
 TEST(OGLESGPGPUTest, GradProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(640, 480, 2, true);
 
@@ -561,6 +577,7 @@ TEST(OGLESGPGPUTest, GradProc) {
 
 TEST(OGLESGPGPUTest, LowPassProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         std::vector<cv::Mat> images {
             cv::Mat(480, 640, CV_8UC4, cv::Scalar(0,0,0,255)),
@@ -585,6 +602,7 @@ TEST(OGLESGPGPUTest, LowPassProc) {
 
 TEST(OGLESGPGPUTest, HighPassProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         std::vector<cv::Mat> images {
             cv::Mat(480, 640, CV_8UC4, cv::Scalar(0,0,0,255)),
@@ -609,6 +627,7 @@ TEST(OGLESGPGPUTest, HighPassProc) {
 
 TEST(OGLESGPGPUTest, ThreshProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(640, 480, 2, true);
 
@@ -627,6 +646,7 @@ TEST(OGLESGPGPUTest, ThreshProc) {
 
 TEST(OGLESGPGPUTest, PyramidProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(640, 480, 2, true);
 
@@ -645,7 +665,7 @@ TEST(OGLESGPGPUTest, PyramidProc) {
 
 TEST(OGLESGPGPUTest, IxytProc) {
     GLFWContext context;
-
+    ASSERT_TRUE(context);
     if(context) {
         glActiveTexture(GL_TEXTURE0);
         ogles_gpgpu::VideoSource video;
@@ -676,6 +696,7 @@ TEST(OGLESGPGPUTest, IxytProc) {
 
 TEST(OGLESGPGPUTest, TensorProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(640, 480, 2, true);
 
@@ -694,6 +715,7 @@ TEST(OGLESGPGPUTest, TensorProc) {
 
 TEST(OGLESGPGPUTest, ShiTomasiProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(640, 480, 2, true);
         for(int i = 0; i < 100; i++) {
@@ -725,6 +747,7 @@ TEST(OGLESGPGPUTest, ShiTomasiProc) {
 
 TEST(OGLESGPGPUTest, HarrisProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(640, 480, 2, true);
         for(int i = 0; i < 100; i++) {
@@ -756,6 +779,7 @@ TEST(OGLESGPGPUTest, HarrisProc) {
 
 TEST(OGLESGPGPUTest, NmsProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test(480, 640, CV_8UC1, cv::Scalar::all(0));
 
@@ -787,6 +811,7 @@ TEST(OGLESGPGPUTest, NmsProc) {
 
 TEST(OGLESGPGPUTest, FlowProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(480, 640, 3, true);
 
@@ -813,6 +838,7 @@ TEST(OGLESGPGPUTest, FlowProc) {
 
 TEST(OGLESGPGPUTest, Rgb2HsvProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(480, 640, 3, true);
 
@@ -831,6 +857,7 @@ TEST(OGLESGPGPUTest, Rgb2HsvProc) {
 
 TEST(OGLESGPGPUTest, Hsv2RgbProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(480, 640, 3, true);
 
@@ -849,6 +876,7 @@ TEST(OGLESGPGPUTest, Hsv2RgbProc) {
 
 TEST(OGLESGPGPUTest, LNormProc) {
     GLFWContext context;
+    ASSERT_TRUE(context);    
     if(context) {
         cv::Mat test = getTestImage(480, 640, 3, true);
 
