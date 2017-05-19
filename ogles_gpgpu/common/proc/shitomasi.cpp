@@ -12,7 +12,7 @@
 using namespace std;
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *ShiTomasiProc::fshaderShiTomasiSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -36,7 +36,7 @@ void main()
 
     gl_FragColor = vec4(vec3(cornerness) * sensitivity, 1.0);
 });
-// *INDENT-ON*
+// clang-format on
 
 ShiTomasiProc::ShiTomasiProc() {
 

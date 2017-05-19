@@ -17,7 +17,7 @@ using namespace ogles_gpgpu;
 // Perform a vertical 5x1 average gray pixel value calculation
 // Requires a grayscale image as input!
 
-// *INDENT-OFF*
+// clang-format off
 const char *AdaptThreshProcPass::fshaderAdaptThreshPass1Src = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -42,13 +42,13 @@ void main() {
     gl_FragColor = vec4(avg, centerGray, 0.0, 1.0);
 }
 );
-// *INDENT-ON*
+// clang-format on
 
 // Adaptive thresholding - Pass 2
 // Perform a horizontal 7x1 or 5x1 average gray pixel value calculation and
 // the final binarization
 
-// *INDENT-OFF*
+// clang-format off
 const char *AdaptThreshProcPass::fshaderAdaptThreshPass2Src = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -76,7 +76,7 @@ void main()
     gl_FragColor = vec4(bin, bin, bin, 1.0);
 }
 );
-// *INDENT-ON*
+// clang-format on
 
 int AdaptThreshProcPass::init(int inW, int inH, unsigned int order, bool prepareForExternalInput) {
     OG_LOGINF(getProcName(), "render pass %d", renderPass);

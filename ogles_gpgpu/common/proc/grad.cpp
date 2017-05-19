@@ -12,7 +12,7 @@
 using namespace std;
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *GradProc::fshaderGradSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision highp float;)
@@ -69,7 +69,7 @@ OG_TO_STR(
      gl_FragColor = vec4(mag, clamp(theta/pi, 0.0, 1.0), clamp(dx, 0.0, 1.0), clamp(dy, 0.0, 1.0));
  }
  );
-// *INDENT-ON*
+// clang-format on
 
 GradProc::GradProc(float strength) : strength(strength) {
 

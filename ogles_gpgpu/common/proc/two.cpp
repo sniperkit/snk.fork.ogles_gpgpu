@@ -12,7 +12,7 @@
 using namespace std;
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *TwoInputProc::vshaderTwoInputSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -29,9 +29,9 @@ OG_TO_STR(
      gl_Position = position;
      textureCoordinate = inputTextureCoordinate.xy;
  });
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
+// clang-format off
 const char *TwoInputProc::fshaderTwoInputSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -49,7 +49,7 @@ OG_TO_STR(
 	 vec4 textureColor2 = texture2D(inputImageTexture2, textureCoordinate);
 	 gl_FragColor = vec4(textureColor.rgb - textureColor2.rgb, textureColor.a);
 });
-// *INDENT-ON*
+// clang-format on
 
 TwoInputProc::TwoInputProc() {
 

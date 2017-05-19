@@ -12,7 +12,7 @@
 using namespace std;
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *LbpProc::fshaderLbpSrc =
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -60,7 +60,7 @@ void main()
     //gl_FragColor = vec4(centerIntensity, centerIntensity, centerIntensity, 1.0);
     gl_FragColor = vec4(byteTally, byteTally, byteTally, 1.0);
 });
-// *INDENT-ON*
+// clang-format on
 
 LbpProc::LbpProc() {
 

@@ -11,7 +11,7 @@
 using namespace std;
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *ThreeInputProc::vshaderThreeInputSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -48,7 +48,7 @@ OG_TO_STR(
      vec4 textureColor3 = texture2D(inputImageTexture3, textureCoordinate);
 	 gl_FragColor = vec4(textureColor.rgb - textureColor2.rgb, textureColor.a);
 });
-// *INDENT-ON*
+// clang-format on
 
 ThreeInputProc::ThreeInputProc() {
 

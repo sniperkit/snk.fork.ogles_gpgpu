@@ -12,7 +12,7 @@
 
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *RemapProc::vshaderRemapSrc = OG_TO_STR
 (
     attribute vec4 position;
@@ -24,9 +24,9 @@ const char *RemapProc::vshaderRemapSrc = OG_TO_STR
         textureCoordinate = inputTextureCoordinate.xy;
     }
 );
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
+// clang-format off
 const char *RemapProc::fshaderRemapSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision highp float;)
@@ -46,7 +46,7 @@ OG_TO_STR(
      vec4 centerIntensity = texture2D(inputImageTexture, textureCoordinate + (delta * offset));
      gl_FragColor = centerIntensity;
  });
-// *INDENT-ON*
+// clang-format on
 
 RemapProc::RemapProc() {}
 

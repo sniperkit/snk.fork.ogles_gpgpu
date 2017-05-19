@@ -11,7 +11,7 @@
 
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *LocalNormPass::fshaderLocalNormPass1Src = 
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision highp float;)
@@ -33,9 +33,9 @@ void main() {
 
     gl_FragColor = vec4(pxC.rgb, val); // {r,g,b,r_mean}
 });
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
+// clang-format off
 const char *LocalNormPass::fshaderLocalNormPass2Src =
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision highp float;)
@@ -60,7 +60,7 @@ void main() {
 
     gl_FragColor = vec4(clamp(0.5 * rNorm, 0.0, 1.0), pxC.g, pxC.r, val); // {r_norm,g,r,r_mean}
 });
-// *INDENT-ON*
+// clang-format on
 
 int LocalNormPass::init(int inW, int inH, unsigned int order, bool prepareForExternalInput) {
     OG_LOGINF(getProcName(), "render pass %d", renderPass);

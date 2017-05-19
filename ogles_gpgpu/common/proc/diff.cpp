@@ -11,7 +11,7 @@
 
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *DiffProc::fshaderDiffSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision highp float;)
@@ -29,7 +29,7 @@ OG_TO_STR(
      vec3 dt = (centerIntensity.rgb-centerIntensity2.rgb) * strength;
      gl_FragColor = vec4(vec3(clamp(dt + offset, 0.0, 1.0)), 1.0);
  });
-// *INDENT-ON*
+// clang-format on
 
 DiffProc::DiffProc(float strength, float offset) : strength(strength), offset(offset) {
 

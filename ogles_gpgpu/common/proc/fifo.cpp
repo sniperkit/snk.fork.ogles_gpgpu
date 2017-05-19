@@ -34,7 +34,7 @@ private:
     GLint shParamUGain;
 };
 
-// *INDENT-OFF*
+// clang-format off
 const char * NoopProc::fshaderNoopSrc =
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision mediump float;)
@@ -48,7 +48,7 @@ OG_TO_STR(
      vec4 val = texture2D(uInputTex, vTexCoord);
      gl_FragColor = clamp(val * gain, 0.0, 1.0);
  });
-// *INDENT-ON*
+// clang-format on
 
 // #################### FIFO ####################
 

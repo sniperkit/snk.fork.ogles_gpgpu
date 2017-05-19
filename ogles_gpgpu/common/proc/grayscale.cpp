@@ -29,7 +29,7 @@ const GLfloat GrayscaleProc::grayscaleConvVecNone[3] = {
     1.0, 1.0, 1.0
 };
 
-// *INDENT-OFF*
+// clang-format off
 const char *GrayscaleProc::fshaderGrayscaleSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -47,9 +47,9 @@ void main()
     gl_FragColor = vec4(gray, gray, gray, 1.0);
 }
 );
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
+// clang-format off
 const char *GrayscaleProc::fshaderNoopSrc =
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -64,7 +64,7 @@ OG_TO_STR(
      gl_FragColor = vec4(texture2D(uInputTex, vTexCoord).rgba);
  }
 );
-// *INDENT-ON*
+// clang-format on
 
 GrayscaleProc::GrayscaleProc() {
     // set defaults

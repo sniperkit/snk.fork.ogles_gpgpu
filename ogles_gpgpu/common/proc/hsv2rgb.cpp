@@ -11,7 +11,7 @@
 #include "hsv2rgb.h"
 
 BEGIN_OGLES_GPGPU
-// *INDENT-OFF*
+// clang-format off
 const char * Hsv2RgbProc::fshaderHsv2RgbSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision mediump float;)
@@ -31,5 +31,5 @@ OG_TO_STR(
      vec4 val = texture2D(uInputTex, vTexCoord);
      gl_FragColor = vec4(hsv2rgb(val.rgb), 1.0);
  });
-// *INDENT-ON*
+// clang-format on
 END_OGLES_GPGPU

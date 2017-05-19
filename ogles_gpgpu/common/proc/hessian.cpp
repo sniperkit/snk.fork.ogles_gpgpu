@@ -40,7 +40,7 @@ using namespace ogles_gpgpu;
 
 // Source: GPUImageXYDerivativeFilter.m
 
-// *INDENT-OFF*
+// clang-format off
 const char *HessianProc::fshaderHessianAndDeterminantSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -102,9 +102,9 @@ void main()
 
     gl_FragColor = vec4((Ixx + 1.0)/2.0, (Iyy + 1.0)/2.0, (Ixy + 1.0)/2.0, d * edgeStrength);
 });
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
+// clang-format off
 const char *HessianProc::fshaderDeterminantSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -165,7 +165,7 @@ const char *HessianProc::fshaderDeterminantSrc =
 
     gl_FragColor = vec4(d * edgeStrength, 1.0);
 });
-// *INDENT-ON*
+// clang-format on
 
 HessianProc::HessianProc(float edgeStrength, bool doHessian)
     : doHessian(doHessian)

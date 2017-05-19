@@ -14,7 +14,7 @@
 using namespace ogles_gpgpu;
 using namespace std;
 
-// *INDENT-OFF*
+// clang-format off
 const char *FilterProcBase::vshaderGPUImage = OG_TO_STR(
 attribute vec4 position;
 attribute vec4 inputTextureCoordinate;
@@ -23,9 +23,9 @@ void main() {
     gl_Position = position;
     textureCoordinate = inputTextureCoordinate.xy;
 });
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
+// clang-format off
 const char *FilterProcBase::vshaderFilter3x3Src = OG_TO_STR(
 
     attribute vec4 position;
@@ -79,7 +79,7 @@ void main()
     vTexCoord = aTexCoord;
 }
 );
-// *INDENT-ON*
+// clang-format on
 
 #pragma mark public methods
 

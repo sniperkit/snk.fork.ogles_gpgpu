@@ -99,7 +99,7 @@ void FlowProc::setUniforms() {
 // | |*| + |*| |
 // -------------
 
-// *INDENT-OFF*
+// clang-format off
 const char *FlowProc::fshaderFlowSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision highp float;)
@@ -162,7 +162,7 @@ OG_TO_STR(
      vec4 flow = vec4(((-uv + 1.0) / 2.0), (center.xy + 1.0) / 2.0);
      gl_FragColor = flow;
  });
-// *INDENT-ON*
+// clang-format on
 
 // ============== convenience =========================
 
@@ -247,7 +247,7 @@ void FlowImplProc::setUniforms() {
     glUniform1f(shParamUStrength, strength);
 }
 
-// *INDENT-OFF*
+// clang-format off
 const char * FlowImplProc::fshaderFlowXSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision highp float;)
@@ -265,9 +265,9 @@ OG_TO_STR(
      vec4 x = vec4(t, (pix.x*pix.z+1.0)/2.0);
      gl_FragColor = x * strength;
  });
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
+// clang-format off
 const char *FlowImplProc::fshaderFlowYSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision highp float;)
@@ -285,7 +285,7 @@ OG_TO_STR(
      vec4 y = vec4(t, (pix.y*pix.z+1.0)/2.0);
      gl_FragColor = y * strength;
  });
-// *INDENT-ON*
+// clang-format on
 
 //##########################################################################
 //                   +=> [Ix^2; Ix*Iy; Iy^2; Ix*It] => SMOOTH ===+
@@ -313,7 +313,7 @@ void Flow2Proc::setUniforms() {
     glUniform1f(shParamUTau, tau);
 }
 
-// *INDENT-OFF*
+// clang-format off
 const char *Flow2Proc::fshaderFlowSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision highp float;)
@@ -366,7 +366,7 @@ OG_TO_STR(
      vec4 flow = vec4(((-uv + 1.0) / 2.0), L1, L2); // TODO: L1,L2 need scaling
      gl_FragColor = flow;
  });
-// *INDENT-ON*
+// clang-format on
 
 // =========================================
 

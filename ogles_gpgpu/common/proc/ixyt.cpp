@@ -25,7 +25,7 @@ void IxytProc::setUniforms() {
     glUniform1f(shParamUStrength, strength);
 }
 
-// *INDENT-OFF*
+// clang-format off
 const char *IxytProc::fshaderIxytSrc =
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision highp float;)
@@ -77,4 +77,4 @@ OG_TO_STR(
      gl_FragColor = vec4(d2, centerIntensity);
  }
  );
-// *INDENT-ON*
+// clang-format on

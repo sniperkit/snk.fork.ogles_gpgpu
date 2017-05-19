@@ -14,7 +14,7 @@ using namespace ogles_gpgpu;
 
 // Source: GPUImageXYDerivativeFilter.m
 
-// *INDENT-OFF*
+// clang-format off
 const char *TensorProc::fshaderTensorSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -64,7 +64,7 @@ void main()
     // is useful for optical flow.
     gl_FragColor = vec4(xx, yy, (xy + 1.0) / 2.0, centerIntensity);
 });
-// *INDENT-ON*
+// clang-format on
 
 TensorProc::TensorProc() {
 

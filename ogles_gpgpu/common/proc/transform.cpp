@@ -15,7 +15,7 @@
 using namespace std;
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *TransformProc::vshaderTransformSrc = OG_TO_STR(
 attribute vec4 aPos;
 attribute vec2 aTexCoord;
@@ -27,9 +27,9 @@ void main()
     vTexCoord = aTexCoord;
 }
 );
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
+// clang-format off
 const char *TransformProc::fshaderTransformSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -43,9 +43,9 @@ void main()
     gl_FragColor = vec4(texture2D(uInputTex, vTexCoord).rgba);
 }
 );
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
+// clang-format off
 const char *TransformProc::fshaderTransformBicubicSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -103,7 +103,7 @@ void main()
    gl_FragColor = textureBicubic(uInputTex, vTexCoord, texSize);
 }
 );
-// *INDENT-ON*
+// clang-format on
 
 TransformProc::TransformProc() {
     memset(transformMatrix.data, 0, sizeof(transformMatrix.data));

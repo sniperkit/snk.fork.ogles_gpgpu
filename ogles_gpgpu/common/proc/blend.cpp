@@ -11,7 +11,7 @@
 
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *BlendProc::fshaderBlendSrc =
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision highp float;)
@@ -30,7 +30,7 @@ OG_TO_STR(
     vec4 textureColor2 = texture2D(inputImageTexture2, textureCoordinate);
     gl_FragColor = mix(textureColor, textureColor2, alpha);
  });
-// *INDENT-ON*
+// clang-format on
 
 BlendProc::BlendProc(float alpha) : alpha(alpha) {
 

@@ -11,7 +11,7 @@
 
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *Fir3Proc::fshaderFir3Src =
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision highp float;)
@@ -62,7 +62,7 @@ OG_TO_STR(
 
      gl_FragColor = vec4(response * alpha + beta, 1.0);
 });
-// *INDENT-ON*
+// clang-format on
 
 Fir3Proc::Fir3Proc(bool doRgb)
     : doRgb(doRgb) {

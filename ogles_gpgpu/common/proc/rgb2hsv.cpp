@@ -10,7 +10,7 @@
 
 #include "rgb2hsv.h"
 
-// *INDENT-OFF*
+// clang-format off
 BEGIN_OGLES_GPGPU
 const char * Rgb2HsvProc::fshaderRgb2HsvSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -37,4 +37,4 @@ OG_TO_STR(
  });
 
 END_OGLES_GPGPU
-// *INDENT-ON*
+// clang-format on

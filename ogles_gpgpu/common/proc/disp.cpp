@@ -13,7 +13,7 @@
 using namespace std;
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *Disp::fshaderDispSrc =
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision mediump float;)
@@ -26,7 +26,7 @@ void main()
     gl_FragColor = vec4(texture2D(uInputTex, vTexCoord).rgba);
 }
 );
-// *INDENT-ON*
+// clang-format on
 
 int Disp::init(int inW, int inH, unsigned int order, bool prepareForExternalInput) {
     OG_LOGINF(getProcName(), "initialize");

@@ -8,7 +8,7 @@
 
 #include "gain.h"
 
-// *INDENT-OFF*
+// clang-format off
 BEGIN_OGLES_GPGPU
 const char * GainProc::fshaderGainSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -33,4 +33,4 @@ void GainProc::setUniforms() {
 }
 
 END_OGLES_GPGPU
-// *INDENT-ON*
+// clang-format on

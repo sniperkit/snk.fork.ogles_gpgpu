@@ -52,15 +52,12 @@ void setColorConversion709( GLfloat conversionMatrix[9] ) {
     kColorConversion709 = conversionMatrix;
 }
 
-// *INDENT-OFF*
+// clang-format off
 const char *kGPUImageYUVVideoRangeConversionForRGFragmentShaderString = 
-
-//#if defined(OGLES_GPGPU_OPENGLES)
-//OG_TO_STR(precision mediump float;)
-//#endif
+#if defined(OGLES_GPGPU_OPENGLES)
+OG_TO_STR(precision mediump float;)
+#endif
 OG_TO_STR(
-          
- precision mediump float;
           
  varying vec2 vTexCoord;
 
@@ -79,13 +76,15 @@ OG_TO_STR(
 
      gl_FragColor = vec4(rgb, 1);
  });
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
-const char *kGPUImageYUVFullRangeConversionForLAFragmentShaderString = OG_TO_STR(
-                        
- precision mediump float;
-                                                                                 
+// clang-format off
+const char *kGPUImageYUVFullRangeConversionForLAFragmentShaderString =
+#if defined(OGLES_GPGPU_OPENGLES)
+OG_TO_STR(precision mediump float;)
+#endif
+OG_TO_STR(
+
  varying vec2 vTexCoord;
 
  uniform sampler2D luminanceTexture;
@@ -103,12 +102,14 @@ const char *kGPUImageYUVFullRangeConversionForLAFragmentShaderString = OG_TO_STR
 
      gl_FragColor = vec4(rgb, 1);
  });
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
-const char *kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = OG_TO_STR(
-
- precision mediump float;
+// clang-format off
+const char *kGPUImageYUVVideoRangeConversionForLAFragmentShaderString =
+#if defined(OGLES_GPGPU_OPENGLES)
+OG_TO_STR(precision mediump float;)
+#endif
+OG_TO_STR(
                                                                                   
  varying vec2 vTexCoord;
 
@@ -127,7 +128,7 @@ const char *kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = OG_TO_ST
 
      gl_FragColor = vec4(rgb, 1);
  });
-// *INDENT-ON*
+// clang-format on
 
 // =================================================================================
 

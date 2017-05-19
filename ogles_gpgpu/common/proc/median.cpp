@@ -52,7 +52,7 @@ BEGIN_OGLES_GPGPU
 
 MedianProc::MedianProc() : Filter3x3Proc() {}
 
-// *INDENT-OFF*
+// clang-format off
 const char *MedianProc::fshaderMedianSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision highp float;)
@@ -108,7 +108,7 @@ OG_TO_STR(
 
      gl_FragColor = vec4(v[4], 1.0);
  });
-// *INDENT-ON*
+// clang-format on
 
 void MedianProc::getUniforms() {
     Filter3x3Proc::getUniforms();

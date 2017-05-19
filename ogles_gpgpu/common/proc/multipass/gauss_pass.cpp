@@ -16,7 +16,7 @@ using namespace ogles_gpgpu;
 
 // #### 7 tap filters ####
 
-// *INDENT-OFF*
+// clang-format off
 const char *GaussProcPass::vshaderGauss7Src = OG_TO_STR(
  attribute vec4 position;
  attribute vec4 inputTextureCoordinate;
@@ -48,9 +48,9 @@ const char *GaussProcPass::vshaderGauss7Src = OG_TO_STR(
      textureCoordinateP2 = textureCoordinate + texelStep * 2.0;
      textureCoordinateP3 = textureCoordinate + texelStep * 3.0;
  });
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
+// clang-format off
 const char *GaussProcPass::fshaderGauss7Src = 
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision mediump float;)
@@ -80,7 +80,7 @@ void main()
     gl_FragColor = 0.015625 * (pxL3 + pxR3) + 0.09375 * (pxL2 + pxR2) + 0.234375 * (pxL1 + pxR1) + 0.3125 * pxC;
 }
 );
-// *INDENT-ON*
+// clang-format on
 
 // 1 6 15 20 15 6 1
 // 20+30+12+2 = 64
@@ -89,7 +89,7 @@ void main()
 // 6/64 = 0.09375
 // 1/64 = 0.015625
 
-// *INDENT-OFF*
+// clang-format off
 const char *GaussProcPass::fshaderGauss7SrcR =
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision mediump float;)
@@ -119,11 +119,11 @@ void main()
     pxC.r = (0.006 * (pxL3 + pxR3) + 0.061 * (pxL2 + pxR2) + 0.242 * (pxL1 + pxR1) + 0.382 * pxC.r);
     gl_FragColor = pxC;
 });
-// *INDENT-ON*
+// clang-format on
 
 // #### 5 tap filters ####
 
-// *INDENT-OFF*
+// clang-format off
 const char *GaussProcPass::vshaderGauss5Src = OG_TO_STR(
  attribute vec4 position;
  attribute vec4 inputTextureCoordinate;
@@ -151,9 +151,9 @@ const char *GaussProcPass::vshaderGauss5Src = OG_TO_STR(
      textureCoordinateP1 = textureCoordinate + texelStep;
      textureCoordinateP2 = textureCoordinate + texelStep * 2.0;
  });
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
+// clang-format off
 const char *GaussProcPass::fshaderGauss5Src = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -180,7 +180,7 @@ const char *GaussProcPass::fshaderGauss5Src =
     vec4 result = (0.0625 * (pxL2 + pxR2) + 0.25 * (pxL1 + pxR1) + 0.375 * pxC);
     gl_FragColor = result;
 });
-// *INDENT-ON*
+// clang-format on
 
 // 1 4 6 4 1
 // 1+4+6+4+1 = 16
@@ -188,7 +188,7 @@ const char *GaussProcPass::fshaderGauss5Src =
 // 4/16 = 0.25
 // 1/16 = 0.0625
 
-// *INDENT-OFF*
+// clang-format off
 const char *GaussProcPass::fshaderGauss5SrcR = 
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision mediump float;)
@@ -214,7 +214,7 @@ OG_TO_STR(
     pxC.r = (0.0625 * (pxL2 + pxR2) + 0.25 * (pxL1 + pxR1) + 0.375 * pxC.r);
     gl_FragColor = pxC;
 });
-// *INDENT-ON*
+// clang-format on
 
 void GaussProcPass::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
     // create shader object

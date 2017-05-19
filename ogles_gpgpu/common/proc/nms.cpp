@@ -14,7 +14,7 @@
 using namespace std;
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *NmsProc::fshaderNmsSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
 OG_TO_STR(precision highp float;)
@@ -64,7 +64,7 @@ OG_TO_STR(
 
      gl_FragColor = vec4(finalValue, centerColor.gba); // DO NOT EDIT (see swizzle)
 });
-// *INDENT-ON*
+// clang-format on
 
 NmsProc::NmsProc() {
 

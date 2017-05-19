@@ -18,7 +18,7 @@ using namespace ogles_gpgpu;
 // Simple thresholding fragment shader
 // Requires a grayscale image as input!
 
-// *INDENT-OFF*
+// clang-format off
 const char *ThreshProc::fshaderSimpleThreshSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
@@ -33,7 +33,7 @@ void main() {
     float bin = step(uThresh, gray);
     gl_FragColor = vec4(bin, bin, bin, 1.0);
 });
-// *INDENT-ON*
+// clang-format on
 
 ThreshProc::ThreshProc() {
     // set defaults
