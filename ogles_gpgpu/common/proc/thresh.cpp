@@ -9,29 +9,31 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "thresh.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
 
 // Simple thresholding fragment shader
 // Requires a grayscale image as input!
-const char *ThreshProc::fshaderSimpleThreshSrc = OG_TO_STR(
+
+// clang-format off
+const char *ThreshProc::fshaderSimpleThreshSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-            precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
-            varying vec2 vTexCoord;
-            uniform float uThresh;
-            uniform sampler2D uInputTex;
+OG_TO_STR(
+varying vec2 vTexCoord;
+uniform float uThresh;
+uniform sampler2D uInputTex;
 void main() {
     float gray = texture2D(uInputTex, vTexCoord).r;
     float bin = step(uThresh, gray);
     gl_FragColor = vec4(bin, bin, bin, 1.0);
-}
-        );
+});
+// clang-format on
 
 ThreshProc::ThreshProc() {
     // set defaults
@@ -61,7 +63,7 @@ int ThreshProc::render(int position) {
 
     filterRenderPrepare();
 
-    glUniform1f(shParamUThresh, threshVal);	// thresholding value for simple thresholding
+    glUniform1f(shParamUThresh, threshVal); // thresholding value for simple thresholding
 
     Tools::checkGLErr("ThreshProc", "render prepare");
 

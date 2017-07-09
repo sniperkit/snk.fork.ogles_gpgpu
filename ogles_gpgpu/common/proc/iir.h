@@ -16,7 +16,6 @@ BEGIN_OGLES_GPGPU
 
 class IirFilterProc : public MultiPassProc {
 public:
-
     enum FilterKind {
         kLowPass,
         kHighPass
@@ -24,11 +23,11 @@ public:
 
     class Impl;
 
-    IirFilterProc(FilterKind kind, float alpha=0.5, float strength=1.f);
+    IirFilterProc(FilterKind kind, float alpha = 0.5, float strength = 1.f);
     ~IirFilterProc();
-    virtual void useTexture(GLuint id, GLuint useTexUnit = 1, GLenum target = GL_TEXTURE_2D, int position=0);
-    virtual int render(int position=0);
-    virtual const char *getProcName() {
+    virtual void useTexture(GLuint id, GLuint useTexUnit = 1, GLenum target = GL_TEXTURE_2D, int position = 0);
+    virtual int render(int position = 0);
+    virtual const char* getProcName() {
         return "IirFilterProc";
     }
     virtual ProcInterface* getInputFilter() const;

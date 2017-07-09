@@ -23,7 +23,6 @@ namespace ogles_gpgpu {
  */
 class Yuv2RgbProc : public FilterProcBase {
 public:
-
     /**
      * Constructor.
      */
@@ -32,7 +31,7 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "Yuv2RgbProc";
     }
 
@@ -45,21 +44,20 @@ public:
     /**
      * Render the output.
      */
-    virtual int render(int position=0);
+    virtual int render(int position = 0);
 
     /**
     * Create the shader program
     */
-    virtual void filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target);
+    virtual void filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target);
 
     void setTextures(GLuint luminanceTexture, GLuint chrominanceTexture);
 
 private:
-
     virtual void filterRenderPrepare();
 
-    static const char *vshaderYuv2RgbSrc;   // fragment shader source
-    static const char *fshaderYuv2RgbSrc;   // fragment shader source
+    static const char* vshaderYuv2RgbSrc; // fragment shader source
+    static const char* fshaderYuv2RgbSrc; // fragment shader source
 
     //GLProgram *yuvConversionProgram;
 
@@ -73,7 +71,7 @@ private:
     GLint yuvConversionChrominanceTextureUniform;
     GLint yuvConversionMatrixUniform;
 
-    const GLfloat *_preferredConversion;
+    const GLfloat* _preferredConversion;
 };
 }
 

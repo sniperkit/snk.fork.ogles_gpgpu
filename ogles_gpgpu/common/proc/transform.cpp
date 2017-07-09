@@ -7,15 +7,15 @@
 // Original shader: theagentd/Myomyomyo http://www.java-gaming.org/index.php?topic=35123.0
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "transform.h"
+#include "../common_includes.h"
 
 #include <memory.h>
 
 using namespace std;
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *TransformProc::vshaderTransformSrc = OG_TO_STR(
 attribute vec4 aPos;
 attribute vec2 aTexCoord;
@@ -27,15 +27,15 @@ void main()
     vTexCoord = aTexCoord;
 }
 );
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
-const char *TransformProc::fshaderTransformSrc = OG_TO_STR(
+// clang-format off
+const char *TransformProc::fshaderTransformSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
 varying vec2 vTexCoord;
 uniform sampler2D uInputTex;
 void main()
@@ -43,16 +43,16 @@ void main()
     gl_FragColor = vec4(texture2D(uInputTex, vTexCoord).rgba);
 }
 );
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
-const char *TransformProc::fshaderTransformBicubicSrc = OG_TO_STR(
+// clang-format off
+const char *TransformProc::fshaderTransformBicubicSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
-vec4 cubic(OGLES_GPGPU_HIGHP float v)
+OG_TO_STR(
+vec4 cubic(float v)
 {
     vec4 n = vec4(1.0, 2.0, 3.0, 4.0) - v;
     vec4 s = n * n * n;
@@ -64,7 +64,7 @@ vec4 cubic(OGLES_GPGPU_HIGHP float v)
     return result;
 }
 
-vec4 textureBicubic(sampler2D sampler, OGLES_GPGPU_HIGHP vec2 texCoords, OGLES_GPGPU_HIGHP vec2 texSize)
+vec4 textureBicubic(sampler2D sampler, vec2 texCoords, vec2 texSize)
 {
     vec2 invTexSize = 1.0 / texSize;
 
@@ -103,28 +103,27 @@ void main()
    gl_FragColor = textureBicubic(uInputTex, vTexCoord, texSize);
 }
 );
-// *INDENT-ON*
+// clang-format on
 
 TransformProc::TransformProc() {
     memset(transformMatrix.data, 0, sizeof(transformMatrix.data));
-    for(int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
         transformMatrix.data[i][i] = 1;
     }
 }
 
-
-const char *TransformProc::getFragmentShaderSource() {
+const char* TransformProc::getFragmentShaderSource() {
     return (interpolation == BILINEAR) ? fshaderTransformSrc : fshaderTransformBicubicSrc;
 }
 
-const char *TransformProc::getVertexShaderSource() {
+const char* TransformProc::getVertexShaderSource() {
     return vshaderTransformSrc;
 }
 
 void TransformProc::setUniforms() {
     FilterProcBase::setUniforms();
     glUniformMatrix4fv(shParamUTransform, 1, 0, &transformMatrix.data[0][0]);
-    if(interpolation == BICUBIC) {
+    if (interpolation == BICUBIC) {
         glUniform2f(shParamUTransformSize, inFrameW, inFrameH);
     }
 }
@@ -132,12 +131,11 @@ void TransformProc::setUniforms() {
 void TransformProc::getUniforms() {
     FilterProcBase::getUniforms();
     shParamUTransform = shader->getParam(UNIF, "transformMatrix");
-    if(interpolation == BICUBIC) {
+    if (interpolation == BICUBIC) {
         shParamUTransformSize = shader->getParam(UNIF, "texSize");
     }
 }
 
-void TransformProc::setTransformMatrix(const Mat44f &matrix) {
+void TransformProc::setTransformMatrix(const Mat44f& matrix) {
     transformMatrix = matrix;
 }
-

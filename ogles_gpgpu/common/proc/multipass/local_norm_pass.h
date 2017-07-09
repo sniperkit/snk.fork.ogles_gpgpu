@@ -34,7 +34,7 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "LocalNormPass";
     }
 
@@ -47,7 +47,7 @@ public:
     /**
      * Render the output.
      */
-    virtual int render(int position=0);
+    virtual int render(int position = 0);
 
     /**
      * Create a texture that is attached to the FBO and will contain the processing result.
@@ -59,16 +59,15 @@ public:
 private:
     int renderPass; // render pass number. must be 1 or 2
 
-    GLint shParamUPxD;		// pixel delta values for texture lookup in the fragment shader. only used for adapt. thresholding
-    float pxDx;	// pixel delta value for texture access
-    float pxDy;	// pixel delta value for texture access
+    GLint shParamUPxD; // pixel delta values for texture lookup in the fragment shader. only used for adapt. thresholding
+    float pxDx; // pixel delta value for texture access
+    float pxDy; // pixel delta value for texture access
 
     GLint shParamUNormConst;
     float normConst = 0.00005; // normalization constant
 
-    static const char *fshaderLocalNormPass1Src;  // fragment shader source for gaussian smoothing for both passes
-    static const char *fshaderLocalNormPass2Src;  // fragment shader source for gaussian smoothing for both passes
+    static const char* fshaderLocalNormPass1Src; // fragment shader source for gaussian smoothing for both passes
+    static const char* fshaderLocalNormPass2Src; // fragment shader source for gaussian smoothing for both passes
 };
-
 }
 #endif

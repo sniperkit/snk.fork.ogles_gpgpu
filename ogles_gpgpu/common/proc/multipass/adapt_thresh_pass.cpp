@@ -7,9 +7,8 @@
 // See LICENSE file in project repository root for the license.
 //
 
-
-#include "../../common_includes.h"
 #include "adapt_thresh_pass.h"
+#include "../../common_includes.h"
 
 using namespace ogles_gpgpu;
 
@@ -17,13 +16,13 @@ using namespace ogles_gpgpu;
 // Perform a vertical 5x1 average gray pixel value calculation
 // Requires a grayscale image as input!
 
-// *INDENT-OFF*
-const char *AdaptThreshProcPass::fshaderAdaptThreshPass1Src = OG_TO_STR(
+// clang-format off
+const char *AdaptThreshProcPass::fshaderAdaptThreshPass1Src = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
 varying vec2 vTexCoord;
 uniform vec2 uPxD;
 uniform sampler2D uInputTex;
@@ -42,19 +41,19 @@ void main() {
     gl_FragColor = vec4(avg, centerGray, 0.0, 1.0);
 }
 );
-// *INDENT-ON*
+// clang-format on
 
 // Adaptive thresholding - Pass 2
 // Perform a horizontal 7x1 or 5x1 average gray pixel value calculation and
 // the final binarization
 
-// *INDENT-OFF*
-const char *AdaptThreshProcPass::fshaderAdaptThreshPass2Src = OG_TO_STR(
+// clang-format off
+const char *AdaptThreshProcPass::fshaderAdaptThreshPass2Src = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
 varying vec2 vTexCoord;
 uniform vec2 uPxD;
 uniform sampler2D uInputTex;
@@ -76,7 +75,7 @@ void main()
     gl_FragColor = vec4(bin, bin, bin, 1.0);
 }
 );
-// *INDENT-ON*
+// clang-format on
 
 int AdaptThreshProcPass::init(int inW, int inH, unsigned int order, bool prepareForExternalInput) {
     OG_LOGINF(getProcName(), "render pass %d", renderPass);
@@ -92,7 +91,7 @@ int AdaptThreshProcPass::init(int inW, int inH, unsigned int order, bool prepare
     pxDy = 1.0f / (float)outFrameH;
 
     // get necessary fragment shader source
-    const char *shSrc = renderPass == 1 ? fshaderAdaptThreshPass1Src : fshaderAdaptThreshPass2Src;
+    const char* shSrc = renderPass == 1 ? fshaderAdaptThreshPass1Src : fshaderAdaptThreshPass2Src;
 
     // FilterProcBase init - create shaders, get shader params, set buffers for OpenGL
     filterInit(vshaderDefault, shSrc, RenderOrientationDiagonal);
@@ -107,7 +106,7 @@ void AdaptThreshProcPass::createFBOTex(bool genMipmap) {
     assert(fbo);
 
     if (renderPass == 1) {
-        fbo->createAttachedTex(outFrameH, outFrameW, genMipmap);   // swapped
+        fbo->createAttachedTex(outFrameH, outFrameW, genMipmap); // swapped
     } else {
         fbo->createAttachedTex(outFrameW, outFrameH, genMipmap);
     }
@@ -122,7 +121,7 @@ int AdaptThreshProcPass::render(int position) {
 
     filterRenderPrepare();
 
-    glUniform2f(shParamUPxD, pxDx, pxDy);	// texture pixel delta values
+    glUniform2f(shParamUPxD, pxDx, pxDy); // texture pixel delta values
 
     Tools::checkGLErr(getProcName(), "render prepare");
 

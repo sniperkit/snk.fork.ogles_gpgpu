@@ -21,11 +21,11 @@ EGLDisplay EGL::disp = EGL_NO_DISPLAY;
 bool EGL::setup(int rSize, int gSize, int bSize, int aSize, int depthSize) {
     // EGL config attributes
     const EGLint confAttr[] = {
-        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,	// use OpenGL ES 2.0, very important!
-        EGL_SURFACE_TYPE, EGL_PBUFFER_BIT,			// we will create a pixelbuffer surface
-        EGL_RED_SIZE, 	rSize,
+        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT, // use OpenGL ES 2.0, very important!
+        EGL_SURFACE_TYPE, EGL_PBUFFER_BIT, // we will create a pixelbuffer surface
+        EGL_RED_SIZE, rSize,
         EGL_GREEN_SIZE, gSize,
-        EGL_BLUE_SIZE, 	bSize,
+        EGL_BLUE_SIZE, bSize,
         EGL_ALPHA_SIZE, aSize,
         EGL_DEPTH_SIZE, depthSize,
         EGL_NONE
@@ -33,7 +33,7 @@ bool EGL::setup(int rSize, int gSize, int bSize, int aSize, int depthSize) {
 
     // EGL context attributes
     const EGLint ctxAttr[] = {
-        EGL_CONTEXT_CLIENT_VERSION, 2,				// use OpenGL ES 2.0, very important!
+        EGL_CONTEXT_CLIENT_VERSION, 2, // use OpenGL ES 2.0, very important!
         EGL_NONE
     };
 
@@ -53,7 +53,7 @@ bool EGL::setup(int rSize, int gSize, int bSize, int aSize, int depthSize) {
 
     OG_LOGINF("EGL", "EGL init with version %d.%d", eglMajVers, eglMinVers);
 
-    if (!eglChooseConfig(disp, confAttr, &conf, 1, &numConfigs)) {	// choose the first config
+    if (!eglChooseConfig(disp, confAttr, &conf, 1, &numConfigs)) { // choose the first config
         OG_LOGERR("EGL", "eglChooseConfig failed: %d", eglGetError());
         return false;
     }
@@ -81,7 +81,7 @@ bool EGL::createPBufferSurface(int w, int h) {
         EGL_NONE
     };
 
-    surface = eglCreatePbufferSurface(disp, conf, surfaceAttr);	// create a pixelbuffer surface
+    surface = eglCreatePbufferSurface(disp, conf, surfaceAttr); // create a pixelbuffer surface
     if (surface == EGL_NO_SURFACE) {
         OG_LOGERR("EGL", "eglCreatePbufferSurface failed: %d", eglGetError());
         return false;
@@ -122,7 +122,8 @@ void EGL::shutdown() {
 }
 
 void EGL::destroySurface() {
-    if (surface == EGL_NO_SURFACE) return;
+    if (surface == EGL_NO_SURFACE)
+        return;
 
     eglDestroySurface(disp, surface);
 

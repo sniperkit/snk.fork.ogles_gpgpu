@@ -63,14 +63,12 @@ const GLfloat ProcBase::quadTexCoordsDiagonalMirrored[] = {
     0, 1
 };
 
-
 const GLfloat ProcBase::quadVertices[] = {
     -1, -1, 0,
     1, -1, 0,
-    -1,  1, 0,
-    1,  1, 0
+    -1, 1, 0,
+    1, 1, 0
 };
-
 
 ProcBase::ProcBase() {
     texId = 0;
@@ -107,23 +105,23 @@ void ProcBase::printInfo() {
     assert(fbo);
 
     OG_LOGINF(getProcName(), "info: order num %d, input tex %d (%dx%d), output tex %d (%dx%d), downscale %d",
-              orderNum,
-              texId, inFrameW, inFrameH,
-              fbo->getAttachedTexId(), outFrameW, outFrameH,
-              willDownscale);
+        orderNum,
+        texId, inFrameW, inFrameH,
+        fbo->getAttachedTexId(), outFrameW, outFrameH,
+        willDownscale);
 }
 
-void ProcBase::getResultData(unsigned char *data) const {
+void ProcBase::getResultData(unsigned char* data) const {
     assert(fbo != NULL);
     fbo->readBuffer(data);
 }
 
-void ProcBase::getResultData(FrameDelegate &delegate) const {
+void ProcBase::getResultData(FrameDelegate& delegate) const {
     assert(fbo != NULL);
     fbo->readBuffer(delegate);
 }
 
-MemTransfer *ProcBase::getMemTransferObj() const {
+MemTransfer* ProcBase::getMemTransferObj() const {
     assert(fbo);
 
     return fbo->getMemTransfer();
@@ -150,14 +148,14 @@ int ProcBase::reinit(int inW, int inH, bool prepareForExternalInput) {
 
     setInOutFrameSizes(inW, inH, procParamOutW, procParamOutH, procParamOutScale);
 
-    fbo->destroyAttachedTex();  // needs to be recreated later!
+    fbo->destroyAttachedTex(); // needs to be recreated later!
 
-    if (prepareForExternalInput) {    // recreate input
+    if (prepareForExternalInput) { // recreate input
         useTexture(fbo->getMemTransfer()->prepareInput(inFrameW, inFrameH, inputDataFmt));
     }
 
     OG_LOGINF(getProcName(), "reinit with input size %dx%d, output size %dx%d, downscale %d",
-              inFrameW, inFrameH, outFrameW, outFrameH, willDownscale);
+        inFrameW, inFrameH, outFrameW, outFrameH, willDownscale);
 
     return 1;
 }
@@ -177,10 +175,10 @@ void ProcBase::baseInit(int inW, int inH, unsigned int order, bool prepareForExt
     }
 
     OG_LOGINF(getProcName(), "init with input size %dx%d, output size %dx%d, downscale %d",
-              inFrameW, inFrameH, outFrameW, outFrameH, willDownscale);
+        inFrameW, inFrameH, outFrameW, outFrameH, willDownscale);
 }
 
-void ProcBase::setExternalInputData(const unsigned char *data) {
+void ProcBase::setExternalInputData(const unsigned char* data) {
     fbo->getMemTransfer()->toGPU(data);
 }
 
@@ -191,8 +189,8 @@ void ProcBase::setInOutFrameSizes(int inW, int inH, int outW, int outH, float sc
     bool isFirst = (outW <= 0 && outH <= 0);
 
     // If only one dimension is specified, compute the other via aspect ratio:
-    if((std::min(outW, outH) <= 0) && (std::max(outW, outH) > 0)) {
-        if(outH > 0) {
+    if ((std::min(outW, outH) <= 0) && (std::max(outW, outH) > 0)) {
+        if (outH > 0) {
             outW = (outH * inW / inH);
         } else {
             outH = (outW * inH / inW);
@@ -209,7 +207,7 @@ void ProcBase::setInOutFrameSizes(int inW, int inH, int outW, int outH, float sc
     }
 
     // For transpose operatinos we need swap outW and outH
-    if(isFirst && (renderOrientation >= RenderOrientationDiagonal)) {
+    if (isFirst && (renderOrientation >= RenderOrientationDiagonal)) {
         std::swap(outW, outH);
     }
 
@@ -228,16 +226,18 @@ void ProcBase::createFBO() {
     fbo->setGLTexUnit(1);
 }
 
-void ProcBase::createShader(const char *vShSrc, const char *fShSrc, GLenum target, const Shader::Attributes &attributes) {
-    if (shader) {	// already compiled,
-        if (texTarget != target) delete shader;	 // change in texture target -> recreate!
-        else return;	// no change -> do nothing
+void ProcBase::createShader(const char* vShSrc, const char* fShSrc, GLenum target, const Shader::Attributes& attributes) {
+    if (shader) { // already compiled,
+        if (texTarget != target)
+            delete shader; // change in texture target -> recreate!
+        else
+            return; // no change -> do nothing
     }
 
     string fSrcStr(fShSrc);
 
 #ifdef GL_TEXTURE_EXTERNAL_OES
-    if (target == GL_TEXTURE_EXTERNAL_OES) {	// other texture target than default "GL_TEXTURE_2D"
+    if (target == GL_TEXTURE_EXTERNAL_OES) { // other texture target than default "GL_TEXTURE_2D"
         // we need to modify the fragment shader source for correct texture access
         string newSrcHeader = "#extension GL_OES_EGL_image_external : require\n";
         string newSrcReplacementOld = "uniform sampler2D ";

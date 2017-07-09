@@ -59,7 +59,6 @@ private:
      */
     static void destroySurface();
 
-
     static EGLConfig conf;
     static EGLSurface surface;
     static EGLContext ctx;

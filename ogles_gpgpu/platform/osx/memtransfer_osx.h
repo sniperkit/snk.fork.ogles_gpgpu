@@ -37,15 +37,17 @@ public:
     /**
      * Constructor. Set defaults.
      */
-    MemTransferOSX() :  MemTransfer(),
-        bufferAttr(NULL),
-        inputPixelBuffer(NULL),
-        outputPixelBuffer(NULL),
-        inputTexture(NULL),
-        outputTexture(NULL),
-        textureCache(NULL),
-        inputPixelBufferSize(0),
-        outputPixelBufferSize(0) { }
+    MemTransferOSX()
+        : MemTransfer()
+        , bufferAttr(NULL)
+        , inputPixelBuffer(NULL)
+        , outputPixelBuffer(NULL)
+        , inputTexture(NULL)
+        , outputTexture(NULL)
+        , textureCache(NULL)
+        , inputPixelBufferSize(0)
+        , outputPixelBufferSize(0) {
+    }
 
     /**
      * Deconstructor. Release in- and outputs.
@@ -60,7 +62,7 @@ public:
     /**
      * Prepare for input frames of size <inTexW>x<inTexH>. Return a texture id for the input frames.
      */
-    virtual GLuint prepareInput(int inTexW, int inTexH, GLenum inputPxFormat = GL_RGBA, void *inputDataPtr = NULL);
+    virtual GLuint prepareInput(int inTexW, int inTexH, GLenum inputPxFormat = GL_RGBA, void* inputDataPtr = NULL);
 
     /**
      * Prepare for output frames of size <outTexW>x<outTexH>. Return a texture id for the output frames.
@@ -80,19 +82,19 @@ public:
     /**
      * Map data in <buf> to GPU.
      */
-    virtual void toGPU(const unsigned char *buf);
+    virtual void toGPU(const unsigned char* buf);
 
     /**
      * Map data from GPU to <buf>
      */
-    virtual void fromGPU(unsigned char *buf);
+    virtual void fromGPU(unsigned char* buf);
 
     /**
      * Lock the input or output buffer and return its base address.
      * The input buffer will be locked for reading AND writing, while the
      * output buffer will be locked for reading only.
      */
-    virtual void *lockBufferAndGetPtr(BufType bufType);
+    virtual void* lockBufferAndGetPtr(BufType bufType);
 
     /**
      * Unlock the input or output buffer.
@@ -103,22 +105,20 @@ private:
     /**
      * Sets <buf> and <lockOpt> to the necessary pointers/values according to <bufType>.
      */
-    void getPixelBufferAndLockFlags(BufType bufType, CVPixelBufferRef *buf, CVOptionFlags *lockOpt);
+    void getPixelBufferAndLockFlags(BufType bufType, CVPixelBufferRef* buf, CVOptionFlags* lockOpt);
 
+    CFMutableDictionaryRef bufferAttr; // buffer attributes
 
-    CFMutableDictionaryRef bufferAttr;  // buffer attributes
-
-    CVPixelBufferRef inputPixelBuffer;  // input pixel buffer
+    CVPixelBufferRef inputPixelBuffer; // input pixel buffer
     CVPixelBufferRef outputPixelBuffer; // output pixel buffer
 
-    CVOpenGLTextureRef inputTexture;  // input texture reference
+    CVOpenGLTextureRef inputTexture; // input texture reference
     CVOpenGLTextureRef outputTexture; // output texture reference
 
     CVOpenGLTextureCacheRef textureCache; // common texture cache
 
-    size_t inputPixelBufferSize;    // input pixel buffer size in bytes
-    size_t outputPixelBufferSize;   // output pixel buffer size in bytes
+    size_t inputPixelBufferSize; // input pixel buffer size in bytes
+    size_t outputPixelBufferSize; // output pixel buffer size in bytes
 };
-
 }
 #endif

@@ -25,8 +25,9 @@ namespace ogles_gpgpu {
  */
 class FilterProcBase : public ProcBase {
 public:
-    FilterProcBase() : ProcBase(),
-        fragShaderSrcForCompilation(NULL) {
+    FilterProcBase()
+        : ProcBase()
+        , fragShaderSrcForCompilation(NULL) {
     }
 
     /**
@@ -44,10 +45,9 @@ public:
      * Abstract method.  The optional position parameter is used
      * to specify the input index for multi-texture filters.
      */
-    virtual int render(int position=0);
+    virtual int render(int position = 0);
 
 protected:
-
     /**
      * Perform a standard shader initialization.
      */
@@ -56,14 +56,14 @@ protected:
     /**
      * Get the vertex shader source.
      */
-    virtual const char *getVertexShaderSource() {
+    virtual const char* getVertexShaderSource() {
         return vshaderDefault;
     }
 
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return 0;
     }
 
@@ -81,13 +81,13 @@ protected:
      * Common initialization method for filters with vertex shader source <vShaderSrc>
      * fragment shader source <fShaderSrc> and render output orientation <o>.
      */
-    void filterInit(const char *vShaderSrc, const char *fShaderSrc, RenderOrientation o = RenderOrientationNone);
+    void filterInit(const char* vShaderSrc, const char* fShaderSrc, RenderOrientation o = RenderOrientationNone);
 
     /**
      * Common filter shader creation method with vertexshader source <vSaderSrc>
      * fragment shader source <fShaderSrc> and texture target <target>.
      */
-    virtual void filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target);
+    virtual void filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target);
 
     /**
      * Initialize texture coordinate buffer according to member variable
@@ -99,27 +99,26 @@ protected:
      * Return texture coordinates cooresponding to a particular orientation: buffer according to member variable
      * <renderOrientation> or override member variable by <overrideRenderOrientation>.
      */
-    static const GLfloat * getTexCoordBuf(RenderOrientation o);
+    static const GLfloat* getTexCoordBuf(RenderOrientation o);
 
     virtual void filterRenderPrepare();
     virtual void filterRenderSetCoords();
     virtual void filterRenderDraw();
     virtual void filterRenderCleanup();
 
-    static const char *vshaderFilter3x3Src; // GPUImage vertex shader (3x3 access)
-    static const char *vshaderGPUImage; // GPUImage vertex shader (shader compatibility)
-    static const char *vshaderDefault;  // default vertex shader to render a fullscreen quad
+    static const char* vshaderFilter3x3Src; // GPUImage vertex shader (3x3 access)
+    static const char* vshaderGPUImage; // GPUImage vertex shader (shader compatibility)
+    static const char* vshaderDefault; // default vertex shader to render a fullscreen quad
 
-    const char *vertexShaderSrcForCompilation = nullptr;  // used vertex shader source for shader compilation
-    const char *fragShaderSrcForCompilation = nullptr;	  // used fragment shader source for shader compilation
+    const char* vertexShaderSrcForCompilation = nullptr; // used vertex shader source for shader compilation
+    const char* fragShaderSrcForCompilation = nullptr; // used fragment shader source for shader compilation
 
-    GLint shParamAPos;          // shader attribute vertex positions
-    GLint shParamATexCoord;     // shader attribute texture coordinates
+    GLint shParamAPos; // shader attribute vertex positions
+    GLint shParamATexCoord; // shader attribute texture coordinates
 
     GLfloat vertexBuf[OGLES_GPGPU_QUAD_VERTEX_BUFSIZE]; // vertex data buffer for a quad
-    GLfloat texCoordBuf[OGLES_GPGPU_QUAD_TEX_BUFSIZE];  // texture coordinate data buffer for a quad
+    GLfloat texCoordBuf[OGLES_GPGPU_QUAD_TEX_BUFSIZE]; // texture coordinate data buffer for a quad
 };
-
 }
 
 #endif

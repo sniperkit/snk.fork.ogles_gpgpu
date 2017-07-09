@@ -24,10 +24,9 @@ namespace ogles_gpgpu {
 
 class MultiPassProc : public MultiProcInterface {
 public:
-
     virtual ProcInterface* getInputFilter() const;
     virtual ProcInterface* getOutputFilter() const;
-    virtual ProcInterface * operator[](int i) const;
+    virtual ProcInterface* operator[](int i) const;
     virtual size_t size() const;
 
     /**
@@ -63,12 +62,12 @@ public:
      * Render a result, i.e. run the shader on the input texture.
      * Abstract method.
      */
-    virtual int render(int position=0);
+    virtual int render(int position = 0);
 
     /**
      * Use texture id <id> as input texture at texture <useTexUnit> with texture target <target>.
      */
-    virtual void useTexture(GLuint id, GLuint useTexUnit = 1, GLenum target = GL_TEXTURE_2D, int position=0);
+    virtual void useTexture(GLuint id, GLuint useTexUnit = 1, GLenum target = GL_TEXTURE_2D, int position = 0);
 
     /**
      * Returns true if output size < input size.
@@ -85,15 +84,13 @@ public:
     /**
      * Return te list of processor instances of each pass of this multipass processor.
      */
-    std::vector<ProcInterface *> getProcPasses() const {
+    std::vector<ProcInterface*> getProcPasses() const {
         return procPasses;
     }
 
 protected:
-
-    std::vector<ProcInterface *> procPasses;   // holds all instances to the single processing passes. strong ref!
+    std::vector<ProcInterface*> procPasses; // holds all instances to the single processing passes. strong ref!
 };
-
 }
 
 #endif

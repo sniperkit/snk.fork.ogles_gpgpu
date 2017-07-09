@@ -21,51 +21,44 @@ public:
     /**
      * Constructor.
      */
-    GainProc(float gain=1.f) : gain(gain) {}
+    GainProc(float gain = 1.f)
+        : gain(gain) {
+    }
 
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "GainProc";
     }
 
     /**
      * Set the gain coefficient.
      */
-    void setGain(float value) {
-        gain = value;
-    }
+    void setGain(float value);
 
 private:
-
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return fshaderGainSrc;
     }
 
     /**
      * Get shader uniform id.
      */
-    virtual void getUniforms() {
-        shParamUGain = shader->getParam(UNIF, "gain");
-    }
+    virtual void getUniforms();
 
     /**
      * Set shader uniform values.
      */
-    virtual void setUniforms() {
-        glUniform1f(shParamUGain, gain);
-    }
+    virtual void setUniforms();
 
-    static const char *fshaderGainSrc; // fragment shader source
+    static const char* fshaderGainSrc; // fragment shader source
     float gain = 1.f;
     GLint shParamUGain;
 };
-
 }
 
 #endif
-

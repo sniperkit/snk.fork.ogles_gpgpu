@@ -27,7 +27,6 @@ class Core;
  */
 class FBO {
 public:
-
     using FrameDelegate = MemTransfer::FrameDelegate;
 
     /**
@@ -89,18 +88,18 @@ public:
      * Will create a framebuffer output texture with texture id <attachedTexId>
      * and will bind it to this FBO.
      */
-    virtual void createAttachedTex(int w, int h, bool genMipmap = false, GLenum attachment = GL_COLOR_ATTACHMENT0, GLenum target=GL_TEXTURE_2D);
+    virtual void createAttachedTex(int w, int h, bool genMipmap = false, GLenum attachment = GL_COLOR_ATTACHMENT0, GLenum target = GL_TEXTURE_2D);
 
     /**
      * Copy the framebuffer data which was written to the framebuffer texture back to
      * main memory at <buf>.
      */
-    virtual void readBuffer(unsigned char *buf);
+    virtual void readBuffer(unsigned char* buf);
 
     /**
      * Call the delegate on framebuffer data which was written to the framebuffer texture.
      */
-    virtual void readBuffer(FrameDelegate &delegate);
+    virtual void readBuffer(FrameDelegate& delegate);
 
     /**
      * Free the framebuffer.
@@ -129,7 +128,7 @@ public:
     /**
      * Get MemTransfer object associated with this FBO.
      */
-    MemTransfer *getMemTransfer() const {
+    MemTransfer* getMemTransfer() const {
         return memTransfer;
     }
 
@@ -139,19 +138,17 @@ protected:
      */
     virtual void generateIds();
 
+    Core* core; // Core singleton
 
-    Core *core;                 // Core singleton
+    MemTransfer* memTransfer; // MemTransfer object associated with this FBO
 
-    MemTransfer *memTransfer;   // MemTransfer object associated with this FBO
+    GLuint id; // OpenGL FBO id
+    GLuint glTexUnit; // GL texture unit (to be used in glActiveTexture()) for output texture
+    GLuint attachedTexId; // output texture id
 
-    GLuint id;                  // OpenGL FBO id
-    GLuint glTexUnit;           // GL texture unit (to be used in glActiveTexture()) for output texture
-    GLuint attachedTexId;       // output texture id
-
-    int texW;   // output texture width
-    int texH;   // output texture height
+    int texW; // output texture width
+    int texH; // output texture height
 };
-
 }
 
 #endif

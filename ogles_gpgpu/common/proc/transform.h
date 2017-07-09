@@ -23,7 +23,6 @@ namespace ogles_gpgpu {
  */
 class TransformProc : public FilterProcBase {
 public:
-
     enum Interpolation {
         BILINEAR,
         BICUBIC
@@ -37,19 +36,19 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "TransformProc";
     }
 
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource();
+    virtual const char* getFragmentShaderSource();
 
     /**
      * Get the vertex shader source.
      */
-    virtual const char *getVertexShaderSource();
+    virtual const char* getVertexShaderSource();
 
     /**
      * Set additional uniforms.
@@ -64,14 +63,14 @@ public:
     /**
      * Get the transformation matrix.
      */
-    const Mat44f & getTransformMatrix() const {
+    const Mat44f& getTransformMatrix() const {
         return transformMatrix;
     }
 
     /**
      * Set the transformation matrix.
      */
-    void setTransformMatrix(const Mat44f & matrix);
+    void setTransformMatrix(const Mat44f& matrix);
 
     /**
      * Set interpolation mode.
@@ -88,17 +87,16 @@ public:
     }
 
 protected:
-
-    static const char *vshaderTransformSrc;   // fragment shader source
-    static const char *fshaderTransformSrc;   // fragment shader source
-    static const char *fshaderTransformBicubicSrc; // bicubic shader
+    static const char* vshaderTransformSrc; // fragment shader source
+    static const char* fshaderTransformSrc; // fragment shader source
+    static const char* fshaderTransformBicubicSrc; // bicubic shader
 
     Interpolation interpolation = BILINEAR;
 
-    GLint shParamUTransform;        // shader uniform transformation matrix
-    Mat44f transformMatrix;         // currently set weighted channel grayscale conversion vector
+    GLint shParamUTransform; // shader uniform transformation matrix
+    Mat44f transformMatrix; // currently set weighted channel grayscale conversion vector
 
-    GLint shParamUTransformSize=0;  // texture size (for bicubic warp)
+    GLint shParamUTransformSize = 0; // texture size (for bicubic warp)
 };
 }
 

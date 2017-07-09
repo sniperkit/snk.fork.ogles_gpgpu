@@ -27,7 +27,6 @@ namespace ogles_gpgpu {
  */
 class GaussProcPass : public FilterProcBase {
 public:
-
     enum KernelSize {
         k5Tap,
         k7Tap
@@ -36,7 +35,7 @@ public:
     /**
      * Construct as render pass <pass> (1 or 2).
      */
-    GaussProcPass(int pass, KernelSize kernel=k5Tap, bool doR=false)
+    GaussProcPass(int pass, KernelSize kernel = k5Tap, bool doR = false)
         : FilterProcBase()
         , renderPass(pass)
         , kernel(kernel)
@@ -49,15 +48,15 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "GaussProcPass";
     }
 
-    virtual void filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target);
+    virtual void filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target);
     virtual void setUniforms();
     virtual void getUniforms();
-    virtual const char *getFragmentShaderSource();
-    virtual const char *getVertexShaderSource();
+    virtual const char* getFragmentShaderSource();
+    virtual const char* getVertexShaderSource();
 
 private:
     int renderPass; // render pass number. must be 1 or 2
@@ -69,14 +68,13 @@ private:
     GLint texelWidthUniform, texelHeightUniform;
     float texelWidth, texelHeight;
 
-    static const char *vshaderGauss7Src;
-    static const char *fshaderGauss7Src;  // fragment shader source for gaussian smoothing for both passes
-    static const char *fshaderGauss7SrcR; // shader for R channel
+    static const char* vshaderGauss7Src;
+    static const char* fshaderGauss7Src; // fragment shader source for gaussian smoothing for both passes
+    static const char* fshaderGauss7SrcR; // shader for R channel
 
-    static const char *vshaderGauss5Src;
-    static const char *fshaderGauss5Src;  // fragment shader source for gaussian smoothing for both passes
-    static const char *fshaderGauss5SrcR; // shader for R channel
+    static const char* vshaderGauss5Src;
+    static const char* fshaderGauss5Src; // fragment shader source for gaussian smoothing for both passes
+    static const char* fshaderGauss5SrcR; // shader for R channel
 };
-
 }
 #endif

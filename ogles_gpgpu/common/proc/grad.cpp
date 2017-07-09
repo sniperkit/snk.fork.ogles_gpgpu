@@ -6,19 +6,18 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "grad.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
-const char *GradProc::fshaderGradSrc = OG_TO_STR
-(
+// clang-format off
+const char *GradProc::fshaderGradSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
  varying vec2 leftTextureCoordinate;
  varying vec2 rightTextureCoordinate;
@@ -70,17 +69,17 @@ precision highp float;
      gl_FragColor = vec4(mag, clamp(theta/pi, 0.0, 1.0), clamp(dx, 0.0, 1.0), clamp(dy, 0.0, 1.0));
  }
  );
-// *INDENT-ON*
+// clang-format on
 
-GradProc::GradProc(float strength) : strength(strength) {
-
+GradProc::GradProc(float strength)
+    : strength(strength) {
 }
 
 void GradProc::setUniforms() {
     Filter3x3Proc::setUniforms();
 
-    glUniform1f(texelWidthUniform, (1.0f/ float(outFrameW)));
-    glUniform1f(texelHeightUniform, (1.0f/ float(outFrameH)));
+    glUniform1f(texelWidthUniform, (1.0f / float(outFrameW)));
+    glUniform1f(texelHeightUniform, (1.0f / float(outFrameH)));
 
     glUniform1f(shParamUStrength, strength);
 }

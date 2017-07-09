@@ -29,16 +29,15 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "MedianProc";
     }
 
 private:
-
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return fshaderMedianSrc;
     }
 
@@ -47,7 +46,7 @@ private:
      */
     virtual void getUniforms();
 
-    static const char *fshaderMedianSrc;   // fragment shader source
+    static const char* fshaderMedianSrc; // fragment shader source
 };
 
 END_OGLES_GPGPU

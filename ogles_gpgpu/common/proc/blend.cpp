@@ -6,18 +6,17 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "blend.h"
+#include "../common_includes.h"
 
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
-const char *BlendProc::fshaderBlendSrc = OG_TO_STR
-(
+// clang-format off
+const char *BlendProc::fshaderBlendSrc =
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
  varying vec2 textureCoordinate2;
 
@@ -31,10 +30,10 @@ const char *BlendProc::fshaderBlendSrc = OG_TO_STR
     vec4 textureColor2 = texture2D(inputImageTexture2, textureCoordinate);
     gl_FragColor = mix(textureColor, textureColor2, alpha);
  });
-// *INDENT-ON*
+// clang-format on
 
-BlendProc::BlendProc(float alpha) : alpha(alpha) {
-
+BlendProc::BlendProc(float alpha)
+    : alpha(alpha) {
 }
 
 void BlendProc::getUniforms() {

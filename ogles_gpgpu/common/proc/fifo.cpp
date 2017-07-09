@@ -6,21 +6,24 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
+#include "fifo.h"
 #include "../common_includes.h"
 #include "base/filterprocbase.h"
-#include "fifo.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
 
 class NoopProc : public ogles_gpgpu::FilterProcBase {
 public:
-    NoopProc(float gain=1.f) : gain(gain) {}
-    virtual const char *getProcName() {
+    NoopProc(float gain = 1.f)
+        : gain(gain) {
+    }
+    virtual const char* getProcName() {
         return "NoopProc";
     }
+
 private:
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return fshaderNoopSrc;
     }
     virtual void getUniforms() {
@@ -29,17 +32,17 @@ private:
     virtual void setUniforms() {
         glUniform1f(shParamUGain, gain);
     }
-    static const char *fshaderNoopSrc; // fragment shader source
+    static const char* fshaderNoopSrc; // fragment shader source
     float gain = 1.f;
     GLint shParamUGain;
 };
 
-// *INDENT-OFF*
-const char * NoopProc::fshaderNoopSrc = OG_TO_STR
-(
+// clang-format off
+const char * NoopProc::fshaderNoopSrc =
 #if defined(OGLES_GPGPU_OPENGLES)
- precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
+OG_TO_STR( 
  varying vec2 vTexCoord;
  uniform sampler2D uInputTex;
  uniform float gain;
@@ -48,7 +51,7 @@ const char * NoopProc::fshaderNoopSrc = OG_TO_STR
      vec4 val = texture2D(uInputTex, vTexCoord);
      gl_FragColor = clamp(val * gain, 0.0, 1.0);
  });
-// *INDENT-ON*
+// clang-format on
 
 // #################### FIFO ####################
 
@@ -59,8 +62,8 @@ static int modulo(int a, int b) {
 
 FifoProc::FifoProc(int size) {
     m_inputIndex = m_outputIndex = 0;
-    for(int i = 0; i < size; i++) {
-        procPasses.push_back( new NoopProc );
+    for (int i = 0; i < size; i++) {
+        procPasses.push_back(new NoopProc);
     }
 
     delayedSubscribers.resize(size);
@@ -68,13 +71,13 @@ FifoProc::FifoProc(int size) {
 
 FifoProc::~FifoProc() {
     // remove all pass instances
-    for(auto &it : procPasses) {
+    for (auto& it : procPasses) {
         delete it;
     }
     procPasses.clear();
 }
 
-void FifoProc::addWithDelay(ProcInterface *filter, int position, int time) {
+void FifoProc::addWithDelay(ProcInterface* filter, int position, int time) {
     assert(time >= 0 && time < size());
     delayedSubscribers[time].emplace_back(filter, position);
 }
@@ -83,10 +86,10 @@ void FifoProc::prepare(int inW, int inH, int index, int position) {
     assert(position == 0);
     ProcInterface::prepare(inW, inH, index, position);
 
-    for(int i = 0; i < delayedSubscribers.size(); i++) {
-        for(auto &subscriber : delayedSubscribers[i]) {
+    for (int i = 0; i < delayedSubscribers.size(); i++) {
+        for (auto& subscriber : delayedSubscribers[i]) {
             // At startup we have to initialize with our main processor output
-            subscriber.first->prepare(getOutFrameW(), getOutFrameH(), index+1, subscriber.second);
+            subscriber.first->prepare(getOutFrameW(), getOutFrameH(), index + 1, subscriber.second);
             subscriber.first->useTexture(getOutputTexId(), getTextureUnit(), GL_TEXTURE_2D, subscriber.second);
         }
     }
@@ -96,11 +99,11 @@ void FifoProc::process(int position, Logger logger) {
     assert(position == 0);
     ProcInterface::process(position, logger);
 
-    if(isFull()) {
+    if (isFull()) {
         // Trigger delayed subscribers:
-        for(int i = 0; i < delayedSubscribers.size(); i++) {
+        for (int i = 0; i < delayedSubscribers.size(); i++) {
             auto producer = (*this)[i];
-            for(auto &subscriber : delayedSubscribers[i]) {
+            for (auto& subscriber : delayedSubscribers[i]) {
                 subscriber.first->useTexture(producer->getOutputTexId(), producer->getTextureUnit(), GL_TEXTURE_2D, subscriber.second);
                 subscriber.first->process(subscriber.second, logger);
             }
@@ -108,8 +111,8 @@ void FifoProc::process(int position, Logger logger) {
     }
 }
 
-ProcInterface * FifoProc::operator[](int i) const {
-    int index = modulo(m_outputIndex+i, procPasses.size());
+ProcInterface* FifoProc::operator[](int i) const {
+    int index = modulo(m_outputIndex + i, procPasses.size());
     return procPasses[index];
 }
 
@@ -135,7 +138,7 @@ ProcInterface* FifoProc::getOutputFilter() const {
 int FifoProc::init(int inW, int inH, unsigned int order, bool prepareForExternalInput) {
     m_inputIndex = m_outputIndex = m_count = 0;
     int num = 0;
-    for(auto &it : procPasses) {
+    for (auto& it : procPasses) {
         num += it->init(inW, inH, num, prepareForExternalInput);
     }
     return num;
@@ -144,20 +147,20 @@ int FifoProc::init(int inW, int inH, unsigned int order, bool prepareForExternal
 int FifoProc::reinit(int inW, int inH, bool prepareForExternalInput) {
     m_inputIndex = m_outputIndex = m_count = 0;
     int num = 0;
-    for(auto &it : procPasses) {
+    for (auto& it : procPasses) {
         num += it->reinit(inW, inH, prepareForExternalInput);
     }
     return num;
 }
 
 void FifoProc::cleanup() {
-    for(auto &it : procPasses) {
+    for (auto& it : procPasses) {
         it->cleanup();
     }
 }
 
 void FifoProc::createFBOTex(bool genMipmap) {
-    for(auto &it : procPasses) {
+    for (auto& it : procPasses) {
         it->createFBOTex(genMipmap);
     }
 }
@@ -188,7 +191,7 @@ void FifoProc::createFBOTex(bool genMipmap) {
 
 int FifoProc::render(int position) {
     // Render into input FBO
-    if(m_count == int(size())) {
+    if (m_count == int(size())) {
         m_outputIndex = modulo(m_inputIndex + 1, size());
     }
 
@@ -202,21 +205,21 @@ int FifoProc::render(int position) {
 
 void FifoProc::useTexture(GLuint id, GLuint useTexUnit, GLenum target, int position) {
     assert(position == 0); // no multi-input filters for FIFO
-    for(auto &it : procPasses) {
+    for (auto& it : procPasses) {
         it->useTexture(id, useTexUnit, target, position);
     }
 }
 
 // All output sizes will be the same
 void FifoProc::setOutputSize(float scaleFactor) {
-    for(auto &it : procPasses) {
+    for (auto& it : procPasses) {
         it->setOutputSize(scaleFactor);
     }
 }
 
 // All output sizes will be the same
 void FifoProc::setOutputSize(int outW, int outH) {
-    for(auto &it : procPasses) {
+    for (auto& it : procPasses) {
         it->setOutputSize(outW, outH);
     }
 }

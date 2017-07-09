@@ -40,22 +40,21 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "BoxOptProcPass";
     }
 
-    virtual void filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target);
+    virtual void filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target);
     virtual void setUniforms();
     virtual void getUniforms();
-    virtual const char *getFragmentShaderSource();
-    virtual const char *getVertexShaderSource();
+    virtual const char* getFragmentShaderSource();
+    virtual const char* getVertexShaderSource();
 
 private:
-
     int renderPass; // render pass number. must be 1 or 2
 
-    float pxDx;	// pixel delta value for texture access
-    float pxDy;	// pixel delta value for texture access
+    float pxDx; // pixel delta value for texture access
+    float pxDy; // pixel delta value for texture access
 
     float _blurRadiusInPixels = 0.0; // start 0 (uninitialized)
 
@@ -65,6 +64,5 @@ private:
     std::string vshaderBoxSrc;
     std::string fshaderBoxSrc;
 };
-
 }
 #endif

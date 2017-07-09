@@ -15,8 +15,8 @@
 #define OGLES_GPGPU_COMMON_CORE
 
 #include "common_includes.h"
-#include "proc/base/procinterface.h"
 #include "gl/memtransfer.h"
+#include "proc/base/procinterface.h"
 
 #include <list>
 #include <vector>
@@ -37,7 +37,7 @@ public:
     /**
      * Get singleton instance.
      */
-    static Core *getInstance();
+    static Core* getInstance();
 
     /**
      * Destroy singleton instance.
@@ -59,7 +59,7 @@ public:
      * Note: OpenGL context must be initialized before a ProcInterface object
      * was created!
      */
-    void addProcToPipeline(ProcInterface *proc);
+    void addProcToPipeline(ProcInterface* proc);
 
     /**
      * Create an object that renders the last processor's output to the screen.
@@ -70,7 +70,7 @@ public:
      * Note: Must be called after last addProcToPipeline() call and before
      * init() / prepare()!
      */
-    Disp *createRenderDisplay(int dispW = 0, int dispH = 0, RenderOrientation orientation = RenderOrientationStd);
+    Disp* createRenderDisplay(int dispW = 0, int dispH = 0, RenderOrientation orientation = RenderOrientationStd);
 
     /**
      * Initialize OpenGL settings and the pipeline.
@@ -80,7 +80,7 @@ public:
      * Note OpenGL context must be initialized before the pipeline was
      * defined!
      */
-    void init(void *glContext = NULL);
+    void init(void* glContext = NULL);
 
     /**
      * Prepare the processing pipeline for incoming frames of size <inW> x <inH>
@@ -95,19 +95,19 @@ public:
     /**
      * Return the render display object as weak ref.
      */
-    Disp *getRenderDisplay() const {
+    Disp* getRenderDisplay() const {
         return renderDisp;
     }
 
     /**
      * Get pointer to input memory transfer handler
      */
-    MemTransfer *getInputMemTransfer() const;
+    MemTransfer* getInputMemTransfer() const;
 
     /**
      * Get pointer to output memory transfer handler
      */
-    MemTransfer *getOutputMemTransfer() const;
+    MemTransfer* getOutputMemTransfer() const;
 
     /**
      * Use mipmaps: <use>.
@@ -132,7 +132,7 @@ public:
     /**
      * Set input as RGBA byte data of size <w> x <h>.
      */
-    void setInputData(const unsigned char *data);
+    void setInputData(const unsigned char* data);
 
     /**
      * Process input data by executing the GPGPU processors defined in
@@ -151,13 +151,12 @@ public:
     /**
      * Get input as bytes. Will copy the input texture from the GPU to <buf>.
      */
-    void getInputData(unsigned char *buf);
-
+    void getInputData(unsigned char* buf);
 
     /**
      * Get output as bytes. Will copy the output texture from the GPU to <buf>.
      */
-    void getOutputData(unsigned char *buf);
+    void getOutputData(unsigned char* buf);
 
     /**
      * Get output frame width.
@@ -176,7 +175,7 @@ public:
     /**
      * Get pointer to OpenGL context (platform specific type).
      */
-    void *getGLContextPtr() const {
+    void* getGLContextPtr() const {
         return glContextPtr;
     }
 
@@ -214,7 +213,7 @@ private:
     /**
      * Empty copy constructor.
      */
-    Core (const Core&) {}
+    Core(const Core&) {}
 
     /**
      * Check which OpenGL extensions are available.
@@ -229,36 +228,34 @@ private:
      */
     void cleanup();
 
+    static Core* instance; // singleton instance
 
-    static Core *instance;  // singleton instance
+    void* glContextPtr; // pointer to OpenGL context (platform specific type), weak ref.
 
-    void *glContextPtr;     // pointer to OpenGL context (platform specific type), weak ref.
+    list<ProcInterface*> pipeline; // contains weak refs to ProcBase objects
 
-    list<ProcInterface *> pipeline;  // contains weak refs to ProcBase objects
+    ProcInterface* firstProc; // pointer to first processor in pipeline
+    ProcInterface* lastProc; // pointer to last processor in pipeline
 
-    ProcInterface *firstProc;    // pointer to first processor in pipeline
-    ProcInterface *lastProc;     // pointer to last processor in pipeline
+    Disp* renderDisp; // render-to-display object. strong ref.
 
-    Disp *renderDisp;       // render-to-display object. strong ref.
+    bool initialized; // pipeline initialized?
+    bool prepared; // input prepared?
 
-    bool initialized;       // pipeline initialized?
-    bool prepared;          // input prepared?
+    bool useMipmaps; // use mipmaps?
+    bool glExtNPOTMipmaps; // hardware supports NPOT mipmapping?
 
-    bool useMipmaps;        // use mipmaps?
-    bool glExtNPOTMipmaps;  // hardware supports NPOT mipmapping?
+    bool inputSizeIsPOT; // input frame size is POT?
 
-    bool inputSizeIsPOT;    // input frame size is POT?
+    int inputFrameW; // input frame width
+    int inputFrameH; // input frame height
+    int outputFrameW; // output frame width
+    int outputFrameH; // output frame width
 
-    int inputFrameW;        // input frame width
-    int inputFrameH;        // input frame height
-    int outputFrameW;       // output frame width
-    int outputFrameH;       // output frame width
-
-    GLuint inputTexId;      // input texture id
-    GLenum inputTexTarget;  // input texture target
-    GLuint outputTexId;     // output texture id
+    GLuint inputTexId; // input texture id
+    GLenum inputTexTarget; // input texture target
+    GLuint outputTexId; // output texture id
 };
-
 }
 
 #endif

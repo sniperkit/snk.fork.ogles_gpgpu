@@ -11,8 +11,8 @@
 
 #include "proc/disp.h"
 
-#include <string>
 #include <algorithm>
+#include <string>
 
 using namespace std;
 using namespace ogles_gpgpu;
@@ -21,9 +21,9 @@ using namespace ogles_gpgpu;
 
 // initialize static variables
 
-Core *Core::instance = NULL;                // no instance
+Core* Core::instance = NULL; // no instance
 
-Core *Core::getInstance() {
+Core* Core::getInstance() {
     if (!Core::instance) {
         Core::instance = new Core();
     }
@@ -79,7 +79,7 @@ void Core::reset() {
     firstProc = lastProc = NULL;
 }
 
-void Core::addProcToPipeline(ProcInterface *proc) {
+void Core::addProcToPipeline(ProcInterface* proc) {
     // pipeline needs to be set up before calling init()
     if (initialized) {
         OG_LOGERR("Core", "adding processor failed: pipeline already initialized");
@@ -91,7 +91,7 @@ void Core::addProcToPipeline(ProcInterface *proc) {
     pipeline.push_back(proc);
 }
 
-Disp *Core::createRenderDisplay(int dispW, int dispH, RenderOrientation orientation) {
+Disp* Core::createRenderDisplay(int dispW, int dispH, RenderOrientation orientation) {
     assert(!renderDisp);
 
     renderDisp = new Disp();
@@ -104,7 +104,7 @@ Disp *Core::createRenderDisplay(int dispW, int dispH, RenderOrientation orientat
     return renderDisp;
 }
 
-void Core::init(void *glContext) {
+void Core::init(void* glContext) {
 
     checkGLExtensions();
 
@@ -124,9 +124,11 @@ void Core::init(void *glContext) {
 void Core::prepare(int inW, int inH, GLenum inFmt) {
     assert(initialized && inW > 0 && inH > 0 && pipeline.size() > 0);
 
-    if (prepared && inputFrameW == inW && inputFrameH == inH) return;   // no change
+    if (prepared && inputFrameW == inW && inputFrameH == inH)
+        return; // no change
 
-    if (!pipeline.size()) return; // satisfy static analyzer
+    if (!pipeline.size())
+        return; // satisfy static analyzer
 
     // set input frame size
     inputSizeIsPOT = Tools::isPOT(inW) && Tools::isPOT(inH);
@@ -134,13 +136,13 @@ void Core::prepare(int inW, int inH, GLenum inFmt) {
     inputFrameH = inH;
 
     OG_LOGINF("Core", "prepare with input frame size %dx%d (POT: %d), %u processors in pipeline",
-              inputFrameW, inputFrameH, inputSizeIsPOT, (unsigned int)pipeline.size());
+        inputFrameW, inputFrameH, inputSizeIsPOT, (unsigned int)pipeline.size());
 
     // initialize the pipeline
-    ProcInterface *prevProc = nullptr;
+    ProcInterface* prevProc = nullptr;
     unsigned int num = 0;
     int numInitialized = 0;
-    for (auto &it : pipeline) {
+    for (auto& it : pipeline) {
 
         OG_LOGINF("Core", "init proc#%d", num);
 
@@ -162,10 +164,10 @@ void Core::prepare(int inW, int inH, GLenum inFmt) {
             pipelineFrameH = prevProc->getOutFrameH();
         }
 
-        if (!prepared) {    // for first time preparation
+        if (!prepared) { // for first time preparation
             // initialize current proc
             numInitialized = it->init(pipelineFrameW, pipelineFrameH, num, num == 0 && inFmt != GL_NONE);
-        } else {    // for reinitialization with different frame size
+        } else { // for reinitialization with different frame size
             numInitialized = it->reinit(pipelineFrameW, pipelineFrameH, num == 0 && inFmt != GL_NONE);
         }
 
@@ -181,7 +183,7 @@ void Core::prepare(int inW, int inH, GLenum inFmt) {
         num += numInitialized;
     }
 
-    if(prevProc == nullptr) {
+    if (prevProc == nullptr) {
         // Nothing to do here (static analyzer):
         return;
     }
@@ -191,17 +193,17 @@ void Core::prepare(int inW, int inH, GLenum inFmt) {
 
     // concatenate all processors
     prevProc = NULL;
-    for (auto &it : pipeline) {
+    for (auto& it : pipeline) {
         if (prevProc) {
             // set input texture id
-            it->useTexture(prevProc->getOutputTexId());  // previous output is this proc's input
+            it->useTexture(prevProc->getOutputTexId()); // previous output is this proc's input
         }
 
         // set pointer to previous proc
         prevProc = it;
     }
 
-    if(prevProc == nullptr) {
+    if (prevProc == nullptr) {
         // Nothing to do here (static analyzer):
         return;
     }
@@ -231,7 +233,7 @@ void Core::prepare(int inW, int inH, GLenum inFmt) {
     OG_LOGINF("Core", "prepared (input tex %d, output tex %d)", inputTexId, outputTexId);
 
     // print report (to spot errors in the pipeline)
-    for (auto &it : pipeline) {
+    for (auto& it : pipeline) {
         it->printInfo();
     }
 
@@ -242,11 +244,11 @@ void Core::prepare(int inW, int inH, GLenum inFmt) {
 
 #pragma mark input, processing and output methods
 
-MemTransfer *Core::getInputMemTransfer() const {
+MemTransfer* Core::getInputMemTransfer() const {
     return firstProc->getMemTransferObj();
 }
 
-MemTransfer *Core::getOutputMemTransfer() const {
+MemTransfer* Core::getOutputMemTransfer() const {
     return lastProc->getMemTransferObj();
 }
 
@@ -257,7 +259,7 @@ void Core::setInputTexId(GLuint inTexId, GLenum inTexTarget) {
     firstProc->useTexture(inputTexId, 1, inputTexTarget);
 }
 
-void Core::setInputData(const unsigned char *data) {
+void Core::setInputData(const unsigned char* data) {
     assert(initialized && inputTexId > 0);
 
 #ifdef OGLES_GPGPU_BENCHMARK
@@ -312,7 +314,7 @@ void Core::process() {
     firstProc->useTexture(inputTexId, 1, inputTexTarget);
 
     // run the processors in the pipeline
-    for (auto & it : pipeline) {
+    for (auto& it : pipeline) {
         it->render();
         glFinish();
     }
@@ -322,7 +324,7 @@ void Core::process() {
 #endif
 }
 
-void Core::getInputData(unsigned char *buf) {
+void Core::getInputData(unsigned char* buf) {
     assert(initialized);
 
 #ifdef OGLES_GPGPU_BENCHMARK
@@ -337,7 +339,7 @@ void Core::getInputData(unsigned char *buf) {
 #endif
 }
 
-void Core::getOutputData(unsigned char *buf) {
+void Core::getOutputData(unsigned char* buf) {
     assert(initialized);
 
     glFinish();
@@ -358,23 +360,23 @@ void Core::getOutputData(unsigned char *buf) {
 
 void Core::checkGLExtensions() {
     // get string with extensions seperated by a SPACE
-    string glExtString((const char *)glGetString(GL_EXTENSIONS));
+    string glExtString((const char*)glGetString(GL_EXTENSIONS));
 
     // get extensions as vector
     vector<string> glExt = Tools::split(glExtString);
 
     // check extensions
-//    OG_LOGINF("Core", "list of extensions:");
-    for (auto &it : glExt) {
+    //    OG_LOGINF("Core", "list of extensions:");
+    for (auto& it : glExt) {
         // get lowercase extension string
         string extName = it;
         transform(extName.begin(), extName.end(), extName.begin(), ::tolower);
 
-//        OG_LOGINF("Core", "> %s", extName.c_str());
+        //        OG_LOGINF("Core", "> %s", extName.c_str());
 
         // check for NPOT mipmapping support
         if (it.compare("gl_arb_texture_non_power_of_two") == 0
-                || it.compare("gl_oes_texture_npot") == 0) {
+            || it.compare("gl_oes_texture_npot") == 0) {
             glExtNPOTMipmaps = true;
         }
     }
@@ -390,7 +392,7 @@ void Core::cleanup() {
     }
 
     // call cleanup() on processors
-    for (auto &it : pipeline) {
+    for (auto& it : pipeline) {
         it->cleanup();
     }
 

@@ -7,8 +7,8 @@
 // Original shaders: https://github.com/BradLarson/GPUImage/blob/master/framework/Source/GPUImageVideoCamera.m
 // Modifications: Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "yuv2rgb.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
@@ -17,113 +17,118 @@ using namespace ogles_gpgpu;
 
 // BT.601, which is the standard for SDTV.
 GLfloat kColorConversion601Default[] = {
-    1.164,  1.164, 1.164,
+    1.164, 1.164, 1.164,
     0.0, -0.392, 2.017,
-    1.596, -0.813,   0.0,
+    1.596, -0.813, 0.0,
 };
 
 // BT.601 full range (ref: http://www.equasys.de/colorconversion.html)
 GLfloat kColorConversion601FullRangeDefault[] = {
-    1.0,    1.0,    1.0,
-    0.0,    -0.343, 1.765,
-    1.4,    -0.711, 0.0,
+    1.0, 1.0, 1.0,
+    0.0, -0.343, 1.765,
+    1.4, -0.711, 0.0,
 };
 
 // BT.709, which is the standard for HDTV.
 GLfloat kColorConversion709Default[] = {
-    1.164,  1.164, 1.164,
+    1.164, 1.164, 1.164,
     0.0, -0.213, 2.112,
-    1.793, -0.533,   0.0,
+    1.793, -0.533, 0.0,
 };
 
-GLfloat *kColorConversion601 = kColorConversion601Default;
-GLfloat *kColorConversion601FullRange = kColorConversion601FullRangeDefault;
-GLfloat *kColorConversion709 = kColorConversion709Default;
+GLfloat* kColorConversion601 = kColorConversion601Default;
+GLfloat* kColorConversion601FullRange = kColorConversion601FullRangeDefault;
+GLfloat* kColorConversion709 = kColorConversion709Default;
 
-void setColorConversion601( GLfloat conversionMatrix[9] ) {
+void setColorConversion601(GLfloat conversionMatrix[9]) {
     kColorConversion601 = conversionMatrix;
 }
 
-void setColorConversion601FullRange( GLfloat conversionMatrix[9] ) {
+void setColorConversion601FullRange(GLfloat conversionMatrix[9]) {
     kColorConversion601FullRange = conversionMatrix;
 }
 
-void setColorConversion709( GLfloat conversionMatrix[9] ) {
+void setColorConversion709(GLfloat conversionMatrix[9]) {
     kColorConversion709 = conversionMatrix;
 }
 
-// *INDENT-OFF*
-const char *kGPUImageYUVVideoRangeConversionForRGFragmentShaderString = OG_TO_STR(
-
+// clang-format off
+const char *kGPUImageYUVVideoRangeConversionForRGFragmentShaderString = 
 #if defined(OGLES_GPGPU_OPENGLES)
-  precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
- varying OGLES_GPGPU_HIGHP vec2 vTexCoord;
+OG_TO_STR(
+          
+ varying vec2 vTexCoord;
 
  uniform sampler2D luminanceTexture;
  uniform sampler2D chrominanceTexture;
- uniform OGLES_GPGPU_MEDIUMP mat3 colorConversionMatrix;
+ uniform mat3 colorConversionMatrix;
 
  void main()
  {
-     OGLES_GPGPU_MEDIUMP vec3 yuv;
-     OGLES_GPGPU_LOWP vec3 rgb;
+     vec3 yuv;
+     vec3 rgb;
 
      yuv.x = texture2D(luminanceTexture, vTexCoord).r;
      yuv.yz = texture2D(chrominanceTexture, vTexCoord).rg - vec2(0.5, 0.5);
      rgb = colorConversionMatrix * yuv;
 
      gl_FragColor = vec4(rgb, 1);
- }
-);
-// *INDENT-ON*
+ });
+// clang-format on
 
-// *INDENT-OFF*
-const char *kGPUImageYUVFullRangeConversionForLAFragmentShaderString = OG_TO_STR(
+// clang-format off
+const char *kGPUImageYUVFullRangeConversionForLAFragmentShaderString =
+#if defined(OGLES_GPGPU_OPENGLES)
+OG_TO_STR(precision mediump float;)
+#endif
+OG_TO_STR(
 
- varying OGLES_GPGPU_HIGHP vec2 vTexCoord;
+ varying vec2 vTexCoord;
 
  uniform sampler2D luminanceTexture;
  uniform sampler2D chrominanceTexture;
- uniform OGLES_GPGPU_MEDIUMP mat3 colorConversionMatrix;
+ uniform mat3 colorConversionMatrix;
 
  void main()
  {
-     OGLES_GPGPU_MEDIUMP vec3 yuv;
-     OGLES_GPGPU_LOWP vec3 rgb;
+     vec3 yuv;
+     vec3 rgb;
 
      yuv.x = texture2D(luminanceTexture, vTexCoord).r;
      yuv.yz = texture2D(chrominanceTexture, vTexCoord).ra - vec2(0.5, 0.5);
      rgb = colorConversionMatrix * yuv;
 
      gl_FragColor = vec4(rgb, 1);
- }
-);
-// *INDENT-ON*
+ });
+// clang-format on
 
-// *INDENT-OFF*
-const char *kGPUImageYUVVideoRangeConversionForLAFragmentShaderString = OG_TO_STR(
-
- varying OGLES_GPGPU_HIGHP vec2 vTexCoord;
+// clang-format off
+const char *kGPUImageYUVVideoRangeConversionForLAFragmentShaderString =
+#if defined(OGLES_GPGPU_OPENGLES)
+OG_TO_STR(precision mediump float;)
+#endif
+OG_TO_STR(
+                                                                                  
+ varying vec2 vTexCoord;
 
  uniform sampler2D luminanceTexture;
  uniform sampler2D chrominanceTexture;
- uniform OGLES_GPGPU_MEDIUMP mat3 colorConversionMatrix;
+ uniform mat3 colorConversionMatrix;
 
  void main()
  {
-     OGLES_GPGPU_MEDIUMP vec3 yuv;
-     OGLES_GPGPU_LOWP vec3 rgb;
+     vec3 yuv;
+     vec3 rgb;
 
      yuv.x = texture2D(luminanceTexture, vTexCoord).r - (16.0/255.0);
      yuv.yz = texture2D(chrominanceTexture, vTexCoord).ra - vec2(0.5, 0.5);
      rgb = colorConversionMatrix * yuv;
 
      gl_FragColor = vec4(rgb, 1);
- }
-);
-// *INDENT-ON*
+ });
+// clang-format on
 
 // =================================================================================
 
@@ -138,7 +143,7 @@ void Yuv2RgbProc::setTextures(GLuint luminance, GLuint chrominance) {
     chrominanceTexture = chrominance;
 }
 
-void Yuv2RgbProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void Yuv2RgbProc::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     //FilterProcBase::filterShaderSetup(vShaderSrc, fShaderSrc, target);
 
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
@@ -211,4 +216,3 @@ int Yuv2RgbProc::render(int position) {
 
     return 0;
 }
-

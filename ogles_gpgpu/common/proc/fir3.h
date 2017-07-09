@@ -17,23 +17,23 @@ BEGIN_OGLES_GPGPU
 class Fir3Proc : public ThreeInputProc {
 public:
     Fir3Proc(bool doRgb = false);
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "Fir3Proc";
     }
     virtual void getUniforms();
     virtual void setUniforms();
 
-    virtual void setWeights(const Vec3f &value) {
+    virtual void setWeights(const Vec3f& value) {
         weights = value;
     }
 
-    virtual void setWeights(const Vec3f &f1, const Vec3f &f2, const Vec3f &f3) {
+    virtual void setWeights(const Vec3f& f1, const Vec3f& f2, const Vec3f& f3) {
         weightsRGB[0] = f1;
         weightsRGB[1] = f2;
         weightsRGB[2] = f3;
     }
 
-    virtual const Vec3f & getWeights() const {
+    virtual const Vec3f& getWeights() const {
         return weights;
     }
 
@@ -54,7 +54,6 @@ public:
     }
 
 private:
-
     bool doRgb = false;
 
     GLint shParamUWeights;
@@ -70,11 +69,11 @@ private:
     GLint shParamUWeights3;
     Vec3f weightsRGB[3];
 
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return doRgb ? fshaderFir3RGBSrc : fshaderFir3Src;
     }
-    static const char *fshaderFir3Src;      // fragment shader source
-    static const char *fshaderFir3RGBSrc;   // fragment shader source RGB
+    static const char* fshaderFir3Src; // fragment shader source
+    static const char* fshaderFir3RGBSrc; // fragment shader source RGB
 };
 
 END_OGLES_GPGPU

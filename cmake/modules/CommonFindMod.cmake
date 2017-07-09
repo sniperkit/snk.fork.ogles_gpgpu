@@ -2,7 +2,7 @@
 #  Software License, Version 1.0. (See accompanying file
 #  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
-macro(drishti_common_find_module PREFIX PC_NAME HEADER LIBRARY)
+macro(ogles_gpgpu_common_find_module PREFIX PC_NAME HEADER LIBRARY)
   unset(${PREFIX}_FOUND)
   unset(${PREFIX}_DEFINITIONS)
   unset(${PREFIX}_INCLUDE_DIRS)
@@ -87,7 +87,7 @@ macro(drishti_common_find_module PREFIX PC_NAME HEADER LIBRARY)
         "${PROJECT_BINARY_DIR}/ext_lib"
         "${PROJECT_BINARY_DIR}/ext_lib/test_${PREFIX}.cpp"
         COMPILE_DEFINITIONS
-        "${DRISHTI_CPP_STD_COMPILER_SWITCH} ${${PREFIX}_DEFINITIONS}"
+        "${OGLES_GPGPU_CPP_STD_COMPILER_SWITCH} ${${PREFIX}_DEFINITIONS}"
         CMAKE_FLAGS
         "-DINCLUDE_DIRECTORIES:STRING=${${PREFIX}_INCLUDE_DIRS} "
         "-DLIBRARY_DIRECTORIES:STRING=${${PREFIX}_LIBRARY_DIRS} "

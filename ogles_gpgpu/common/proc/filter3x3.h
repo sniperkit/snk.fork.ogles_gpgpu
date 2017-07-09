@@ -20,7 +20,6 @@ namespace ogles_gpgpu {
  */
 class Filter3x3Proc : public FilterProcBase {
 public:
-
     /**
      * Constructor.
      */
@@ -29,14 +28,14 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "Filter3x3Proc";
     }
 
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getVertexShaderSource() {
+    virtual const char* getVertexShaderSource() {
         return vshaderFilter3x3Src;
     }
 
@@ -53,7 +52,7 @@ public:
     /**
      * Setup the shaders
      */
-    virtual void filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target);
+    virtual void filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target);
 
     void setTexelWidth(float width) {
         hasOverriddenImageSizeFactor = true;
@@ -70,12 +69,11 @@ public:
     }
 
 protected:
-
     bool hasOverriddenImageSizeFactor = false;
     GLint texelWidthUniform, texelHeightUniform;
     float texelWidth, texelHeight;
 
-    static const char *fshaderFilter3x3Src;   // fragment shader source
+    static const char* fshaderFilter3x3Src; // fragment shader source
 };
 }
 

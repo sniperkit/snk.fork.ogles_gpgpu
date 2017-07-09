@@ -17,7 +17,7 @@ ProcInterface* MultiPassProc::getInputFilter() const {
 ProcInterface* MultiPassProc::getOutputFilter() const {
     return procPasses.back();
 }
-ProcInterface * MultiPassProc::operator[](int i) const {
+ProcInterface* MultiPassProc::operator[](int i) const {
     return procPasses[i];
 }
 size_t MultiPassProc::size() const {
@@ -28,7 +28,7 @@ size_t MultiPassProc::size() const {
 
 MultiPassProc::~MultiPassProc() {
     // remove all pass instances
-    for(auto &it : procPasses) {
+    for (auto& it : procPasses) {
         delete it;
     }
 
@@ -38,11 +38,11 @@ MultiPassProc::~MultiPassProc() {
 #pragma mark ProcInterface methods
 
 int MultiPassProc::init(int inW, int inH, unsigned int order, bool prepareForExternalInput) {
-    ProcInterface *prevProc = NULL;
+    ProcInterface* prevProc = NULL;
     int num = 0;
     int numInitialized = 0;
 
-    for(auto &it : procPasses) {
+    for (auto& it : procPasses) {
 
         // find out the input frame size for the proc
         int pipelineFrameW, pipelineFrameH;
@@ -69,11 +69,11 @@ int MultiPassProc::init(int inW, int inH, unsigned int order, bool prepareForExt
 }
 
 int MultiPassProc::reinit(int inW, int inH, bool prepareForExternalInput) {
-    ProcInterface *prevProc = NULL;
+    ProcInterface* prevProc = NULL;
     int num = 0;
     int numInitialized = 0;
 
-    for(auto &it : procPasses) {
+    for (auto& it : procPasses) {
 
         // find out the input frame size for the proc
         int pipelineFrameW, pipelineFrameH;
@@ -100,35 +100,35 @@ int MultiPassProc::reinit(int inW, int inH, bool prepareForExternalInput) {
 }
 
 void MultiPassProc::cleanup() {
-    for(auto &it : procPasses) {
+    for (auto& it : procPasses) {
         it->cleanup();
     }
 }
 
 void MultiPassProc::createFBOTex(bool genMipmap) {
     bool first = true;
-    for(auto &it : procPasses) {
+    for (auto& it : procPasses) {
         it->createFBOTex(first ? genMipmap : false);
         first = false;
     }
 }
 
 int MultiPassProc::render(int position) {
-    for(auto &it : procPasses) {
+    for (auto& it : procPasses) {
         it->render(position);
     }
     return 0;
 }
 
 void MultiPassProc::useTexture(GLuint id, GLuint useTexUnit, GLenum target, int position) {
-    ProcInterface *prevProc = NULL;
+    ProcInterface* prevProc = NULL;
 
     assert(position == 0); // for now no multi-texture multi-pass filters are supported
 
-    for(auto &it : procPasses) {
-        if (!prevProc) {    // means this is the first proc pass
+    for (auto& it : procPasses) {
+        if (!prevProc) { // means this is the first proc pass
             it->useTexture(id, useTexUnit, target);
-        } else {            // all other passes
+        } else { // all other passes
             it->useTexture(prevProc->getOutputTexId(), prevProc->getTextureUnit(), prevProc->getTextureTarget());
         }
         prevProc = it;
@@ -136,8 +136,8 @@ void MultiPassProc::useTexture(GLuint id, GLuint useTexUnit, GLenum target, int 
 }
 
 bool MultiPassProc::getWillDownscale() const {
-    for (auto &it : procPasses) {
-        if(it->getWillDownscale()) {
+    for (auto& it : procPasses) {
+        if (it->getWillDownscale()) {
             return true;
         }
     }

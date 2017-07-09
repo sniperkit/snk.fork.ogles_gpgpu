@@ -7,19 +7,18 @@
 // See LICENSE file in project repository root for the license.
 //
 
-#include "../common_includes.h"
 #include "disp.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
-const char *Disp::fshaderDispSrc = OG_TO_STR(
-
+// clang-format off
+const char *Disp::fshaderDispSrc =
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
 varying vec2 vTexCoord;
 uniform sampler2D uInputTex;
 void main()
@@ -27,7 +26,7 @@ void main()
     gl_FragColor = vec4(texture2D(uInputTex, vTexCoord).rgba);
 }
 );
-// *INDENT-ON*
+// clang-format on
 
 int Disp::init(int inW, int inH, unsigned int order, bool prepareForExternalInput) {
     OG_LOGINF(getProcName(), "initialize");
@@ -45,7 +44,7 @@ int Disp::render(int position) {
     OG_LOGINF(getProcName(), "input tex %d, target %d, framebuffer of size %dx%d", texId, texTarget, outFrameW, outFrameH);
 
     filterRenderPrepare();
-    glViewport(0, 0, outFrameW*resolutionX, outFrameH*resolutionY); // override
+    glViewport(tx, ty, outFrameW * resolutionX, outFrameH * resolutionY); // override
     Tools::checkGLErr(getProcName(), "render prepare");
 
     filterRenderSetCoords();

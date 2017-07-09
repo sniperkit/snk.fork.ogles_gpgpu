@@ -6,8 +6,8 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "ixyt.h"
+#include "../common_includes.h"
 
 using namespace ogles_gpgpu;
 
@@ -20,18 +20,17 @@ void IxytProc::getUniforms() {
 
 void IxytProc::setUniforms() {
     TwoInputProc::setUniforms();
-    glUniform1f(texelWidthUniform, (1.0f/ float(outFrameW)));
-    glUniform1f(texelHeightUniform, (1.0f/ float(outFrameH)));
+    glUniform1f(texelWidthUniform, (1.0f / float(outFrameW)));
+    glUniform1f(texelHeightUniform, (1.0f / float(outFrameH)));
     glUniform1f(shParamUStrength, strength);
 }
 
-// *INDENT-OFF*
-const char *IxytProc::fshaderIxytSrc = OG_TO_STR
-(
+// clang-format off
+const char *IxytProc::fshaderIxytSrc =
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
  varying vec2 leftTextureCoordinate;
  varying vec2 rightTextureCoordinate;
@@ -78,4 +77,4 @@ const char *IxytProc::fshaderIxytSrc = OG_TO_STR
      gl_FragColor = vec4(d2, centerIntensity);
  }
  );
-// *INDENT-ON*
+// clang-format on

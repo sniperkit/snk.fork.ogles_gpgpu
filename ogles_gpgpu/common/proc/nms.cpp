@@ -6,21 +6,20 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "nms.h"
+#include "../common_includes.h"
 
 #include <regex>
 
 using namespace std;
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
-const char *NmsProc::fshaderNmsSrc = OG_TO_STR
-(
+// clang-format off
+const char *NmsProc::fshaderNmsSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision OGLES_GPGPU_HIGHP float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  uniform sampler2D inputImageTexture;
 
  varying vec2 textureCoordinate;
@@ -65,10 +64,9 @@ precision OGLES_GPGPU_HIGHP float;
 
      gl_FragColor = vec4(finalValue, centerColor.gba); // DO NOT EDIT (see swizzle)
 });
-// *INDENT-ON*
+// clang-format on
 
 NmsProc::NmsProc() {
-
 }
 
 void NmsProc::setUniforms() {
@@ -85,33 +83,33 @@ void NmsProc::getUniforms() {
 void NmsProc::swizzle(int channelIn, int channelOut) {
     std::string new1, new2;
 
-    if(channelOut < 0) {
+    if (channelOut < 0) {
         channelOut = channelIn;
     }
 
     fshaderNmsSwizzleSrc.clear();
     fshaderNmsSwizzleSrc += fshaderNmsSrc; // deep copy
 
-    switch(channelIn) {
+    switch (channelIn) {
     case 0:
-        break;                   // R
+        break; // R
     case 1: {
-        new1 = ".g";    // G
+        new1 = ".g"; // G
         break;
     }
     case 2: {
-        new1 = ".b";    // B
+        new1 = ".b"; // B
         break;
     }
     case 3: {
-        new1 = ".a";    // A
+        new1 = ".a"; // A
         break;
     }
     default:
         assert(false);
     }
 
-    switch(channelOut) {
+    switch (channelOut) {
     case 0:
         break;
     case 1: {
@@ -133,12 +131,12 @@ void NmsProc::swizzle(int channelIn, int channelOut) {
     const std::regex pattern1("\\.r");
     const std::regex pattern2("vec4\\(finalValue, centerColor.gba\\)");
 
-    if(!new1.empty()) {
+    if (!new1.empty()) {
         auto fshader1 = std::regex_replace(fshaderNmsSwizzleSrc, pattern1, new1);
         std::swap(fshader1, fshaderNmsSwizzleSrc);
     }
 
-    if(!new2.empty()) {
+    if (!new2.empty()) {
         auto fshader2 = std::regex_replace(fshaderNmsSwizzleSrc, pattern2, new2);
         std::swap(fshader2, fshaderNmsSwizzleSrc);
     }

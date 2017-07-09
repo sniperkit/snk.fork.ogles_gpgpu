@@ -6,8 +6,8 @@
 
 // Copyright (c) 2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "hessian.h"
+#include "../common_includes.h"
 
 //>> fx=[-1 1; -1 1]; fy=[-1 -1; 1 1];
 //
@@ -40,13 +40,13 @@ using namespace ogles_gpgpu;
 
 // Source: GPUImageXYDerivativeFilter.m
 
-// *INDENT-OFF*
-const char *HessianProc::fshaderHessianAndDeterminantSrc = OG_TO_STR(
+// clang-format off
+const char *HessianProc::fshaderHessianAndDeterminantSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
 varying vec2 textureCoordinate;
 varying vec2 leftTextureCoordinate;
 varying vec2 rightTextureCoordinate;
@@ -102,15 +102,15 @@ void main()
 
     gl_FragColor = vec4((Ixx + 1.0)/2.0, (Iyy + 1.0)/2.0, (Ixy + 1.0)/2.0, d * edgeStrength);
 });
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
-const char *HessianProc::fshaderDeterminantSrc = OG_TO_STR(
+// clang-format off
+const char *HessianProc::fshaderDeterminantSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+ OG_TO_STR(precision highp float;)
 #endif
-
+ OG_TO_STR(
  varying vec2 textureCoordinate;
  varying vec2 leftTextureCoordinate;
  varying vec2 rightTextureCoordinate;
@@ -165,12 +165,11 @@ const char *HessianProc::fshaderDeterminantSrc = OG_TO_STR(
 
     gl_FragColor = vec4(d * edgeStrength, 1.0);
 });
-// *INDENT-ON*
+// clang-format on
 
 HessianProc::HessianProc(float edgeStrength, bool doHessian)
     : doHessian(doHessian)
     , edgeStrength(edgeStrength) {
-
 }
 
 void HessianProc::setUniforms() {
@@ -183,4 +182,3 @@ void HessianProc::getUniforms() {
     shParamUInputTex = shader->getParam(UNIF, "inputImageTexture");
     shParamUEdgeStrength = shader->getParam(UNIF, "edgeStrength");
 }
-

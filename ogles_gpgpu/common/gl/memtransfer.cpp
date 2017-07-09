@@ -22,9 +22,9 @@ bool MemTransfer::initPlatformOptimizations() {
 #pragma mark constructor/deconstructor
 
 #if ANDROID
-#  define DFLT_TEXTURE_FORMAT GL_RGBA
+#define DFLT_TEXTURE_FORMAT GL_RGBA
 #else
-#  define DFLT_TEXTURE_FORMAT GL_BGRA
+#define DFLT_TEXTURE_FORMAT GL_BGRA
 #endif
 
 MemTransfer::MemTransfer() {
@@ -46,14 +46,14 @@ MemTransfer::~MemTransfer() {
 
 #pragma mark public methods
 
-GLuint MemTransfer::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat, void *inputDataPtr) {
+GLuint MemTransfer::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat, void* inputDataPtr) {
     assert(initialized && inTexW > 0 && inTexH > 0);
 
     if ((inputDataPtr == nullptr) && (inputW == inTexW) && (inputH == inTexH) && (inputPixelFormat == inputPxFormat)) {
         return inputTexId; // no change
     }
 
-    if (preparedInput) {    // already prepared -- release buffers!
+    if (preparedInput) { // already prepared -- release buffers!
         releaseInput();
     }
 
@@ -85,7 +85,7 @@ GLuint MemTransfer::prepareOutput(int outTexW, int outTexH) {
         return outputTexId; // no change
     }
 
-    if (preparedOutput) {    // already prepared -- release buffers!
+    if (preparedOutput) { // already prepared -- release buffers!
         releaseOutput();
     }
 
@@ -110,10 +110,10 @@ GLuint MemTransfer::prepareOutput(int outTexW, int outTexH) {
 
     // create empty texture space on GPU
     glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA,
-                 outTexW, outTexH, 0,
-                 rgbFormat, GL_UNSIGNED_BYTE,
-                 NULL);	// we do not need to pass texture data -> it will be generated!
+        GL_RGBA,
+        outTexW, outTexH, 0,
+        rgbFormat, GL_UNSIGNED_BYTE,
+        NULL); // we do not need to pass texture data -> it will be generated!
 
     Tools::checkGLErr("MemTransfer", "fbo texture creation");
 
@@ -137,11 +137,11 @@ void MemTransfer::releaseOutput() {
     }
 }
 
-void MemTransfer::toGPU(const unsigned char *buf) {
+void MemTransfer::toGPU(const unsigned char* buf) {
     assert(preparedInput && inputTexId > 0 && buf);
 
     // set input texture
-    glBindTexture(GL_TEXTURE_2D, inputTexId);	// bind input texture
+    glBindTexture(GL_TEXTURE_2D, inputTexId); // bind input texture
 
     // copy data as texture to GPU (tested: OS X)
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -153,7 +153,7 @@ void MemTransfer::toGPU(const unsigned char *buf) {
     setCommonTextureParams(0);
 }
 
-void MemTransfer::fromGPU(unsigned char *buf) {
+void MemTransfer::fromGPU(unsigned char* buf) {
     assert(preparedOutput && outputTexId > 0 && buf);
 
     glBindTexture(GL_TEXTURE_2D, outputTexId);
@@ -166,7 +166,7 @@ void MemTransfer::fromGPU(unsigned char *buf) {
 }
 
 // The zero copy fromGPU() call is not possibly with generic glReadPixels() access
-void MemTransfer::fromGPU(FrameDelegate &delegate) {
+void MemTransfer::fromGPU(FrameDelegate& delegate) {
     assert(false);
 }
 

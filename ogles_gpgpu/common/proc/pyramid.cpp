@@ -6,13 +6,13 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "pyramid.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
 
-static std::vector<Rect2d> pack(const std::vector<Size2d> &src) {
+static std::vector<Rect2d> pack(const std::vector<Size2d>& src) {
     std::vector<Rect2d> packed;
 
     int x = 0, y = 0;
@@ -20,17 +20,17 @@ static std::vector<Rect2d> pack(const std::vector<Size2d> &src) {
 
     // Decrease going forward:
     int i = 0;
-    for(; (i < src.size()) && !half; i++) {
+    for (; (i < src.size()) && !half; i++) {
         packed.emplace_back(x, y, src[i].width, src[i].height);
         x += src[i].width;
-        if(src[i].height*2 < src[0].height) {
+        if (src[i].height * 2 < src[0].height) {
             half = true;
         }
     }
 
     // Decrease going backward -- now x becomes the right edge
     int t, l, r, b = src[0].height;
-    for(; i < src.size(); i++) {
+    for (; i < src.size(); i++) {
         r = x;
         l = r - src[i].width;
         t = b - src[i].height;
@@ -41,14 +41,14 @@ static std::vector<Rect2d> pack(const std::vector<Size2d> &src) {
     return packed;
 }
 
-static std::vector<Rect2d> reduce(const Size2d &src, int levels) {
+static std::vector<Rect2d> reduce(const Size2d& src, int levels) {
     std::vector<Rect2d> packed;
 
     int x = 0, y = 0, w = src.width, h = src.height;
-    for(int i = 0; i < levels; i++) {
+    for (int i = 0; i < levels; i++) {
         packed.emplace_back(x, y, w, h);
 
-        if(i % 2) {
+        if (i % 2) {
             y += h;
         } else {
             x += w;
@@ -61,20 +61,19 @@ static std::vector<Rect2d> reduce(const Size2d &src, int levels) {
     return packed;
 }
 
-
-PyramidProc::PyramidProc(int levels) : m_levels(levels) {
-
+PyramidProc::PyramidProc(int levels)
+    : m_levels(levels) {
 }
 
-PyramidProc::PyramidProc(const std::vector<Size2d> &scales) : m_scales(scales) {
-
+PyramidProc::PyramidProc(const std::vector<Size2d>& scales)
+    : m_scales(scales) {
 }
 
 void PyramidProc::setOutputSize(float scaleFactor) {
     // noop
 }
 
-void PyramidProc::setScales(const std::vector<Size2d> &scales) {
+void PyramidProc::setScales(const std::vector<Size2d>& scales) {
     m_crops = pack(scales);
 }
 
@@ -83,7 +82,7 @@ void PyramidProc::setLevels(int levels) {
     m_levels = levels;
 }
 
-const std::vector<Rect2d> & PyramidProc::getLevelCrops() const {
+const std::vector<Rect2d>& PyramidProc::getLevelCrops() const {
     return m_crops;
 }
 
@@ -100,9 +99,9 @@ int PyramidProc::PyramidProc::render(int position) {
 
     // Set a constant background color
     glClear(GL_COLOR_BUFFER_BIT);
-    glClearColor(0,0,0,1);
+    glClearColor(0, 0, 0, 1);
 
-    for(auto &c : m_crops) {
+    for (auto& c : m_crops) {
         glViewport(c.x, c.y, c.width, c.height);
         filterRenderDraw();
     }
@@ -114,24 +113,20 @@ int PyramidProc::PyramidProc::render(int position) {
     return 0;
 }
 
-
 int PyramidProc::init(int inW, int inH, unsigned int order, bool prepareForExternalInput) {
     int width = 0, height = 0;
-    if(m_scales.size()) {
+    if (m_scales.size()) {
         m_crops = pack(m_scales);
-        for(const auto &c : m_crops) {
+        for (const auto& c : m_crops) {
             width = std::max(width, c.x + c.width);
             height = std::max(height, c.y + c.height);
         }
     } else {
-        m_crops = reduce({inW, inH}, m_levels);
+        m_crops = reduce({ inW, inH }, m_levels);
         width = inW * 3 / 2;
         height = inH;
-
     }
 
     FilterProcBase::setOutputSize(width, height);
     return FilterProcBase::init(inW, inH, order, prepareForExternalInput);
 }
-
-
