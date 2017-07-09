@@ -72,7 +72,13 @@ if(OGLES_GPGPU_BUILD_TESTS)
   find_package(GTest CONFIG REQUIRED)
   list(APPEND OGLES_GPGPU_TEST_LIBS GTest::gtest)  
 
-  # Use aglet for portable lightweight off screen opengl context
+  if(MSVC)
+    # TODO: Temporary aglet fix for appveyor?  Shouldn't be needed.
+    hunter_add_package(glew)
+    find_package(glew CONFIG REQUIRED)
+  endif()
+
+  # Use aglet for portable lightweight off screen opengl context  
   hunter_add_package(aglet)
   find_package(aglet CONFIG REQUIRED)
   list(APPEND OGLES_GPGPU_TEST_LIBS aglet::aglet)
