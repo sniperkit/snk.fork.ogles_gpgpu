@@ -57,7 +57,7 @@ matrix:
 
     - os: osx
       osx_image: xcode8.1      
-      env: CONFIG=Release TOOLCHAIN=ios-10-1-arm64 INSTALL=--install MESA=OFF TEST=--test
+      env: CONFIG=Release TOOLCHAIN=ios-nocodesign-10-1-arm64 INSTALL=--install MESA=OFF TEST=--test
 
     - os: osx
       osx_image: xcode8.1
