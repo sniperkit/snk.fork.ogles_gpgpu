@@ -58,11 +58,6 @@ else()
 
     target_link_libraries(ogles_gpgpu PUBLIC ${OSMESA_LIBRARY} ${GLAPI_LIBRARY} ${EGL_LIBRARY})
 
-    message("OSMESA_LIBRARY = ${OSMESA_LIBRARY}")
-    message("GLAPI_LIBRARY = ${GLAPI_LIBRARY}")
-    message("EGL_LIBRARY = ${EGL_LIBRARY}")
-    message("OSMESA_PATH = ${OSMESA_PATH}")
-
   else()
     find_package(OpenGL REQUIRED)
     target_link_libraries(ogles_gpgpu PUBLIC OpenGL::GL)
