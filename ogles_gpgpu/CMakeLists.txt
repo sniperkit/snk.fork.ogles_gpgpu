@@ -38,6 +38,15 @@ else()
 
   if(OGLES_GPGPU_USE_OSMESA)
 
+    # Note: Currently OSMesa is used for CPU OpenGL shader processing,
+    # primarily to supporting testing on HW platforms that lack GPU
+    # resources.  This is currently tested on Linux, although this could
+    # in theory be tested on other platforms.  There are a number of
+    # platform specific optimizations for iOS and Android that would
+    # have to be made option in order to support this.  For now the
+    # OSMESA option is excluded from those platforms in the CMake control
+    # logic.
+    
     find_library(OSMESA_LIBRARY OSMesa)
     if(NOT OSMESA_LIBRARY)
       message(FATAL_ERROR "OGLES_GPGPU was configured to use OSMesa, but the library could not be found")
@@ -56,12 +65,21 @@ else()
     endif()
     mark_as_advanced(OSMESA_LIBRARY GLAPI_LIBRARY EGL_LIBRARY)
 
-    target_link_libraries(ogles_gpgpu PUBLIC ${OSMESA_LIBRARY} ${GLAPI_LIBRARY} ${EGL_LIBRARY})
+    # Create a new target specfiically for OSMesa (cpu shader) based testing 
+    # (We will never create ogles_gpgpu libraries w/ CPU OpenGL processing.)
+    add_library(ogles_gpgpu_cpu ${OGLES_GPGPU_SRCS})
 
-  else()
-    find_package(OpenGL REQUIRED)
-    target_link_libraries(ogles_gpgpu PUBLIC OpenGL::GL)
+    if(OGLES_GPGPU_VERBOSE)
+      target_compile_definitions(ogles_gpgpu_cpu PUBLIC OGLES_GPGPU_VERBOSE=1)
+    endif()    
+
+    target_link_libraries(ogles_gpgpu_cpu PUBLIC ${OSMESA_LIBRARY} ${GLAPI_LIBRARY} ${EGL_LIBRARY})
+    
   endif()
+
+  # Link epxported ogles_gpgpu with the stanrda OpenGL lib
+  find_package(OpenGL REQUIRED)
+  target_link_libraries(ogles_gpgpu PUBLIC OpenGL::GL)
   
   if(MSVC)
     # ogles_gpgpu/platform/opengl/gl_includes.h: #include <gl/glew.h>
@@ -73,7 +91,7 @@ else()
   endif()
 endif()
   
-set_property(TARGET ${library} PROPERTY FOLDER "libs/ogles_gpgpu")
+set_property(TARGET ogles_gpgpu PROPERTY FOLDER "libs/ogles_gpgpu")
 target_include_directories(
     ogles_gpgpu PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>"
 )
