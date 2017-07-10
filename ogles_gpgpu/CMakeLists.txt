@@ -74,6 +74,11 @@ else()
     endif()    
 
     target_link_libraries(ogles_gpgpu_cpu PUBLIC ${OSMESA_LIBRARY} ${GLAPI_LIBRARY} ${EGL_LIBRARY})
+
+    set_property(TARGET ogles_gpgpu_cpu PROPERTY FOLDER "libs/ogles_gpgpu")
+    target_include_directories(
+      ogles_gpgpu_cpu PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>"
+      )    
     
   endif()
 
