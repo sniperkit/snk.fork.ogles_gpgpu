@@ -1,10 +1,12 @@
 set(OPENCV_CMAKE_ARGS
 
-  BUILD_opencv_imgcodecs=ON  
+  BUILD_opencv_core=ON
   BUILD_opencv_imgproc=ON
-  BUILD_opencv_video=ON
-  BUILD_opencv_videoio=ON
-  BUILD_opencv_highgui=ON  
+  
+  BUILD_opencv_imgcodecs=OFF
+  BUILD_opencv_video=OFF
+  BUILD_opencv_videoio=OFF
+  BUILD_opencv_highgui=OFF  
   
   BUILD_opencv_calib3d=OFF
   BUILD_opencv_contrib=OFF
@@ -54,10 +56,10 @@ set(OPENCV_CMAKE_ARGS
   ANDROID_EXAMPLES_WITH_LIBS=OFF    # "Build binaries of Android examples with native libraries"
 
   ### Custom ARGS ###
-  WITH_PNG=ON             # "Include PNG support"
+  WITH_PNG=OFF             # "Include PNG support"
   WITH_TIFF=OFF           # "Include TIFF support"
-  WITH_JASPER=ON          # "Include JPEG2K support"
-  WITH_JPEG=ON            # "Include JPEG support"
+  WITH_JASPER=OFF          # "Include JPEG2K support"
+  WITH_JPEG=OFF            # "Include JPEG support"
 
   WITH_OPENCL=NO
   HAVE_OPENCL=NO
@@ -117,11 +119,8 @@ set(OPENCV_CMAKE_ARGS
   WITH_GPHOTO2=OFF        # "Include gPhoto2 library support"
   )
 
-#hunter_config(OpenCV VERSION 3.0.0-p11 CMAKE_ARGS "${OPENCV_CMAKE_ARGS}")
-
+# Try to build very small OpenCV to support unit tests
 hunter_config(OpenCV VERSION ${HUNTER_OpenCV_VERSION} CMAKE_ARGS "${OPENCV_CMAKE_ARGS}")
-
-hunter_config(aglet GIT_SUBMODULE "3rdparty/aglet") # TODO: upstream hunter package
 
 if(OGLES_GPGPU_USE_OSMESA)
   hunter_config(glfw VERSION ${HUNTER_glfw_VERSION} CMAKE_ARGS GLFW_USE_OSMESA=ON)

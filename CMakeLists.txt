@@ -7,8 +7,8 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/modules")
 
 include("cmake/HunterGate.cmake")
 HunterGate(
-  URL "https://github.com/ruslo/hunter/archive/v0.19.26.tar.gz"
-  SHA1 "362b3c2fd8f0f50fc03cec5105be8fd4376ea886"  
+  URL "https://github.com/ruslo/hunter/archive/v0.19.29.tar.gz"
+  SHA1 "b0a69cd79597493f5e1e32d4cb77ff764807618a"  
   LOCAL
   )
 
