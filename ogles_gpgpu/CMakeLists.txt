@@ -16,6 +16,7 @@ if(APPLE)
     target_link_libraries(ogles_gpgpu PUBLIC
       "-framework ImageIO"
       "-framework CoreFoundation"
+      "-framework CoreVideo"
       "-framework Foundation" # NSLog
       "-framework OpenGLES"      
       )    
