@@ -5,7 +5,6 @@
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
 
 // NOTE: GL_BGRA is absent in Android NDK
 // clang-format off
