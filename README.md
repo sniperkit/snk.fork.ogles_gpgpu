@@ -4,12 +4,11 @@
 |-------------------------------------------------|-----------------------------------------------------|
 | [![Build Status][travis_status]][travis_builds] | [![Build Status][appveyor_status]][appveyor_builds] |
 
-
 [travis_status]: https://travis-ci.org/hunter-packages/ogles_gpgpu.svg?branch=hunter
 [travis_builds]: https://travis-ci.org/hunter-packages/ogles_gpgpu
 
-[appveyor_status]: https://ci.appveyor.com/api/projects/status/nuo2m8o09q562ogq/branch/hunter?svg=true
-[appveyor_builds]: https://ci.appveyor.com/project/headupinclouds/ogles-gpgpu-leruf/branch/hunter
+[appveyor_status]: https://ci.appveyor.com/api/projects/status/5t9i7mwbdvhqn21i/branch/hunter?svg=true
+[appveyor_builds]: https://ci.appveyor.com/project/ruslo/ogles-gpgpu/branch/hunter
 
 UPDATE: CMake support has been added via the [Hunter](https://github.com/ruslo/hunter) package manager with cross platform toolchains provided by [Polly](https://github.com/ruslo/polly).  See the README pages of these links for details.
 
