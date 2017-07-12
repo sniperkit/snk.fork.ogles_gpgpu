@@ -12,14 +12,13 @@ BEGIN_OGLES_GPGPU
 class MultiProcInterface : public ProcInterface {
 
 public:
-
     // ######## First/last filter access:
     MultiProcInterface() {}
     virtual ~MultiProcInterface() {}
 
     virtual ProcInterface* getInputFilter() const = 0;
     virtual ProcInterface* getOutputFilter() const = 0;
-    virtual ProcInterface * operator[](int i) const = 0;
+    virtual ProcInterface* operator[](int i) const = 0;
     virtual size_t size() const = 0;
     virtual void printInfo();
 
@@ -29,7 +28,7 @@ public:
     virtual RenderOrientation getOutputRenderOrientation() const;
 
     virtual void setExternalInputDataFormat(GLenum fmt);
-    virtual void setExternalInputData(const unsigned char *data);
+    virtual void setExternalInputData(const unsigned char* data);
     virtual GLuint getTextureUnit() const;
     virtual void setOutputSize(float scaleFactor);
     virtual void setOutputSize(int outW, int outH);
@@ -38,10 +37,10 @@ public:
     virtual int getInFrameW() const;
     virtual int getInFrameH() const;
     virtual bool getWillDownscale() const;
-    virtual void getResultData(unsigned char *data) const;
-    virtual void getResultData(FrameDelegate &delegate) const;
-    virtual MemTransfer *getMemTransferObj() const;
-    virtual MemTransfer *getInputMemTransferObj() const;
+    virtual void getResultData(unsigned char* data) const;
+    virtual void getResultData(FrameDelegate& delegate) const;
+    virtual MemTransfer* getMemTransferObj() const;
+    virtual MemTransfer* getInputMemTransferObj() const;
     virtual GLuint getInputTexId() const;
     virtual GLuint getOutputTexId() const;
 };
@@ -49,4 +48,3 @@ public:
 END_OGLES_GPGPU
 
 #endif
-

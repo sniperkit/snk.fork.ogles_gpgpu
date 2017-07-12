@@ -1,9 +1,50 @@
 set(OPENCV_CMAKE_ARGS
 
+  BUILD_opencv_core=ON
+  BUILD_opencv_imgproc=ON
+  
+  BUILD_opencv_imgcodecs=OFF
+  BUILD_opencv_video=OFF
+  BUILD_opencv_videoio=OFF
+  BUILD_opencv_highgui=OFF  
+  
+  BUILD_opencv_calib3d=OFF
+  BUILD_opencv_contrib=OFF
+  BUILD_opencv_cudaarithm=OFF
+  BUILD_opencv_cudabgsegm=OFF
+  BUILD_opencv_cudacodec=OFF
+  BUILD_opencv_cudafeatures2d=OFF
+  BUILD_opencv_cudafilters=OFF
+  BUILD_opencv_cudaimgproc=OFF
+  BUILD_opencv_cudalegacy=OFF
+  BUILD_opencv_cudaobjdetect=OFF
+  BUILD_opencv_cudaoptflow=OFF
+  BUILD_opencv_cudastereo=OFF
+  BUILD_opencv_cudawarping=OFF
+  BUILD_opencv_cudev=OFF
+  BUILD_opencv_features2d=OFF
+  BUILD_opencv_flann=OFF
+  BUILD_opencv_gpu=OFF
+  BUILD_opencv_java=OFF
+  BUILD_opencv_legacy=OFF
+  BUILD_opencv_ml=OFF
+  BUILD_opencv_nonfree=OFF
+  BUILD_opencv_objdetect=OFF
+  BUILD_opencv_ocl=OFF
+  BUILD_opencv_photo=OFF
+  BUILD_opencv_python=OFF
+  BUILD_opencv_shape=OFF
+  BUILD_opencv_stitching=OFF
+  BUILD_opencv_superres=OFF
+  BUILD_opencv_ts=OFF
+  BUILD_opencv_videostab=OFF
+  BUILD_opencv_viz=OFF
+  BUILD_opencv_world=OFF
+  BUILD_opencv_apps=OFF  
+  
   BUILD_DOCS=OFF
   BUILD_TESTS=OFF
   BUILD_PERF_TESTS=OFF
-  BUILD_opencv_apps=OFF
   BUILD_EXAMPLES=OFF
   ENABLE_NEON=OFF
   BUILD_ANDROID_SERVICE=OFF
@@ -15,10 +56,10 @@ set(OPENCV_CMAKE_ARGS
   ANDROID_EXAMPLES_WITH_LIBS=OFF    # "Build binaries of Android examples with native libraries"
 
   ### Custom ARGS ###
-  WITH_PNG=ON             # "Include PNG support"
+  WITH_PNG=OFF             # "Include PNG support"
   WITH_TIFF=OFF           # "Include TIFF support"
-  WITH_JASPER=ON          # "Include JPEG2K support"
-  WITH_JPEG=ON            # "Include JPEG support"
+  WITH_JASPER=OFF          # "Include JPEG2K support"
+  WITH_JPEG=OFF            # "Include JPEG support"
 
   WITH_OPENCL=NO
   HAVE_OPENCL=NO
@@ -78,10 +119,10 @@ set(OPENCV_CMAKE_ARGS
   WITH_GPHOTO2=OFF        # "Include gPhoto2 library support"
   )
 
-if(APPLE)
-  set(ogles_gpgpu_opencv_version "3.0.0-p11")
-else()
-  set(ogles_gpgpu_opencv_version "${HUNTER_OpenCV_VERSION}")
+# Try to build very small OpenCV to support unit tests
+hunter_config(OpenCV VERSION ${HUNTER_OpenCV_VERSION} CMAKE_ARGS "${OPENCV_CMAKE_ARGS}")
+
+if(OGLES_GPGPU_USE_OSMESA)
+  hunter_config(glfw VERSION ${HUNTER_glfw_VERSION} CMAKE_ARGS GLFW_USE_OSMESA=ON)
 endif()
 
-hunter_config(OpenCV VERSION ${ogles_gpgpu_opencv_version} CMAKE_ARGS "${OPENCV_CMAKE_ARGS}")

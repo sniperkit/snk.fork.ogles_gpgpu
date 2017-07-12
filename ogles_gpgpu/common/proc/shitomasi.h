@@ -31,7 +31,7 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "ShiTomasiProc";
     }
 
@@ -50,7 +50,6 @@ public:
     }
 
 private:
-
     /**
      * Set additional uniforms.
      */
@@ -62,23 +61,23 @@ private:
     virtual void getUniforms();
 
     // TODO: we currently need to override the filterShaderSetup to parse uniforms from the GPUImage
-    virtual void filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target);
+    virtual void filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target);
 
     /**
      * Get the vertex shader source.
      */
-    virtual const char *getVertexShaderSource() {
+    virtual const char* getVertexShaderSource() {
         return vshaderGPUImage;
     }
 
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return fshaderShiTomasiSrc;
     }
 
-    static const char *fshaderShiTomasiSrc;         // fragment shader source
+    static const char* fshaderShiTomasiSrc; // fragment shader source
 
     GLuint shParamUInputSensitivity = 0;
 

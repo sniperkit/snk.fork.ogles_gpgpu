@@ -6,21 +6,21 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "tensor.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
 
 // Source: GPUImageXYDerivativeFilter.m
 
-// *INDENT-OFF*
-const char *TensorProc::fshaderTensorSrc = OG_TO_STR(
+// clang-format off
+const char *TensorProc::fshaderTensorSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
 varying vec2 textureCoordinate;
 varying vec2 leftTextureCoordinate;
 varying vec2 rightTextureCoordinate;
@@ -64,10 +64,9 @@ void main()
     // is useful for optical flow.
     gl_FragColor = vec4(xx, yy, (xy + 1.0) / 2.0, centerIntensity);
 });
-// *INDENT-ON*
+// clang-format on
 
 TensorProc::TensorProc() {
-
 }
 
 void TensorProc::setUniforms() {
@@ -80,4 +79,3 @@ void TensorProc::getUniforms() {
     shParamUInputTex = shader->getParam(UNIF, "inputImageTexture");
     shParamUEdgeStrength = shader->getParam(UNIF, "edgeStrength");
 }
-

@@ -39,7 +39,7 @@ public:
      * The input buffer will be locked for reading AND writing, while the
      * output buffer will be locked for reading only.
      */
-    virtual void *lockBufferAndGetPtr(BufType bufType) = 0;
+    virtual void* lockBufferAndGetPtr(BufType bufType) = 0;
 
     /**
      * Unlock the input or output buffer.
@@ -53,7 +53,6 @@ public:
         glFlush();
     }
 };
-
 }
 
 #endif

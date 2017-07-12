@@ -25,7 +25,7 @@ clock_t Tools::startTick = 0;
 vector<double> Tools::timeMeasurements;
 #endif
 
-void Tools::checkGLErr(const char *cls, const char *msg) {
+void Tools::checkGLErr(const char* cls, const char* msg) {
     GLenum err = glGetError();
     if (err != GL_NO_ERROR) {
         OG_LOGERR(cls, "%s - GL error '%d' occured", msg, err);
@@ -41,7 +41,7 @@ float Tools::getBiggerPOTValue(float v) {
     return powf(2.0f, ceilf(log2f(v)));
 }
 
-vector<string> Tools::split(const string &s, char delim) {
+vector<string> Tools::split(const string& s, char delim) {
     vector<string> elems;
     stringstream strs(s);
     string item;
@@ -59,7 +59,7 @@ void Tools::strReplaceAll(string& str, const string& from, const string& to) {
 
     size_t start_pos = 0;
 
-    while((start_pos = str.find(from, start_pos)) != string::npos) {
+    while ((start_pos = str.find(from, start_pos)) != string::npos) {
         str.replace(start_pos, from.length(), to);
         start_pos += to.length();
     }

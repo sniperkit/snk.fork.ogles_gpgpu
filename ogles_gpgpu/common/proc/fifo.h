@@ -6,7 +6,6 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-
 #ifndef OGLES_GPGPU_COMMON_PROC_FIFO
 #define OGLES_GPGPU_COMMON_PROC_FIFO
 
@@ -18,14 +17,13 @@ BEGIN_OGLES_GPGPU
 
 class FifoProc : public MultiProcInterface {
 public:
-
-    FifoProc(int size=2);
+    FifoProc(int size = 2);
 
     virtual ~FifoProc();
     virtual int init(int inW, int inH, unsigned int order, bool prepareForExternalInput = false);
     virtual int reinit(int inW, int inH, bool prepareForExternalInput = false);
     virtual void cleanup();
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "FifoProc";
     }
     virtual void createFBOTex(bool genMipmap);
@@ -42,7 +40,7 @@ public:
 
     virtual ProcInterface* getInputFilter() const;
     virtual ProcInterface* getOutputFilter() const;
-    virtual ProcInterface * operator[](int i) const;
+    virtual ProcInterface* operator[](int i) const;
     virtual size_t size() const {
         return procPasses.size();
     }
@@ -50,15 +48,15 @@ public:
     virtual int getIn() const;
     virtual int getOut() const;
 
-    virtual void addWithDelay(ProcInterface *filter, int position = 0, int time = 0);
+    virtual void addWithDelay(ProcInterface* filter, int position = 0, int time = 0);
 
     /**
      * Return te list of processor instances of each pass of this multipass processor.
      */
-    std::vector<ProcInterface *>& getProcPasses() {
+    std::vector<ProcInterface*>& getProcPasses() {
         return procPasses;
     }
-    const std::vector<ProcInterface *>& getProcPasses() const {
+    const std::vector<ProcInterface*>& getProcPasses() const {
         return procPasses;
     }
     bool isFull() const {
@@ -69,7 +67,6 @@ public:
     }
 
 protected:
-
     virtual void prepare(int inW, int inH, int index = 0, int position = 0);
     virtual void process(int position, Logger logger = {});
 
@@ -77,10 +74,10 @@ protected:
     int m_inputIndex = -1;
     int m_outputIndex = -1;
 
-    using FilterTarget = std::pair<ProcInterface *, int>;
+    using FilterTarget = std::pair<ProcInterface*, int>;
     std::vector<std::vector<FilterTarget>> delayedSubscribers;
 
-    std::vector<ProcInterface *> procPasses;   // holds all instances to the single processing passes. strong ref!
+    std::vector<ProcInterface*> procPasses; // holds all instances to the single processing passes. strong ref!
 };
 
 typedef FifoProc FIFOPRoc;

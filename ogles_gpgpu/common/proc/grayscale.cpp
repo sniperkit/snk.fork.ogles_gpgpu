@@ -9,8 +9,8 @@
 
 // Modifications: Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "grayscale.h"
+#include "../common_includes.h"
 
 #include <memory.h>
 
@@ -29,13 +29,14 @@ const GLfloat GrayscaleProc::grayscaleConvVecNone[3] = {
     1.0, 1.0, 1.0
 };
 
-// *INDENT-OFF*
-const char *GrayscaleProc::fshaderGrayscaleSrc = OG_TO_STR(
+// clang-format off
+const char *GrayscaleProc::fshaderGrayscaleSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
 
+OG_TO_STR(
 uniform sampler2D uInputTex;
 uniform vec3 uInputConvVec;
 varying vec2 vTexCoord;
@@ -46,15 +47,16 @@ void main()
     gl_FragColor = vec4(gray, gray, gray, 1.0);
 }
 );
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
-const char *GrayscaleProc::fshaderNoopSrc = OG_TO_STR(
+// clang-format off
+const char *GrayscaleProc::fshaderNoopSrc =
 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
 
+OG_TO_STR(
  varying vec2 vTexCoord;
  uniform sampler2D uInputTex;
  void main()
@@ -62,7 +64,7 @@ const char *GrayscaleProc::fshaderNoopSrc = OG_TO_STR(
      gl_FragColor = vec4(texture2D(uInputTex, vTexCoord).rgba);
  }
 );
-// *INDENT-ON*
+// clang-format on
 
 GrayscaleProc::GrayscaleProc() {
     // set defaults
@@ -71,17 +73,16 @@ GrayscaleProc::GrayscaleProc() {
 }
 
 void GrayscaleProc::setIdentity() {
-
 }
 
 void GrayscaleProc::setUniforms() {
-    if(inputConvType != GRAYSCALE_INPUT_CONVERSION_NONE) {
-        glUniform3fv(shParamUInputConvVec, 1, grayscaleConvVec);  // set additional uniforms
+    if (inputConvType != GRAYSCALE_INPUT_CONVERSION_NONE) {
+        glUniform3fv(shParamUInputConvVec, 1, grayscaleConvVec); // set additional uniforms
     }
 }
 
 void GrayscaleProc::getUniforms() {
-    if(inputConvType != GRAYSCALE_INPUT_CONVERSION_NONE) {
+    if (inputConvType != GRAYSCALE_INPUT_CONVERSION_NONE) {
         shParamUInputConvVec = shader->getParam(UNIF, "uInputConvVec");
     }
 }
@@ -92,11 +93,12 @@ void GrayscaleProc::setGrayscaleConvVec(const GLfloat v[3]) {
 }
 
 void GrayscaleProc::setGrayscaleConvType(GrayscaleInputConversionType type) {
-    if (inputConvType == type) return;  // no change
+    if (inputConvType == type)
+        return; // no change
 
-    const GLfloat *v = NULL;
+    const GLfloat* v = NULL;
 
-    switch(type) {
+    switch (type) {
     case GRAYSCALE_INPUT_CONVERSION_RGB:
         v = &grayscaleConvVecRGB[0];
         break;

@@ -17,14 +17,14 @@
 #include "procinterface.h"
 
 #include "../../gl/fbo.h"
-#include "../../gl/shader.h"
 #include "../../gl/memtransfer.h"
+#include "../../gl/shader.h"
 
-#define OGLES_GPGPU_QUAD_VERTICES 				4
-#define OGLES_GPGPU_QUAD_COORDS_PER_VERTEX      3
-#define OGLES_GPGPU_QUAD_TEXCOORDS_PER_VERTEX 	2
-#define OGLES_GPGPU_QUAD_VERTEX_BUFSIZE          (OGLES_GPGPU_QUAD_VERTICES * OGLES_GPGPU_QUAD_COORDS_PER_VERTEX)
-#define OGLES_GPGPU_QUAD_TEX_BUFSIZE 			(OGLES_GPGPU_QUAD_VERTICES * OGLES_GPGPU_QUAD_TEXCOORDS_PER_VERTEX)
+#define OGLES_GPGPU_QUAD_VERTICES 4
+#define OGLES_GPGPU_QUAD_COORDS_PER_VERTEX 3
+#define OGLES_GPGPU_QUAD_TEXCOORDS_PER_VERTEX 2
+#define OGLES_GPGPU_QUAD_VERTEX_BUFSIZE (OGLES_GPGPU_QUAD_VERTICES * OGLES_GPGPU_QUAD_COORDS_PER_VERTEX)
+#define OGLES_GPGPU_QUAD_TEX_BUFSIZE (OGLES_GPGPU_QUAD_VERTICES * OGLES_GPGPU_QUAD_TEXCOORDS_PER_VERTEX)
 
 namespace ogles_gpgpu {
 
@@ -67,7 +67,7 @@ public:
      * Insert external data into this processor. It will be used as input texture.
      * Note: init() must have been called with prepareForExternalInput = true for that.
      */
-    virtual void setExternalInputData(const unsigned char *data);
+    virtual void setExternalInputData(const unsigned char* data);
 
     /**
      * Create a texture that is attached to the FBO and will contain the processing result.
@@ -90,7 +90,7 @@ public:
     /**
      * Set output size by scaling down or up the input frame size by factor <scaleFactor>.
      */
-    virtual void setOutputSize(float scaleFactor)  {
+    virtual void setOutputSize(float scaleFactor) {
         procParamOutScale = scaleFactor;
     }
 
@@ -154,17 +154,17 @@ public:
     /**
      * Return the result data from the FBO.
      */
-    virtual void getResultData(unsigned char *data) const;
+    virtual void getResultData(unsigned char* data) const;
 
     /**
      * Return the result data from the FBO.
      */
-    virtual void getResultData(FrameDelegate &delegate) const;
+    virtual void getResultData(FrameDelegate& delegate) const;
 
     /**
      * Return pointer to MemTransfer object of this processor.
      */
-    virtual MemTransfer *getMemTransferObj() const;
+    virtual MemTransfer* getMemTransferObj() const;
 
     /**
      * Return input texture id.
@@ -209,47 +209,45 @@ protected:
      * <vshSrc> and <fshSrc>. The fragment shader source might be modified, depending
      * on texture target <target>.
      */
-    virtual void createShader(const char *vShSrc, const char *fShSrc, GLenum target, const Shader::Attributes &attributes= {});
+    virtual void createShader(const char* vShSrc, const char* fShSrc, GLenum target, const Shader::Attributes& attributes = {});
 
+    static const GLfloat quadTexCoordsStd[]; // default quad texture coordinates
+    static const GLfloat quadTexCoordsStdMirrored[]; // default quad texture coordinates (mirrored)
+    static const GLfloat quadTexCoordsFlipped[]; // flipped quad texture coordinates
+    static const GLfloat quadTexCoordsFlippedMirrored[]; // flipped, mirrored quad texture coordinates
+    static const GLfloat quadTexCoordsDiagonal[]; // diagonal quad texture coordinates
+    static const GLfloat quadTexCoordsDiagonalFlipped[]; // diagonal flipped quad texture coordinates
+    static const GLfloat quadTexCoordsDiagonalMirrored[]; // diagonal mirrored quad texture coordinates
+    static const GLfloat quadVertices[]; // default quad vertices
 
-    static const GLfloat quadTexCoordsStd[];                // default quad texture coordinates
-    static const GLfloat quadTexCoordsStdMirrored[];        // default quad texture coordinates (mirrored)
-    static const GLfloat quadTexCoordsFlipped[];            // flipped quad texture coordinates
-    static const GLfloat quadTexCoordsFlippedMirrored[];    // flipped, mirrored quad texture coordinates
-    static const GLfloat quadTexCoordsDiagonal[];           // diagonal quad texture coordinates
-    static const GLfloat quadTexCoordsDiagonalFlipped[];    // diagonal flipped quad texture coordinates
-    static const GLfloat quadTexCoordsDiagonalMirrored[];   // diagonal mirrored quad texture coordinates
-    static const GLfloat quadVertices[];                    // default quad vertices
+    FBO* fbo; // strong ref.!
+    Shader* shader; // strong ref.!
 
-    FBO *fbo;       // strong ref.!
-    Shader *shader;	// strong ref.!
-
-    unsigned int orderNum;  // position of this processor in the pipeline
+    unsigned int orderNum; // position of this processor in the pipeline
 
     bool hasTexId = true;
-    GLuint texId;       // input texture id
-    GLuint texUnit;     // input texture unit (glActiveTexture())
-    GLenum texTarget;   // input texture target
+    GLuint texId; // input texture id
+    GLuint texUnit; // input texture unit (glActiveTexture())
+    GLenum texTarget; // input texture target
 
-    GLint shParamUInputTex;     // shader uniform input texture sampler
+    GLint shParamUInputTex; // shader uniform input texture sampler
 
-    int procParamOutW;          // output frame width parameter
-    int procParamOutH;          // output frame height parameter
-    float procParamOutScale;    // output frame scaling parameter
+    int procParamOutW; // output frame width parameter
+    int procParamOutH; // output frame height parameter
+    float procParamOutScale; // output frame scaling parameter
 
-    RenderOrientation renderOrientation;    // output render orientation
+    RenderOrientation renderOrientation; // output render orientation
 
     bool willDownscale; // is true if output size < input size.
 
-    GLenum inputDataFmt;    // input pixel data format
+    GLenum inputDataFmt; // input pixel data format
 
-    int inFrameW = 0;   // input frame width
-    int inFrameH = 0;   // input frame height
+    int inFrameW = 0; // input frame width
+    int inFrameH = 0; // input frame height
 
-    int outFrameW = 0;  // output frame width
-    int outFrameH = 0;  // output frame height
+    int outFrameW = 0; // output frame width
+    int outFrameH = 0; // output frame height
 };
-
 }
 
 #endif

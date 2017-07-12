@@ -13,11 +13,11 @@
 #ifndef OGLES_GPGPU_COMMON_TOOLS
 #define OGLES_GPGPU_COMMON_TOOLS
 
-#include <vector>
-#include <string>
-#include <sstream>
-#include <ctime>
 #include <cstdio>
+#include <ctime>
+#include <sstream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -32,7 +32,7 @@ public:
      * Check for an OpenGL error in the previous call(s). Produce error
      * message in class <cls> with prefix <msg>.
      */
-    static void checkGLErr(const char *cls, const char *msg);
+    static void checkGLErr(const char* cls, const char* msg);
 
     /**
      * Check if <v> is a power-of-two (POT) value.
@@ -47,7 +47,7 @@ public:
     /**
      * Split a string <s> by delimiter <delim>.
      */
-    static vector<string> split(const string &s, char delim = ' ');
+    static vector<string> split(const string& s, char delim = ' ');
 
     /**
      * Replace all strings <from> in <str> by <to>.
@@ -67,13 +67,11 @@ public:
 #endif
 
 private:
-
 #ifdef OGLES_GPGPU_BENCHMARK
     static clock_t startTick;
     static vector<double> timeMeasurements;
 #endif
 };
-
 }
 
 #endif

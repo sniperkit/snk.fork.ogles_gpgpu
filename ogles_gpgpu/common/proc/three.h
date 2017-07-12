@@ -26,7 +26,7 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "ThreeInputProc";
     }
 
@@ -48,23 +48,22 @@ public:
         waitForThirdTexture = flag;
     }
 
-    virtual int render(int position=0);
+    virtual int render(int position = 0);
 
 protected:
-
-    virtual void filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target);
+    virtual void filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target);
 
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return fshaderThreeInputSrc;
     }
 
     /**
      * Get the vertex shader source.
      */
-    virtual const char *getVertexShaderSource() {
+    virtual const char* getVertexShaderSource() {
         return vshaderThreeInputSrc;
     }
 
@@ -89,19 +88,19 @@ protected:
     bool hasTex2 = false;
     bool waitForSecondTexture = true;
     GLint shParamUInputTex2;
-    GLuint texId2;       // input texture id
-    GLuint texUnit2;     // input texture unit (glActiveTexture())
-    GLenum texTarget2;   // input texture target
+    GLuint texId2; // input texture id
+    GLuint texUnit2; // input texture unit (glActiveTexture())
+    GLenum texTarget2; // input texture target
 
     bool hasTex3 = false;
     bool waitForThirdTexture = true;
     GLint shParamUInputTex3;
-    GLuint texId3;       // input texture id
-    GLuint texUnit3;     // input texture unit (glActiveTexture())
-    GLenum texTarget3;   // input texture target
+    GLuint texId3; // input texture id
+    GLuint texUnit3; // input texture unit (glActiveTexture())
+    GLenum texTarget3; // input texture target
 
-    static const char *fshaderThreeInputSrc; // fragment shader source
-    static const char *vshaderThreeInputSrc; // vertex shader source
+    static const char* fshaderThreeInputSrc; // fragment shader source
+    static const char* vshaderThreeInputSrc; // vertex shader source
 };
 }
 

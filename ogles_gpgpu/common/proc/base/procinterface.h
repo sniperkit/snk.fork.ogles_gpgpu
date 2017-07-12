@@ -26,17 +26,16 @@ BEGIN_OGLES_GPGPU
  */
 class ProcInterface {
 public:
+    typedef std::function<void(const std::string& tag)> Logger;
 
-    typedef std::function<void(const std::string &tag)> Logger;
-
-    using ProcDelegate = std::function<void(ProcInterface *)>;
+    using ProcDelegate = std::function<void(ProcInterface*)>;
 
     using FrameDelegate = MemTransfer::FrameDelegate;
 
     /**
      * Important: deconstructor must be virtual
      */
-    virtual ~ProcInterface() { }
+    virtual ~ProcInterface() {}
 
     /**
      * Init the processor for input frames of size <inW>x<inH> which is at
@@ -64,7 +63,7 @@ public:
      * Insert external data into this processor. It will be used as input texture.
      * Note: init() must have been called with prepareForExternalInput = true for that.
      */
-    virtual void setExternalInputData(const unsigned char *data) = 0;
+    virtual void setExternalInputData(const unsigned char* data) = 0;
 
     /**
      * Create a texture that is attached to the FBO and will contain the processing result.
@@ -76,24 +75,24 @@ public:
      * Render a result, i.e. run the shader on the input texture.
      * Abstract method.  Return 0 on success.
      */
-    virtual int render(int position=0) = 0;
+    virtual int render(int position = 0) = 0;
 
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() = 0;
+    virtual const char* getProcName() = 0;
 
     /**
      * Set a custom tag name.
      */
-    virtual void setProcTitle(const std::string &name) {
+    virtual void setProcTitle(const std::string& name) {
         title = name;
     }
 
     /**
      * Return the custom tag name.
      */
-    virtual const char *getProcTitle() {
+    virtual const char* getProcTitle() {
         return title.c_str();
     }
 
@@ -105,7 +104,7 @@ public:
     /**
      * Use texture id <id> as input texture at texture <useTexUnit> with texture target <target>.
      */
-    virtual void useTexture(GLuint id, GLuint useTexUnit = 1, GLenum target = GL_TEXTURE_2D, int position=0) = 0;
+    virtual void useTexture(GLuint id, GLuint useTexUnit = 1, GLenum target = GL_TEXTURE_2D, int position = 0) = 0;
 
     /**
      * Return used texture unit.
@@ -181,24 +180,24 @@ public:
     /**
      * Return the result data from the FBO.
      */
-    virtual void getResultData(unsigned char *data) const = 0;
+    virtual void getResultData(unsigned char* data) const = 0;
 
     /**
      * Return the result data from the FBO (zero copy).
      */
-    virtual void getResultData(FrameDelegate &) const = 0;
+    virtual void getResultData(FrameDelegate&) const = 0;
 
     /**
      * Return pointer to MemTransfer object of this processor.
      */
-    virtual MemTransfer *getMemTransferObj() const = 0;
+    virtual MemTransfer* getMemTransferObj() const = 0;
 
     /**
      * Return pointer to designated input MemTransfer object of this processor.
      *
      * Note: This is typically the same, except for multi-pass processors.
      */
-    virtual MemTransfer *getInputMemTransferObj() const {
+    virtual MemTransfer* getInputMemTransferObj() const {
         return getMemTransferObj();
     }
 
@@ -217,7 +216,7 @@ public:
     /**
      * Add a subscriber
      */
-    virtual void add(ProcInterface *filter, int position=0);
+    virtual void add(ProcInterface* filter, int position = 0);
 
     /**
      * Prepare the filter chain
@@ -254,36 +253,34 @@ public:
     /**
      * Set a pre processing callback
      */
-    virtual void setPreProcessCallback(ProcDelegate &cb);
+    virtual void setPreProcessCallback(ProcDelegate& cb);
 
     /**
      * Set a pre processing callback
      */
-    virtual void setPostProcessCallback(ProcDelegate &cb);
+    virtual void setPostProcessCallback(ProcDelegate& cb);
 
     /**
      * Set a pre render callback
      */
-    virtual void setPreRenderCallback(ProcDelegate &cb);
+    virtual void setPreRenderCallback(ProcDelegate& cb);
 
     /**
      * Set a post render callback
      */
-    virtual void setPostRenderCallback(ProcDelegate &cb);
+    virtual void setPostRenderCallback(ProcDelegate& cb);
 
     /**
      * Set a pre init callback
      */
-    virtual void setPreInitCallback(ProcDelegate &cb);
+    virtual void setPreInitCallback(ProcDelegate& cb);
 
     /**
      * Set a post init callback
      */
-    virtual void setPostInitCallback(ProcDelegate &cb);
-
+    virtual void setPostInitCallback(ProcDelegate& cb);
 
 protected:
-
     /**
      * Get a formatted/unique filter tag
      */
@@ -295,7 +292,7 @@ protected:
 
     bool active = true;
 
-    std::vector<std::pair<ProcInterface *, int>> subscribers;
+    std::vector<std::pair<ProcInterface*, int>> subscribers;
 
     ProcDelegate m_preProcessCallback;
     ProcDelegate m_postProcessCallback;

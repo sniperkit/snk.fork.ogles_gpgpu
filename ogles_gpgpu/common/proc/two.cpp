@@ -6,19 +6,19 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "two.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
-const char *TwoInputProc::vshaderTwoInputSrc = OG_TO_STR(
+// clang-format off
+const char *TwoInputProc::vshaderTwoInputSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
  attribute vec4 position;
  attribute vec4 inputTextureCoordinate;
 
@@ -29,15 +29,15 @@ precision mediump float;
      gl_Position = position;
      textureCoordinate = inputTextureCoordinate.xy;
  });
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
-const char *TwoInputProc::fshaderTwoInputSrc = OG_TO_STR(
+// clang-format off
+const char *TwoInputProc::fshaderTwoInputSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision mediump float;
+OG_TO_STR(precision mediump float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
 
  uniform sampler2D inputImageTexture;
@@ -49,16 +49,15 @@ precision mediump float;
 	 vec4 textureColor2 = texture2D(inputImageTexture2, textureCoordinate);
 	 gl_FragColor = vec4(textureColor.rgb - textureColor2.rgb, textureColor.a);
 });
-// *INDENT-ON*
+// clang-format on
 
 TwoInputProc::TwoInputProc() {
-
 }
 
 int TwoInputProc::render(int position) {
     int result = 1;
 
-    switch(position) {
+    switch (position) {
     case 0:
         hasTex1 = true;
         break;
@@ -69,7 +68,7 @@ int TwoInputProc::render(int position) {
         assert(false);
     }
 
-    if(hasTex1 && (hasTex2 || !waitForSecondTexture)) {
+    if (hasTex1 && (hasTex2 || !waitForSecondTexture)) {
         result = FilterProcBase::render(position);
         hasTex1 = hasTex2 = false;
     }
@@ -81,7 +80,7 @@ int TwoInputProc::render(int position) {
  */
 
 void TwoInputProc::useTexture(GLuint id, GLuint useTexUnit, GLenum target, int position) {
-    switch(position) {
+    switch (position) {
     case 0:
         FilterProcBase::useTexture(id, useTexUnit, target, position);
         break;
@@ -119,7 +118,7 @@ void TwoInputProc::filterRenderPrepare() {
     glUniform1i(shParamUInputTex2, texUnit2);
 }
 
-void TwoInputProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void TwoInputProc::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     // create shader object
     FilterProcBase::createShader(vShaderSrc, fShaderSrc, target);
 
@@ -140,5 +139,3 @@ void TwoInputProc::getUniforms() {
 void TwoInputProc::setUniforms() {
     FilterProcBase::setUniforms();
 }
-
-

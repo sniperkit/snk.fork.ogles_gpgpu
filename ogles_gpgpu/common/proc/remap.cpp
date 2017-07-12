@@ -12,7 +12,7 @@
 
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
+// clang-format off
 const char *RemapProc::vshaderRemapSrc = OG_TO_STR
 (
     attribute vec4 position;
@@ -24,14 +24,14 @@ const char *RemapProc::vshaderRemapSrc = OG_TO_STR
         textureCoordinate = inputTextureCoordinate.xy;
     }
 );
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
-const char *RemapProc::fshaderRemapSrc = OG_TO_STR
-(
+// clang-format off
+const char *RemapProc::fshaderRemapSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
+OG_TO_STR(    
  varying vec2 textureCoordinate;
  uniform sampler2D inputImageTexture;  // IMAGE
  uniform sampler2D inputImageTexture2; // FLOW
@@ -46,11 +46,11 @@ const char *RemapProc::fshaderRemapSrc = OG_TO_STR
      vec4 centerIntensity = texture2D(inputImageTexture, textureCoordinate + (delta * offset));
      gl_FragColor = centerIntensity;
  });
-// *INDENT-ON*
+// clang-format on
 
 RemapProc::RemapProc() {}
 
-void RemapProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void RemapProc::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     // create shader object
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
 
@@ -64,12 +64,10 @@ void RemapProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc
 }
 
 void RemapProc::getUniforms() {
-
 }
 
 void RemapProc::setUniforms() {
     // Set texel width/height uniforms:
-    glUniform1f(texelWidthUniform, (1.0f/ float(outFrameW)));
-    glUniform1f(texelHeightUniform, (1.0f/ float(outFrameH)));
+    glUniform1f(texelWidthUniform, (1.0f / float(outFrameW)));
+    glUniform1f(texelHeightUniform, (1.0f / float(outFrameH)));
 }
-

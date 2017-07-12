@@ -6,21 +6,19 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "shitomasi.h"
+#include "../common_includes.h"
 
 using namespace std;
 using namespace ogles_gpgpu;
 
-
-
-// *INDENT-OFF*
-const char *ShiTomasiProc::fshaderShiTomasiSrc = OG_TO_STR(
+// clang-format off
+const char *ShiTomasiProc::fshaderShiTomasiSrc = 
 
 #if defined(OGLES_GPGPU_OPENGLES)
-precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
 varying vec2 textureCoordinate;
 
 uniform sampler2D inputImageTexture;
@@ -38,15 +36,13 @@ void main()
 
     gl_FragColor = vec4(vec3(cornerness) * sensitivity, 1.0);
 });
-// *INDENT-ON*
+// clang-format on
 
 ShiTomasiProc::ShiTomasiProc() {
-
 }
 
-
 // TODO: We need to override this if we are using the GPUImage shaders
-void ShiTomasiProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void ShiTomasiProc::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     // create shader object
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
 
@@ -59,10 +55,10 @@ void ShiTomasiProc::filterShaderSetup(const char *vShaderSrc, const char *fShade
 void ShiTomasiProc::getUniforms() {
     FilterProcBase::getUniforms();
     shParamUInputTex = shader->getParam(UNIF, "inputImageTexture");
-    shParamUInputSensitivity =  shader->getParam(UNIF, "sensitivity");
+    shParamUInputSensitivity = shader->getParam(UNIF, "sensitivity");
 }
 
 void ShiTomasiProc::setUniforms() {
     FilterProcBase::setUniforms();
-    glUniform1f (shParamUInputSensitivity, sensitivity);   // set additional uniforms
+    glUniform1f(shParamUInputSensitivity, sensitivity); // set additional uniforms
 }

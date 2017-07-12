@@ -6,17 +6,16 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-
 #include "video.h"
 #include "yuv2rgb.h"
 
 using namespace ogles_gpgpu;
 
-VideoSource::VideoSource(void *glContext) {
+VideoSource::VideoSource(void* glContext) {
     init(glContext);
 }
 
-VideoSource::VideoSource(void *glContext, const Size2d &size, GLenum inputPixFormat) {
+VideoSource::VideoSource(void* glContext, const Size2d& size, GLenum inputPixFormat) {
     init(glContext);
     configurePipeline(size, inputPixFormat);
 }
@@ -25,15 +24,14 @@ VideoSource::~VideoSource() {
     Core::getInstance()->reset();
 }
 
-void VideoSource::init(void *glContext) {
-    auto *gpgpu = Core::getInstance();
-    Core::tryEnablePlatformOptimizations();
+void VideoSource::init(void* glContext) {
+    auto* gpgpu = Core::getInstance();
     Core::getInstance()->setUseMipmaps(false); // TODO
     // pipeline
     gpgpu->init(glContext);
 }
 
-VideoSource::VideoSource(const Size2d &size, GLenum inputPixFormat) {
+VideoSource::VideoSource(const Size2d& size, GLenum inputPixFormat) {
     configurePipeline(size, inputPixFormat);
 }
 
@@ -42,43 +40,42 @@ GLuint VideoSource::getInputTexId() {
     return pipeline->getInputTexId();
 }
 
-void VideoSource::configurePipeline(const Size2d &size, GLenum inputPixFormat) {
-    if(inputPixFormat == 0) { // 0 == NV{12,21}
-        if(!yuv2RgbProc) {
+void VideoSource::configurePipeline(const Size2d& size, GLenum inputPixFormat) {
+    if (inputPixFormat == 0) { // 0 == NV{12,21}
+        if (!yuv2RgbProc) {
             yuv2RgbProc = std::make_shared<ogles_gpgpu::Yuv2RgbProc>();
             yuv2RgbProc->setExternalInputDataFormat(inputPixFormat);
             yuv2RgbProc->init(size.width, size.height, 0, true);
             frameSize = size;
         }
 
-        if(size != frameSize) {
+        if (size != frameSize) {
             yuv2RgbProc->reinit(size.width, size.height, true);
         }
 
         yuv2RgbProc->createFBOTex(false); // TODO: mipmapping?
     }
 
-    ogles_gpgpu::Core::tryEnablePlatformOptimizations();
-
     assert(pipeline);
-    if(pipeline != nullptr) {
+    if (pipeline != nullptr) {
         pipeline->prepare(size.width, size.height, inputPixFormat);
     }
     frameSize = size;
 }
 
-void VideoSource::set(ProcInterface *p) {
+void VideoSource::set(ProcInterface* p) {
     pipeline = p;
 }
 
-void VideoSource::operator()(const FrameInput &frame) {
+void VideoSource::operator()(const FrameInput& frame) {
     return (*this)(frame.size, frame.pixelBuffer, frame.useRawPixels, frame.inputTexture, frame.textureFormat);
 }
 
-void VideoSource::operator()(const Size2d &size, void* pixelBuffer, bool useRawPixels, GLuint inputTexture, GLenum inputPixFormat) {
+void VideoSource::operator()(const Size2d& size, void* pixelBuffer, bool useRawPixels, GLuint inputTexture, GLenum inputPixFormat) {
     preConfig();
 
-    if(m_timer) m_timer("begin");
+    if (m_timer)
+        m_timer("begin");
 
     assert(pipeline);
 
@@ -92,8 +89,8 @@ void VideoSource::operator()(const Size2d &size, void* pixelBuffer, bool useRawP
 
     // on each new frame, this will release the input buffers and textures, and prepare new ones
     // texture format must be GL_BGRA because this is one of the native camera formats (see initCam)
-    if(pixelBuffer) {
-        if(inputPixFormat == 0) {
+    if (pixelBuffer) {
+        if (inputPixFormat == 0) {
             // YUV: Special case NV12=>BGR
             auto manager = yuv2RgbProc->getMemTransferObj();
             if (useRawPixels) {
@@ -109,22 +106,24 @@ void VideoSource::operator()(const Size2d &size, void* pixelBuffer, bool useRawP
             inputTexture = yuv2RgbProc->getOutputTexId(); // override input parameter
         } else {
             gpgpuInputHandler->prepareInput(frameSize.width, frameSize.height, inputPixFormat, pixelBuffer);
-            setInputData(reinterpret_cast< const unsigned char *>(pixelBuffer));
+            setInputData(reinterpret_cast<const unsigned char*>(pixelBuffer));
             inputTexture = gpgpuInputHandler->getInputTexId(); // override input parameter
         }
     }
 
-    if(m_timer) m_timer("process");
+    if (m_timer)
+        m_timer("process");
 
     assert(inputTexture); // inputTexture must be defined at this point
     pipeline->process(inputTexture, 1, GL_TEXTURE_2D, 0, 0, m_timer);
 
-    if(m_timer) m_timer("end");
+    if (m_timer)
+        m_timer("end");
 
     postConfig();
 }
 
-void VideoSource::setInputData(const unsigned char *data) {
+void VideoSource::setInputData(const unsigned char* data) {
 
 #if 1
     bool useMipmaps = false;
@@ -162,5 +161,3 @@ void VideoSource::setInputData(const unsigned char *data) {
 
     //glFinish();
 }
-
-

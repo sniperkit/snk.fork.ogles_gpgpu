@@ -4,4 +4,4 @@
 #
 
 include(CommonFindMod)
-drishti_common_find_module(LOG log android/log.h log)
+ogles_gpgpu_common_find_module(LOG log android/log.h log)

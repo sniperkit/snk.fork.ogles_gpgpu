@@ -98,9 +98,9 @@ void FBO::createAttachedTex(int w, int h, bool genMipmap, GLenum attachment, GLe
 
     // bind it to FBO
     glFramebufferTexture2D(GL_FRAMEBUFFER,
-                           attachment,
-                           target,
-                           attachedTexId, 0);
+        attachment,
+        target,
+        attachedTexId, 0);
 
     GLenum fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
@@ -109,14 +109,14 @@ void FBO::createAttachedTex(int w, int h, bool genMipmap, GLenum attachment, GLe
         attachedTexId = 0;
     } else {
         OG_LOGINF("FBO", "FBO with ID %d: created attached texture %d of size %dx%d (mipmap: %d)",
-                  id, attachedTexId, w, h, genMipmap);
+            id, attachedTexId, w, h, genMipmap);
     }
 
     // unbind FBO
     unbind();
 }
 
-void FBO::readBuffer(unsigned char *buf) {
+void FBO::readBuffer(unsigned char* buf) {
     assert(memTransfer && attachedTexId > 0 && texW > 0 && texH > 0);
 
     // bind the FBO
@@ -129,7 +129,7 @@ void FBO::readBuffer(unsigned char *buf) {
     unbind();
 }
 
-void FBO::readBuffer(FrameDelegate &delegate) {
+void FBO::readBuffer(FrameDelegate& delegate) {
     assert(memTransfer && attachedTexId > 0 && texW > 0 && texH > 0);
 
     // bind the FBO

@@ -1,28 +1,106 @@
 include(sugar_include)
 sugar_include(.)
 
-add_library(ogles_gpgpu ${OGLES_GPGPU_SRCS} )
+add_library(ogles_gpgpu ${OGLES_GPGPU_SRCS})
 
 if(OGLES_GPGPU_VERBOSE)
   target_compile_definitions(ogles_gpgpu PUBLIC OGLES_GPGPU_VERBOSE=1)
 endif()
 
-if(ANDROID)
+## #################################################################
+## Dependencies - OpenGL stuff
+## #################################################################
+
+if(APPLE)
+  if(IOS)
+    target_link_libraries(ogles_gpgpu PUBLIC
+      "-framework ImageIO"
+      "-framework CoreFoundation"
+      "-framework CoreVideo"
+      "-framework Foundation" # NSLog
+      "-framework OpenGLES"      
+      )    
+  else()
+    target_link_libraries(ogles_gpgpu PUBLIC
+      "-framework ImageIO"
+      "-framework CoreFoundation"
+      "-framework CoreVideo"
+      "-framework OpenGL"
+      )
+  endif()
+elseif(ANDROID)
+  find_package(Android REQUIRED)
+  find_package(Log REQUIRED)
+  find_package(EGL REQUIRED)
+  find_package(OpenGLES2 REQUIRED)
   target_link_libraries(ogles_gpgpu PUBLIC log android EGL GLESv2)
   target_compile_definitions(ogles_gpgpu PUBLIC EGL_EGLEXT_PROTOTYPES GL_GLEXT_PROTOTYPES)
-endif()
+else()
 
-if(MSVC)
-  target_link_libraries(ogles_gpgpu glew::glew)
-  target_compile_definitions(ogles_gpgpu PUBLIC NOMINMAX) # avoid std::{min,max} conflicts
-  target_compile_definitions(ogles_gpgpu PUBLIC _USE_MATH_DEFINES) # M_PI, etc
-endif()
+  if(OGLES_GPGPU_USE_OSMESA)
 
-set_property(TARGET ${library} PROPERTY FOLDER "libs/ogles_gpgpu")
+    # Note: Currently OSMesa is used for CPU OpenGL shader processing,
+    # primarily to supporting testing on HW platforms that lack GPU
+    # resources.  This is currently tested on Linux, although this could
+    # in theory be tested on other platforms.  There are a number of
+    # platform specific optimizations for iOS and Android that would
+    # have to be made option in order to support this.  For now the
+    # OSMESA option is excluded from those platforms in the CMake control
+    # logic.
+    
+    find_library(OSMESA_LIBRARY OSMesa)
+    if(NOT OSMESA_LIBRARY)
+      message(FATAL_ERROR "OGLES_GPGPU was configured to use OSMesa, but the library could not be found")
+    endif()
+
+    get_filename_component(OSMESA_PATH ${OSMESA_LIBRARY} DIRECTORY)
+
+    find_library(GLAPI_LIBRARY glapi HINTS ${OSMESA_PATH} PATHS ${OSMESA_PATH})
+    if(NOT GLAPI_LIBRARY)
+      message(FATAL_ERROR "OGLES_GPGPU was configured to use OSMesa, but the GLAPI dependency was not found")
+    endif()
+
+    find_library(EGL_LIBRARY EGL HINTS ${OSMESA_PATH} PATHS ${OSMESA_PATH})
+    if(NOT EGL_LIBRARY)
+      message(FATAL_ERROR "EGL_LIBRARY was configured to use OSMesa, but the EGL dependency was not found")
+    endif()
+    mark_as_advanced(OSMESA_LIBRARY GLAPI_LIBRARY EGL_LIBRARY)
+
+    # Create a new target specfiically for OSMesa (cpu shader) based testing 
+    # (We will never create ogles_gpgpu libraries w/ CPU OpenGL processing.)
+    add_library(ogles_gpgpu_cpu ${OGLES_GPGPU_SRCS})
+
+    if(OGLES_GPGPU_VERBOSE)
+      target_compile_definitions(ogles_gpgpu_cpu PUBLIC OGLES_GPGPU_VERBOSE=1)
+    endif()    
+
+    target_link_libraries(ogles_gpgpu_cpu PUBLIC ${OSMESA_LIBRARY} ${GLAPI_LIBRARY} ${EGL_LIBRARY})
+
+    set_property(TARGET ogles_gpgpu_cpu PROPERTY FOLDER "libs/ogles_gpgpu")
+    target_include_directories(
+      ogles_gpgpu_cpu PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>"
+      )    
+    
+  endif()
+
+  # Link epxported ogles_gpgpu with the stanrda OpenGL lib
+  find_package(OpenGL REQUIRED)
+  target_link_libraries(ogles_gpgpu PUBLIC OpenGL::GL)
+  
+  if(MSVC)
+    # ogles_gpgpu/platform/opengl/gl_includes.h: #include <gl/glew.h>
+    hunter_add_package(glew)
+    find_package(glew CONFIG REQUIRED)
+    target_link_libraries(ogles_gpgpu PUBLIC glew::glew)
+    target_compile_definitions(ogles_gpgpu PUBLIC NOMINMAX) # avoid std::{min,max} conflicts
+    target_compile_definitions(ogles_gpgpu PUBLIC _USE_MATH_DEFINES) # M_PI, etc
+  endif()
+endif()
+  
+set_property(TARGET ogles_gpgpu PROPERTY FOLDER "libs/ogles_gpgpu")
 target_include_directories(
     ogles_gpgpu PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/..>"
 )
-
 
 ## #################################################################
 ## Testing: 

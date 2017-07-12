@@ -29,7 +29,7 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "TensorProc";
     }
 
@@ -42,11 +42,10 @@ public:
     }
 
 private:
-
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return fshaderTensorSrc;
     }
 
@@ -64,7 +63,7 @@ private:
 
     GLuint shParamUEdgeStrength = 0;
 
-    static const char *fshaderTensorSrc;   // fragment shader source
+    static const char* fshaderTensorSrc; // fragment shader source
 };
 }
 

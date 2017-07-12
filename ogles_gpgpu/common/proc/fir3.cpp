@@ -6,18 +6,17 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "fir3.h"
+#include "../common_includes.h"
 
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
-const char *Fir3Proc::fshaderFir3Src = OG_TO_STR
-(
+// clang-format off
+const char *Fir3Proc::fshaderFir3Src =
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
 
  uniform sampler2D inputImageTexture;
@@ -37,12 +36,11 @@ const char *Fir3Proc::fshaderFir3Src = OG_TO_STR
      gl_FragColor = vec4(response * alpha + beta, 1.0);
  });
 
-const char *Fir3Proc::fshaderFir3RGBSrc = OG_TO_STR
-(
+const char *Fir3Proc::fshaderFir3RGBSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
 
  uniform sampler2D inputImageTexture;
@@ -64,7 +62,7 @@ const char *Fir3Proc::fshaderFir3RGBSrc = OG_TO_STR
 
      gl_FragColor = vec4(response * alpha + beta, 1.0);
 });
-// *INDENT-ON*
+// clang-format on
 
 Fir3Proc::Fir3Proc(bool doRgb)
     : doRgb(doRgb) {
@@ -79,7 +77,7 @@ Fir3Proc::Fir3Proc(bool doRgb)
 void Fir3Proc::getUniforms() {
     ThreeInputProc::getUniforms();
 
-    if(doRgb) {
+    if (doRgb) {
         shParamUWeights1 = shader->getParam(UNIF, "weights1");
         shParamUWeights2 = shader->getParam(UNIF, "weights2");
         shParamUWeights3 = shader->getParam(UNIF, "weights3");
@@ -93,7 +91,7 @@ void Fir3Proc::getUniforms() {
 
 void Fir3Proc::setUniforms() {
     ThreeInputProc::setUniforms();
-    if(doRgb) {
+    if (doRgb) {
         glUniform3fv(shParamUWeights1, 1, &weightsRGB[0].data[0]);
         glUniform3fv(shParamUWeights2, 1, &weightsRGB[1].data[0]);
         glUniform3fv(shParamUWeights3, 1, &weightsRGB[2].data[0]);

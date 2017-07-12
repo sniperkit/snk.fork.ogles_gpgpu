@@ -4,4 +4,4 @@
 #
 
 include(CommonFindMod)
-drishti_common_find_module(EGL egl EGL/egl.h EGL)
+ogles_gpgpu_common_find_module(EGL egl EGL/egl.h EGL)

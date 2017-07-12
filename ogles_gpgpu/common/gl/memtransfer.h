@@ -26,8 +26,7 @@ namespace ogles_gpgpu {
  */
 class MemTransfer {
 public:
-
-    typedef std::function<void(const Size2d &size, const void *pixels, size_t rowStride)> FrameDelegate;
+    typedef std::function<void(const Size2d& size, const void* pixels, size_t rowStride)> FrameDelegate;
 
     /**
      * Constructor
@@ -49,7 +48,7 @@ public:
     /**
      * Prepare for input frames of size <inTexW>x<inTexH>. Return a texture id for the input frames.
      */
-    virtual GLuint prepareInput(int inTexW, int inTexH, GLenum inputPxFormat = GL_RGBA, void *inputDataPtr = NULL);
+    virtual GLuint prepareInput(int inTexW, int inTexH, GLenum inputPxFormat = GL_RGBA, void* inputDataPtr = NULL);
 
     /**
      * Prepare for output frames of size <outTexW>x<outTexH>. Return a texture id for the output frames.
@@ -102,17 +101,17 @@ public:
     /**
      * Map data in <buf> to GPU.
      */
-    virtual void toGPU(const unsigned char *buf);
+    virtual void toGPU(const unsigned char* buf);
 
     /**
      * Map data from GPU to <buf>
      */
-    virtual void fromGPU(unsigned char *buf);
+    virtual void fromGPU(unsigned char* buf);
 
     /**
      * Callback for data in GPU.
      */
-    virtual void fromGPU(FrameDelegate &delegate);
+    virtual void fromGPU(FrameDelegate& delegate);
 
     /**
      * Get output pixel format (i.e., GL_BGRA or GL_RGBA)
@@ -153,30 +152,29 @@ protected:
      * bind texture if <texId> > 0 and
      * set clamping (allows NPOT textures)
      */
-    virtual void setCommonTextureParams(GLuint texId, GLenum target=GL_TEXTURE_2D);
+    virtual void setCommonTextureParams(GLuint texId, GLenum target = GL_TEXTURE_2D);
 
-    bool initialized;       // is initialized?
+    bool initialized; // is initialized?
 
-    bool preparedInput;     // input is prepared?
-    bool preparedOutput;    // output is prepared?
+    bool preparedInput; // input is prepared?
+    bool preparedOutput; // output is prepared?
 
-    int inputW;             // input texture width
-    int inputH;             // input texture height
-    int outputW;            // output texture width
-    int outputH;            // output texture heights
+    int inputW; // input texture width
+    int inputH; // input texture height
+    int outputW; // output texture width
+    int outputH; // output texture heights
 
-    GLuint inputTexId;      // input texture id
-    GLuint outputTexId;     // output texture id
+    GLuint inputTexId; // input texture id
+    GLuint outputTexId; // output texture id
 
     GLuint luminanceTexId = 0;
     GLuint chrominanceTexId = 0;
 
-    GLenum inputPixelFormat;    // input texture pixel format
+    GLenum inputPixelFormat; // input texture pixel format
     GLenum outputPixelFormat;
 
     bool useRawPixels = false;
 };
-
 }
 
 #endif

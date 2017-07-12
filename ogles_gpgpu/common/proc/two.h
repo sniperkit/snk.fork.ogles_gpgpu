@@ -30,7 +30,7 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "TwoInputProc";
     }
 
@@ -44,12 +44,11 @@ public:
      */
     virtual void useTexture2(GLuint id, GLuint useTexUnit = 1, GLenum target = GL_TEXTURE_2D);
 
-    virtual int render(int position=0);
+    virtual int render(int position = 0);
 
     void setWaitForSecondTexture(bool flag) {
         waitForSecondTexture = flag;
     }
-
 
     /**
      * Has fist texture
@@ -68,20 +67,19 @@ public:
     }
 
 protected:
-
-    virtual void filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target);
+    virtual void filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target);
 
     /**
      * Get the fragment shader source.
      */
-    virtual const char *getFragmentShaderSource() {
+    virtual const char* getFragmentShaderSource() {
         return fshaderTwoInputSrc;
     }
 
     /**
      * Get the vertex shader source.
      */
-    virtual const char *getVertexShaderSource() {
+    virtual const char* getVertexShaderSource() {
         return vshaderTwoInputSrc;
     }
 
@@ -104,15 +102,15 @@ protected:
     bool hasTex1 = false;
     bool hasTex2 = false;
 
-    GLuint texId2;       // input texture id
-    GLuint texUnit2;     // input texture unit (glActiveTexture())
-    GLenum texTarget2;   // input texture target
+    GLuint texId2; // input texture id
+    GLuint texUnit2; // input texture unit (glActiveTexture())
+    GLenum texTarget2; // input texture target
 
     GLint shParamUInputTex2;
 
-    static const char *fshaderTwoInputSrc; // fragment shader source
+    static const char* fshaderTwoInputSrc; // fragment shader source
 
-    static const char *vshaderTwoInputSrc; // vertex shader source
+    static const char* vshaderTwoInputSrc; // vertex shader source
 };
 }
 

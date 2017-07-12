@@ -4,8 +4,8 @@
 // See LICENSE file in project repository root for the license.
 //
 
-#include "../../common_includes.h"
 #include "box_opt_pass.h"
+#include "../../common_includes.h"
 
 #include <cmath>
 
@@ -25,7 +25,7 @@ static std::string vertexShaderForOptimizedBoxBlur(int blurRadius, float sigma) 
     ss << "attribute vec4 inputTextureCoordinate;\n";
     ss << "uniform float texelWidthOffset;\n";
     ss << "uniform float texelHeightOffset;\n\n";
-    ss << "varying vec2 blurCoordinates[" << (unsigned long)(1 + (numberOfOptimizedOffsets * 2)) <<  "];\n\n";
+    ss << "varying vec2 blurCoordinates[" << (unsigned long)(1 + (numberOfOptimizedOffsets * 2)) << "];\n\n";
     ss << "void main()\n";
     ss << "{\n";
     ss << "   gl_Position = position;\n";
@@ -49,7 +49,7 @@ static std::string fragmentShaderForOptimizedBoxBlur(int blurRadius, float sigma
     assert(blurRadius > 1);
 
     // From these weights we calculate the offsets to read interpolated values from
-    int numberOfOptimizedOffsets =  getNumberOfOptimizedOffsets(blurRadius);
+    int numberOfOptimizedOffsets = getNumberOfOptimizedOffsets(blurRadius);
     int trueNumberOfOptimizedOffsets = blurRadius / 2 + (blurRadius % 2);
 
     std::stringstream ss;
@@ -72,8 +72,8 @@ static std::string fragmentShaderForOptimizedBoxBlur(int blurRadius, float sigma
     for (int currentBlurCoordinateIndex = 0; currentBlurCoordinateIndex < numberOfOptimizedOffsets; currentBlurCoordinateIndex++) {
         int index1 = (unsigned long)((currentBlurCoordinateIndex * 2) + 1);
         int index2 = (unsigned long)((currentBlurCoordinateIndex * 2) + 2);
-        ss << "   sum += texture2D(inputImageTexture, blurCoordinates[" << index1 << "]) * " << boxWeight2 <<";\n";
-        ss << "   sum += texture2D(inputImageTexture, blurCoordinates[" << index2 << "]) * " << boxWeight2  <<";\n";
+        ss << "   sum += texture2D(inputImageTexture, blurCoordinates[" << index1 << "]) * " << boxWeight2 << ";\n";
+        ss << "   sum += texture2D(inputImageTexture, blurCoordinates[" << index2 << "]) * " << boxWeight2 << ";\n";
     }
 
     // If the number of required samples exceeds the amount we can pass in via varyings, we have to do dependent texture reads in the fragment shader
@@ -93,7 +93,6 @@ static std::string fragmentShaderForOptimizedBoxBlur(int blurRadius, float sigma
     return ss.str();
 }
 
-
 void BoxOptProcPass::setRadius(float newValue) {
     float newBlurRadius = round(round(newValue / 2.0) * 2.0);
 
@@ -112,7 +111,7 @@ void BoxOptProcPass::setRadius(float newValue) {
 }
 
 // TODO: We need to override this if we are using the GPUImage shaders
-void BoxOptProcPass::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void BoxOptProcPass::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     // create shader object
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
 
@@ -141,13 +140,10 @@ void BoxOptProcPass::getUniforms() {
     shParamUTexelHeightOffset = shader->getParam(UNIF, "texelHeightOffset");
 }
 
-const char *BoxOptProcPass::getFragmentShaderSource() {
+const char* BoxOptProcPass::getFragmentShaderSource() {
     return fshaderBoxSrc.c_str();
 }
 
-const char *BoxOptProcPass::getVertexShaderSource() {
+const char* BoxOptProcPass::getVertexShaderSource() {
     return vshaderBoxSrc.c_str();
 }
-
-
-

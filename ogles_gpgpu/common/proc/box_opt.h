@@ -18,8 +18,8 @@ namespace ogles_gpgpu {
 class BoxOptProc : public MultiPassProc {
 public:
     BoxOptProc(float blurRadius = 5.0) {
-        BoxOptProcPass *boxPass1 = new BoxOptProcPass(1, blurRadius);
-        BoxOptProcPass *boxPass2 = new BoxOptProcPass(2, blurRadius);
+        BoxOptProcPass* boxPass1 = new BoxOptProcPass(1, blurRadius);
+        BoxOptProcPass* boxPass2 = new BoxOptProcPass(2, blurRadius);
 
         procPasses.push_back(boxPass1);
         procPasses.push_back(boxPass2);
@@ -28,7 +28,7 @@ public:
     /**
      * Return the processors name.
      */
-    virtual const char *getProcName() {
+    virtual const char* getProcName() {
         return "BoxOptProc";
     }
 };

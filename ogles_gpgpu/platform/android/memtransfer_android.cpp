@@ -21,10 +21,10 @@ typedef struct android_native_base_t {
 } android_native_base_t;
 
 typedef struct native_handle {
-    int version;        /* sizeof(native_handle_t) */
-    int numFds;         /* number of file-descriptors at &data[0] */
-    int numInts;        /* number of ints at &data[numFds] */
-    int data[0];        /* numFds + numInts ints */
+    int version; /* sizeof(native_handle_t) */
+    int numFds; /* number of file-descriptors at &data[0] */
+    int numInts; /* number of ints at &data[numFds] */
+    int data[0]; /* numFds + numInts ints */
 } native_handle_t;
 
 typedef const native_handle_t* buffer_handle_t;
@@ -52,47 +52,52 @@ using namespace ogles_gpgpu;
 
 enum {
     /* buffer is never read in software */
-    GRALLOC_USAGE_SW_READ_NEVER   = 0x00000000,
+    GRALLOC_USAGE_SW_READ_NEVER = 0x00000000,
     /* buffer is rarely read in software */
-    GRALLOC_USAGE_SW_READ_RARELY  = 0x00000002,
+    GRALLOC_USAGE_SW_READ_RARELY = 0x00000002,
     /* buffer is often read in software */
-    GRALLOC_USAGE_SW_READ_OFTEN   = 0x00000003,
+    GRALLOC_USAGE_SW_READ_OFTEN = 0x00000003,
     /* mask for the software read values */
-    GRALLOC_USAGE_SW_READ_MASK    = 0x0000000F,
+    GRALLOC_USAGE_SW_READ_MASK = 0x0000000F,
 
     /* buffer is never written in software */
-    GRALLOC_USAGE_SW_WRITE_NEVER  = 0x00000000,
+    GRALLOC_USAGE_SW_WRITE_NEVER = 0x00000000,
     /* buffer is never written in software */
     GRALLOC_USAGE_SW_WRITE_RARELY = 0x00000020,
     /* buffer is never written in software */
-    GRALLOC_USAGE_SW_WRITE_OFTEN  = 0x00000030,
+    GRALLOC_USAGE_SW_WRITE_OFTEN = 0x00000030,
     /* mask for the software write values */
-    GRALLOC_USAGE_SW_WRITE_MASK   = 0x000000F0,
+    GRALLOC_USAGE_SW_WRITE_MASK = 0x000000F0,
 
     /* buffer will be used as an OpenGL ES texture */
-    GRALLOC_USAGE_HW_TEXTURE      = 0x00000100,
+    GRALLOC_USAGE_HW_TEXTURE = 0x00000100,
     /* buffer will be used as an OpenGL ES render target */
-    GRALLOC_USAGE_HW_RENDER       = 0x00000200,
+    GRALLOC_USAGE_HW_RENDER = 0x00000200,
     /* buffer will be used by the 2D hardware blitter */
-    GRALLOC_USAGE_HW_2D           = 0x00000400,
+    GRALLOC_USAGE_HW_2D = 0x00000400,
     /* buffer will be used with the framebuffer device */
-    GRALLOC_USAGE_HW_FB           = 0x00001000,
+    GRALLOC_USAGE_HW_FB = 0x00001000,
     /* mask for the software usage bit-mask */
-    GRALLOC_USAGE_HW_MASK         = 0x00001F00,
+    GRALLOC_USAGE_HW_MASK = 0x00001F00,
 };
 
 enum {
-    HAL_PIXEL_FORMAT_RGBA_8888          = 1,
-    HAL_PIXEL_FORMAT_RGBX_8888          = 2,
-    HAL_PIXEL_FORMAT_RGB_888            = 3,
-    HAL_PIXEL_FORMAT_RGB_565            = 4,
-    HAL_PIXEL_FORMAT_BGRA_8888          = 5,
-    HAL_PIXEL_FORMAT_RGBA_5551          = 6,
-    HAL_PIXEL_FORMAT_RGBA_4444          = 7,
+    HAL_PIXEL_FORMAT_RGBA_8888 = 1,
+    HAL_PIXEL_FORMAT_RGBX_8888 = 2,
+    HAL_PIXEL_FORMAT_RGB_888 = 3,
+    HAL_PIXEL_FORMAT_RGB_565 = 4,
+    HAL_PIXEL_FORMAT_BGRA_8888 = 5,
+    HAL_PIXEL_FORMAT_RGBA_5551 = 6,
+    HAL_PIXEL_FORMAT_RGBA_4444 = 7,
 };
 
-#define OG_DL_FUNC(hndl, fn, type) (type)dlsym(hndl, fn)
-#define OG_DL_FUNC_CHECK(hndl, fn_ptr, fn) if (!fn_ptr) { OG_LOGERR("MemTransferAndroid", "could not dynamically link func '%s': %s", fn, dlerror()); dlclose(hndl); return false; }
+#define OG_DL_FUNC(hndl, fn, type) (type) dlsym(hndl, fn)
+#define OG_DL_FUNC_CHECK(hndl, fn_ptr, fn)                                                          \
+    if (!fn_ptr) {                                                                                  \
+        OG_LOGERR("MemTransferAndroid", "could not dynamically link func '%s': %s", fn, dlerror()); \
+        dlclose(hndl);                                                                              \
+        return false;                                                                               \
+    }
 
 #pragma mark static initializations and methods
 
@@ -106,7 +111,7 @@ EGLExtFnCreateImage MemTransferAndroid::imageKHRCreate = NULL;
 EGLExtFnDestroyImage MemTransferAndroid::imageKHRDestroy = NULL;
 
 EGLExtFnCreateSyncKHR MemTransferAndroid::createKHRSync = NULL;
-EGLExtFnDestroySyncKHR  MemTransferAndroid::destroyKHRSync = NULL;
+EGLExtFnDestroySyncKHR MemTransferAndroid::destroyKHRSync = NULL;
 EGLExtFnClientWaitSyncKHR MemTransferAndroid::waitKHRSync = NULL;
 
 #if OPENGLES_GPGPU_HAS_NATIVE_FENCE_FD_ANDROID
@@ -115,7 +120,7 @@ EGLExtFnDupNativeFenceFDANDROID MemTransferAndroid::dupNativeFenceFDANDROID = NU
 
 bool MemTransferAndroid::initPlatformOptimizations() {
     // load necessary EGL extension functions
-    void *dlEGLhndl = dlopen("libEGL.so", RTLD_LAZY);
+    void* dlEGLhndl = dlopen("libEGL.so", RTLD_LAZY);
     if (!dlEGLhndl) {
         OG_LOGERR("MemTransferAndroid", "could not load EGL library: %s", dlerror());
         return false;
@@ -130,16 +135,16 @@ bool MemTransferAndroid::initPlatformOptimizations() {
 #if OPENGLES_GPGPU_HAS_NATIVE_FENCE_FD_ANDROID
     // Load sync points for ANDROID:
     dupNativeFenceFDANDROID = OG_DL_FUNC(dlEGLhndl, "eglDupNativeFenceFDANDROID", EGLExtFnDupNativeFenceFDANDROID);
-    //OG_DL_FUNC_CHECK(dlEGLhndl, dupNativeFenceFDANDROID, "eglDupNativeFenceFDANDROID");
+//OG_DL_FUNC_CHECK(dlEGLhndl, dupNativeFenceFDANDROID, "eglDupNativeFenceFDANDROID");
 #endif
 
     // Try loading egl{Create,Destroy,ClientWait}SyncKHR, else we will resort to glFinish():
     createKHRSync = OG_DL_FUNC(dlEGLhndl, "eglCreateSyncKHR", EGLExtFnCreateSyncKHR);
     //OG_DL_FUNC_CHECK(dlEGLhndl, createKHRSync, "eglCreateSyncKHR");
-    if(createKHRSync) {
+    if (createKHRSync) {
         destroyKHRSync = OG_DL_FUNC(dlEGLhndl, "eglDestroySyncKHR", EGLExtFnDestroySyncKHR);
         //OG_DL_FUNC_CHECK(dlEGLhndl, destroyKHRSync, "eglDestroySyncKHR");
-        if(destroyKHRSync) {
+        if (destroyKHRSync) {
             waitKHRSync = OG_DL_FUNC(dlEGLhndl, "eglClientWaitSyncKHR", EGLExtFnClientWaitSyncKHR);
             //OG_DL_FUNC_CHECK(dlEGLhndl, destroyKHRSync, "eglClientWaitSyncKHR");
         }
@@ -148,7 +153,7 @@ bool MemTransferAndroid::initPlatformOptimizations() {
     dlclose(dlEGLhndl);
 
     // load necessary Android GraphicBuffer functions
-    void *dlUIhndl = dlopen("libui.so", RTLD_LAZY);
+    void* dlUIhndl = dlopen("libui.so", RTLD_LAZY);
     if (!dlUIhndl) {
         OG_LOGERR("MemTransferAndroid", "could not load Android UI library: %s", dlerror());
         return false;
@@ -203,7 +208,7 @@ void MemTransferAndroid::releaseInput() {
         free(inputGraBufHndl);
 
         inputGraBufHndl = NULL;
-        inputNativeBuf = NULL;  // reset weak-ref pointer to NULL
+        inputNativeBuf = NULL; // reset weak-ref pointer to NULL
     }
 }
 
@@ -223,7 +228,7 @@ void MemTransferAndroid::releaseOutput() {
         free(outputGraBufHndl);
 
         outputGraBufHndl = NULL;
-        outputNativeBuf = NULL;  // reset weak-ref pointer to NULL
+        outputNativeBuf = NULL; // reset weak-ref pointer to NULL
     }
 }
 
@@ -236,14 +241,14 @@ void MemTransferAndroid::init() {
     mEGLDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 }
 
-GLuint MemTransferAndroid::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat, void *inputDataPtr) {
+GLuint MemTransferAndroid::prepareInput(int inTexW, int inTexH, GLenum inputPxFormat, void* inputDataPtr) {
     assert(initialized && inTexW > 0 && inTexH > 0);
 
     if (inputDataPtr == NULL && inputW == inTexW && inputH == inTexH && inputPixelFormat == inputPxFormat) {
         return inputTexId; // no change
     }
 
-    if (preparedInput) {    // already prepared -- release buffers!
+    if (preparedInput) { // already prepared -- release buffers!
         releaseInput();
     }
 
@@ -269,10 +274,10 @@ GLuint MemTransferAndroid::prepareInput(int inTexW, int inTexH, GLenum inputPxFo
     // create graphic buffer
     inputGraBufHndl = malloc(OG_ANDROID_GRAPHIC_BUFFER_SIZE);
     graBufCreate(inputGraBufHndl, inputW, inputH, nativePxFmt,
-                 GRALLOC_USAGE_HW_TEXTURE | GRALLOC_USAGE_SW_WRITE_OFTEN);  // is used as OpenGL texture and will be written often
+        GRALLOC_USAGE_HW_TEXTURE | GRALLOC_USAGE_SW_WRITE_OFTEN); // is used as OpenGL texture and will be written often
 
     // get window buffer
-    inputNativeBuf = (struct ANativeWindowBuffer *)graBufGetNativeBuffer(inputGraBufHndl);
+    inputNativeBuf = (struct ANativeWindowBuffer*)graBufGetNativeBuffer(inputGraBufHndl);
 
     if (!inputNativeBuf) {
         OG_LOGERR("MemTransferAndroid", "error getting native window buffer for input");
@@ -282,10 +287,10 @@ GLuint MemTransferAndroid::prepareInput(int inTexW, int inTexH, GLenum inputPxFo
     // create image for reading back the results
     EGLint eglImgAttrs[] = { EGL_IMAGE_PRESERVED_KHR, EGL_TRUE, EGL_NONE, EGL_NONE };
     inputImage = imageKHRCreate(mEGLDisplay,
-                                EGL_NO_CONTEXT,
-                                EGL_NATIVE_BUFFER_ANDROID,
-                                (EGLClientBuffer)inputNativeBuf,
-                                eglImgAttrs);	// or NULL as last param?
+        EGL_NO_CONTEXT,
+        EGL_NATIVE_BUFFER_ANDROID,
+        (EGLClientBuffer)inputNativeBuf,
+        eglImgAttrs); // or NULL as last param?
 
     if (!inputImage) {
         OG_LOGERR("MemTransferAndroid", "error creating image KHR for input");
@@ -306,7 +311,7 @@ GLuint MemTransferAndroid::prepareOutput(int outTexW, int outTexH) {
         return outputTexId; // no change
     }
 
-    if (preparedOutput) {    // already prepared -- release buffers!
+    if (preparedOutput) { // already prepared -- release buffers!
         releaseOutput();
     }
 
@@ -329,20 +334,20 @@ GLuint MemTransferAndroid::prepareOutput(int outTexW, int outTexH) {
 
     // create empty texture space on GPU
     glTexImage2D(GL_TEXTURE_2D, 0,
-                 GL_RGBA,
-                 outputW, outputH, 0,
-                 inputPixelFormat, GL_UNSIGNED_BYTE,
-                 NULL);	// we do not need to pass texture data -> it will be generated!
+        GL_RGBA,
+        outputW, outputH, 0,
+        inputPixelFormat, GL_UNSIGNED_BYTE,
+        NULL); // we do not need to pass texture data -> it will be generated!
 
     Tools::checkGLErr("MemTransferAndroid", "fbo texture creation");
 
     // create graphic buffer
     outputGraBufHndl = malloc(OG_ANDROID_GRAPHIC_BUFFER_SIZE);
     graBufCreate(outputGraBufHndl, outputW, outputH, HAL_PIXEL_FORMAT_RGBA_8888,
-                 GRALLOC_USAGE_HW_RENDER | GRALLOC_USAGE_SW_READ_OFTEN);    // is render target and will be read often
+        GRALLOC_USAGE_HW_RENDER | GRALLOC_USAGE_SW_READ_OFTEN); // is render target and will be read often
 
     // get window buffer
-    outputNativeBuf = (struct ANativeWindowBuffer *)graBufGetNativeBuffer(outputGraBufHndl);
+    outputNativeBuf = (struct ANativeWindowBuffer*)graBufGetNativeBuffer(outputGraBufHndl);
 
     if (!outputNativeBuf) {
         OG_LOGERR("MemTransferAndroid", "error getting native window buffer for output");
@@ -352,10 +357,10 @@ GLuint MemTransferAndroid::prepareOutput(int outTexW, int outTexH) {
     // create image for reading back the results
     EGLint eglImgAttrs[] = { EGL_IMAGE_PRESERVED_KHR, EGL_TRUE, EGL_NONE, EGL_NONE };
     outputImage = imageKHRCreate(mEGLDisplay,
-                                 EGL_NO_CONTEXT,
-                                 EGL_NATIVE_BUFFER_ANDROID,
-                                 (EGLClientBuffer)outputNativeBuf,
-                                 eglImgAttrs);	// or NULL as last param?
+        EGL_NO_CONTEXT,
+        EGL_NATIVE_BUFFER_ANDROID,
+        (EGLClientBuffer)outputNativeBuf,
+        eglImgAttrs); // or NULL as last param?
 
     if (!outputImage) {
         OG_LOGERR("MemTransferAndroid", "error creating image KHR for output");
@@ -373,11 +378,11 @@ void MemTransferAndroid::flush(uint32_t us) {
     // https://github.com/android/platform_frameworks_base/blob/master/services/core/jni/com_android_server_AssetAtlasService.cpp#L169-L185
     EGLSyncKHR sync;
 
-    if(createKHRSync && destroyKHRSync) {
+    if (createKHRSync && destroyKHRSync) {
 
 #if OPENGLES_GPGPU_HAS_NATIVE_FENCE_FD_ANDROID
         // Give priority to eglDupNativeFenceFDANDROID
-        if(dupNativeFenceFDANDROID)  {
+        if (dupNativeFenceFDANDROID) {
             sync = eglCreateSyncKHR(mEGLDisplay, EGL_SYNC_NATIVE_FENCE_ANDROID, NULL);
             glFlush(); // getRenderEngine().flush();
 
@@ -394,20 +399,20 @@ void MemTransferAndroid::flush(uint32_t us) {
 #endif
 
         // Fallback mechanism:
-        if(waitKHRSync) {
+        if (waitKHRSync) {
             sync = createKHRSync(mEGLDisplay, EGL_SYNC_FENCE_KHR, NULL);
             if (sync != EGL_NO_SYNC_KHR) {
                 EGLint result = waitKHRSync(mEGLDisplay, sync, EGL_SYNC_FLUSH_COMMANDS_BIT_KHR, us);
                 EGLint eglErr = eglGetError();
                 if (result == EGL_TIMEOUT_EXPIRED_KHR) {
                     OG_LOGERR("MemTransferAndroid::flush:", "fence wait timed out");
-                } else if(eglErr != EGL_SUCCESS) {
+                } else if (eglErr != EGL_SUCCESS) {
                     OG_LOGERR("MemTransferAndroid::flush:", "error waiting on EGL fence: %#x", eglErr);
                 }
                 destroyKHRSync(mEGLDisplay, sync);
                 return;
             } else {
-                OG_LOGERR("MemTransferAndroid::flush:","captureScreen: error creating EGL fence: %#x", eglGetError());
+                OG_LOGERR("MemTransferAndroid::flush:", "captureScreen: error creating EGL fence: %#x", eglGetError());
             }
         }
     }
@@ -416,7 +421,7 @@ void MemTransferAndroid::flush(uint32_t us) {
     glFinish();
 }
 
-void MemTransferAndroid::toGPU(const unsigned char *buf) {
+void MemTransferAndroid::toGPU(const unsigned char* buf) {
     assert(preparedInput && inputImage && inputTexId > 0 && buf);
 
     // bind the input texture
@@ -428,17 +433,16 @@ void MemTransferAndroid::toGPU(const unsigned char *buf) {
     Tools::checkGLErr("MemTransferAndroid", "call to glEGLImageTargetTexture2DOES() for input");
 
     // lock the graphics buffer at graphicsPtr
-    unsigned char *graphicsPtr = (unsigned char *)lockBufferAndGetPtr(BUF_TYPE_INPUT);
+    unsigned char* graphicsPtr = (unsigned char*)lockBufferAndGetPtr(BUF_TYPE_INPUT);
 
     // copy whole image from "buf" to "graphicsPtr"
     memcpy(graphicsPtr, buf, inputW * inputH * 4);
 
     // unlock the graphics buffer again
     unlockBuffer(BUF_TYPE_INPUT);
-
 }
 
-void MemTransferAndroid::fromGPU(unsigned char *buf) {
+void MemTransferAndroid::fromGPU(unsigned char* buf) {
     assert(preparedOutput && outputImage && outputTexId > 0 && buf);
 
     // bind the output texture
@@ -450,7 +454,7 @@ void MemTransferAndroid::fromGPU(unsigned char *buf) {
     Tools::checkGLErr("MemTransferAndroid", "call to glEGLImageTargetTexture2DOES() for output");
 
     // lock the graphics buffer at graphicsPtr
-    const unsigned char *graphicsPtr = (const unsigned char *)lockBufferAndGetPtr(BUF_TYPE_OUTPUT);
+    const unsigned char* graphicsPtr = (const unsigned char*)lockBufferAndGetPtr(BUF_TYPE_OUTPUT);
 
     // copy whole image from "graphicsPtr" to "buf"
     memcpy(buf, graphicsPtr, outputW * outputH * 4);
@@ -460,7 +464,7 @@ void MemTransferAndroid::fromGPU(unsigned char *buf) {
 }
 
 // TODO: Move this to mem_transfer_optimized
-void MemTransferAndroid::fromGPU(FrameDelegate &delegate) {
+void MemTransferAndroid::fromGPU(FrameDelegate& delegate) {
     // bind the texture
     glBindTexture(GL_TEXTURE_2D, outputTexId);
 
@@ -469,8 +473,8 @@ void MemTransferAndroid::fromGPU(FrameDelegate &delegate) {
 
     Tools::checkGLErr("MemTransferAndroid", "call to glEGLImageTargetTexture2DOES() for output");
 
-    const void *pixelBufferAddr = lockBufferAndGetPtr(BUF_TYPE_OUTPUT);
-    delegate({outputW, outputH}, pixelBufferAddr, bytesPerRow());
+    const void* pixelBufferAddr = lockBufferAndGetPtr(BUF_TYPE_OUTPUT);
+    delegate({ outputW, outputH }, pixelBufferAddr, bytesPerRow());
 
     unlockBuffer(BUF_TYPE_OUTPUT);
 }
@@ -480,10 +484,10 @@ size_t MemTransferAndroid::bytesPerRow() {
     return (outputNativeBuf->stride * 4);
 }
 
-void *MemTransferAndroid::lockBufferAndGetPtr(BufType bufType) {
-    void *hndl;
+void* MemTransferAndroid::lockBufferAndGetPtr(BufType bufType) {
+    void* hndl;
     int usage;
-    unsigned char *memPtr;
+    unsigned char* memPtr;
 
     if (bufType == BUF_TYPE_INPUT) {
         hndl = inputGraBufHndl;
@@ -501,11 +505,11 @@ void *MemTransferAndroid::lockBufferAndGetPtr(BufType bufType) {
         OG_LOGERR("MemTransferAndroid", "GraphicBuffer lock returned invalid pointer");
     }
 
-    return (void *)memPtr;
+    return (void*)memPtr;
 }
 
 void MemTransferAndroid::unlockBuffer(BufType bufType) {
-    void *hndl = (bufType == BUF_TYPE_INPUT) ? inputGraBufHndl : outputGraBufHndl;
+    void* hndl = (bufType == BUF_TYPE_INPUT) ? inputGraBufHndl : outputGraBufHndl;
 
     graBufUnlock(hndl);
 }

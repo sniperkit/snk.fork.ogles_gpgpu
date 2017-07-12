@@ -6,17 +6,17 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "diff.h"
+#include "../common_includes.h"
 
 using namespace ogles_gpgpu;
 
-// *INDENT-OFF*
-const char *DiffProc::fshaderDiffSrc = OG_TO_STR
-(
+// clang-format off
+const char *DiffProc::fshaderDiffSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
+OG_TO_STR(    
  varying vec2 textureCoordinate;
  uniform sampler2D inputImageTexture;
  uniform sampler2D inputImageTexture2;
@@ -27,12 +27,13 @@ const char *DiffProc::fshaderDiffSrc = OG_TO_STR
      vec4 centerIntensity = texture2D(inputImageTexture, textureCoordinate);
      vec4 centerIntensity2 = texture2D(inputImageTexture2, textureCoordinate);
      vec3 dt = (centerIntensity.rgb-centerIntensity2.rgb) * strength;
-     gl_FragColor = vec4(vec3(clamp(dt, 0.0, 1.0)), 1.0);
+     gl_FragColor = vec4(vec3(clamp(dt + offset, 0.0, 1.0)), 1.0);
  });
-// *INDENT-ON*
+// clang-format on
 
-DiffProc::DiffProc(float strength, float offset) : strength(strength), offset(offset) {
-
+DiffProc::DiffProc(float strength, float offset)
+    : strength(strength)
+    , offset(offset) {
 }
 
 void DiffProc::getUniforms() {

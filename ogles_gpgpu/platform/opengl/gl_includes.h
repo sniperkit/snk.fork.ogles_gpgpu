@@ -11,6 +11,8 @@
  * OpenGL (not iOS or Android) : handle all
  */
 
+// clang-format off
+
 //define something for Windows (64-bit)
 #if defined(_WIN32) || defined(_WIN64)
 #  include <algorithm> // min/max
@@ -39,3 +41,5 @@
 #else
 #  error platform not supported.
 #endif
+
+// clang-format on

@@ -17,35 +17,35 @@
 //#endif
 
 #ifdef OGLES_GPGPU_IOS
-#  include "../../platform/ios/memtransfer_ios.h"
+#include "../../platform/ios/memtransfer_ios.h"
 #elif OGLES_GPGPU_OSX
-#  include "../../platform/osx/memtransfer_osx.h"
+#include "../../platform/osx/memtransfer_osx.h"
 #elif OGLES_GPGPU_ANDROID
-#  include "../../platform/android/memtransfer_android.h"
+#include "../../platform/android/memtransfer_android.h"
 #else
-#  include "../../platform/opengl/memtransfer_generic.h"
+#include "../../platform/opengl/memtransfer_generic.h"
 #endif
 
 using namespace ogles_gpgpu;
 
 bool MemTransferFactory::usePlatformOptimizations = false;
 
-MemTransfer *MemTransferFactory::createInstance() {
-    MemTransfer *instance = NULL;
+MemTransfer* MemTransferFactory::createInstance() {
+    MemTransfer* instance = NULL;
 
-    if (usePlatformOptimizations) {   // create specialized instance
+    if (usePlatformOptimizations) { // create specialized instance
 #ifdef OGLES_GPGPU_IOS
-        instance = (MemTransfer *)new MemTransferIOS();
+        instance = (MemTransfer*)new MemTransferIOS();
 #elif OGLES_GPGPU_OSX
-        instance = (MemTransfer *)new MemTransferOSX();
+        instance = (MemTransfer*)new MemTransferOSX();
 #elif OGLES_GPGPU_ANDROID
-        instance = (MemTransfer *)new MemTransferAndroid();
+        instance = (MemTransfer*)new MemTransferAndroid();
 #else
-        instance = (MemTransfer *)new MemTransfer();
+        instance = (MemTransfer*)new MemTransfer();
 #endif
     }
 
-    if (!instance) {    // create default instance
+    if (!instance) { // create default instance
         instance = new MemTransfer();
     }
 

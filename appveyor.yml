@@ -37,6 +37,9 @@ install:
   - cmd: set PATH=%cd%\_ci\cmake\bin;%PATH%
   - cmd: set PATH=%cd%\_ci\ninja;%PATH%
 
+  # Add '--quiet' to avoid leaking the token to logs
+  - cmd: git submodule update --init --recursive --quiet    
+
   # Remove entry with sh.exe from PATH to fix error with MinGW toolchain
   # (For MinGW make to work correctly sh.exe must NOT be in your path)
   # * http://stackoverflow.com/a/3870338/2288008
@@ -50,8 +53,8 @@ install:
   - cmd: set MSYS_PATH=C:\msys64\usr\bin    
 
 build_script:
-  - cmd: python %POLLY_SOURCE_DIR%\bin\polly.py --toolchain "%TOOLCHAIN%" --config "%CONFIG%" --verbose --test --fwd OGLES_GPGPU_BUILD_TESTS=ON
-  
+  - cmd: python %POLLY_SOURCE_DIR%\bin\polly.py --toolchain "%TOOLCHAIN%" --config "%CONFIG%" --verbose --fwd OGLES_GPGPU_BUILD_TESTS=ON
+
 branches:
   except:
     - /^pr\..*/

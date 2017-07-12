@@ -13,8 +13,8 @@
 #define OGLES_GPGPU_COMMON_VIDEO
 
 #include "../common_includes.h"
-#include "base/procinterface.h"
 #include "base/procbase.h"
+#include "base/procinterface.h"
 #include "yuv2rgb.h"
 
 #include <memory>
@@ -22,23 +22,23 @@
 BEGIN_OGLES_GPGPU
 
 #if __ANDROID__
-#  define DFLT_PIX_FORMAT GL_RGBA
+#define DFLT_PIX_FORMAT GL_RGBA
 #else
-#  define DFLT_PIX_FORMAT GL_BGRA
+#define DFLT_PIX_FORMAT GL_BGRA
 #endif
 
 struct FrameInput {
     FrameInput() {}
-    FrameInput(const Size2d &size, void *pixelBuffer, bool useRawPixels, GLuint inputTexture, GLenum textureFormat)
+    FrameInput(const Size2d& size, void* pixelBuffer, bool useRawPixels, GLuint inputTexture, GLenum textureFormat)
         : size(size)
         , pixelBuffer(pixelBuffer)
         , useRawPixels(useRawPixels)
         , inputTexture(inputTexture)
-        , textureFormat(textureFormat)
-    {}
+        , textureFormat(textureFormat) {
+    }
 
     Size2d size;
-    void *pixelBuffer = nullptr;
+    void* pixelBuffer = nullptr;
     bool useRawPixels = false;
     GLuint inputTexture = 0;
     GLenum textureFormat = 0;
@@ -50,44 +50,42 @@ struct FrameInput {
 
 class VideoSource {
 public:
+    typedef std::function<void(const std::string& tag)> Timer;
 
-    typedef std::function<void(const std::string &tag)> Timer;
+    VideoSource(void* glContext = nullptr);
 
-    VideoSource(void *glContext=nullptr);
+    VideoSource(void* glContext, const Size2d& size, GLenum inputPixFormat);
 
-    VideoSource(void *glContext, const Size2d &size, GLenum inputPixFormat);
-
-    VideoSource(const Size2d &size, GLenum inputPixFormat);
+    VideoSource(const Size2d& size, GLenum inputPixFormat);
 
     virtual ~VideoSource();
 
-    void init(void *glContext);
+    void init(void* glContext);
 
-    void operator()(const FrameInput &frame);
+    void operator()(const FrameInput& frame);
 
-    void operator()(const Size2d &size, void* pixelBuffer, bool useRawPixels, GLuint inputTexture=0, GLenum inputPixFormat=DFLT_PIX_FORMAT);
+    void operator()(const Size2d& size, void* pixelBuffer, bool useRawPixels, GLuint inputTexture = 0, GLenum inputPixFormat = DFLT_PIX_FORMAT);
 
     virtual void preConfig() {}
 
     virtual void postConfig() {}
 
-    void set(ProcInterface *p);
+    void set(ProcInterface* p);
 
-    void setLogger(Timer &timer) {
+    void setLogger(Timer& timer) {
         m_timer = timer;
     }
 
     GLuint getInputTexId();
 
 protected:
-
     Timer m_timer;
 
-    void *glContext = nullptr;
+    void* glContext = nullptr;
 
-    void setInputData(const unsigned char *data);
+    void setInputData(const unsigned char* data);
 
-    void configurePipeline(const Size2d &size, GLenum inputPixFormat);
+    void configurePipeline(const Size2d& size, GLenum inputPixFormat);
 
     bool firstFrame = true;
 

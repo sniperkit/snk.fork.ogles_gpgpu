@@ -6,27 +6,30 @@
 
 // Copyright (c) 2016-2017, David Hirvonen (this file)
 
-#include "../common_includes.h"
 #include "flow.h"
+#include "../common_includes.h"
 
 // For the full pipeline
-#include "grayscale.h"
-#include "gauss_opt.h"
-#include "fifo.h"
-#include "ixyt.h"
+#include "box_opt.h"
 #include "diff.h"
-#include "tensor.h"
+#include "fifo.h"
+#include "gauss_opt.h"
+#include "grayscale.h"
+#include "ixyt.h"
 #include "median.h"
 #include "nms.h"
-#include "box_opt.h"
+#include "tensor.h"
 
 #include <limits>
 
 BEGIN_OGLES_GPGPU
 
-FlowProc::FlowProc(float tau, float strength) : tau(tau), strength(strength) {}
+FlowProc::FlowProc(float tau, float strength)
+    : tau(tau)
+    , strength(strength) {
+}
 
-void FlowProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void FlowProc::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     // create shader object and get attributes:
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
     shParamAPos = shader->getParam(ATTR, "position");
@@ -46,12 +49,11 @@ void FlowProc::setUniforms() {
     FilterProcBase::setUniforms();
 
     const float offset = 1.0f;
-    glUniform1f(texelWidthUniform, (offset/float(outFrameW)));
-    glUniform1f(texelHeightUniform, (offset/float(outFrameH)));
+    glUniform1f(texelWidthUniform, (offset / float(outFrameW)));
+    glUniform1f(texelHeightUniform, (offset / float(outFrameH)));
     glUniform1f(shParamUStrength, strength);
     glUniform1f(shParamUTau, tau);
 }
-
 
 // Solve 2x2 matrix inverse via Cramer's rule:
 
@@ -78,7 +80,6 @@ void FlowProc::setUniforms() {
 // See, for example:
 // http://www.mathworks.com/help/vision/ref/opticalflowlk-class.html?refresh=true
 
-
 // Cornerness:
 // T1 = (A+B)/2.0
 // T2 = sqrt(4*C^2 + (A-B)^2)/2.0
@@ -99,13 +100,12 @@ void FlowProc::setUniforms() {
 // | |*| + |*| |
 // -------------
 
-// *INDENT-OFF*
-const char *FlowProc::fshaderFlowSrc = OG_TO_STR
-(
+// clang-format off
+const char *FlowProc::fshaderFlowSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
  uniform sampler2D inputImageTexture;
 
@@ -163,7 +163,7 @@ const char *FlowProc::fshaderFlowSrc = OG_TO_STR
      vec4 flow = vec4(((-uv + 1.0) / 2.0), (center.xy + 1.0) / 2.0);
      gl_FragColor = flow;
  });
-// *INDENT-ON*
+// clang-format on
 
 // ============== convenience =========================
 
@@ -172,7 +172,7 @@ struct FlowPipeline::Impl {
         : doGray(doGray)
         , gaussProc(1.0f)
         , flowProc(tau, strength) {
-        if(!doGray) {
+        if (!doGray) {
             grayProc.setGrayscaleConvType(GRAYSCALE_INPUT_CONVERSION_NONE);
         }
 
@@ -206,10 +206,10 @@ FlowPipeline::~FlowPipeline() {}
 float FlowPipeline::getStrength() const {
     return m_pImpl->flowProc.getStrength();
 }
-ProcInterface * FlowPipeline::getInputFilter() const {
+ProcInterface* FlowPipeline::getInputFilter() const {
     return &m_pImpl->grayProc;
 }
-ProcInterface * FlowPipeline::getOutputFilter() const {
+ProcInterface* FlowPipeline::getOutputFilter() const {
     return &m_pImpl->flowProc;
 }
 int FlowPipeline::render(int position) {
@@ -229,9 +229,12 @@ int FlowPipeline::reinit(int inW, int inH, bool prepareForExternalInput) {
 // ======= Test two input smoothed tensor output ======
 // ====================================================
 
-FlowImplProc::FlowImplProc(bool isX, float strength) : isX(isX), strength(strength) {}
+FlowImplProc::FlowImplProc(bool isX, float strength)
+    : isX(isX)
+    , strength(strength) {
+}
 
-void FlowImplProc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void FlowImplProc::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
     shParamAPos = shader->getParam(ATTR, "position");
     shParamATexCoord = shader->getParam(ATTR, "inputTextureCoordinate");
@@ -248,13 +251,12 @@ void FlowImplProc::setUniforms() {
     glUniform1f(shParamUStrength, strength);
 }
 
-// *INDENT-OFF*
-const char * FlowImplProc::fshaderFlowXSrc = OG_TO_STR
-(
+// clang-format off
+const char * FlowImplProc::fshaderFlowXSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
  uniform sampler2D inputImageTexture;
  uniform float strength;
@@ -267,15 +269,14 @@ const char * FlowImplProc::fshaderFlowXSrc = OG_TO_STR
      vec4 x = vec4(t, (pix.x*pix.z+1.0)/2.0);
      gl_FragColor = x * strength;
  });
-// *INDENT-ON*
+// clang-format on
 
-// *INDENT-OFF*
-const char *FlowImplProc::fshaderFlowYSrc = OG_TO_STR
-(
+// clang-format off
+const char *FlowImplProc::fshaderFlowYSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
  uniform sampler2D inputImageTexture;
  uniform float strength;
@@ -288,7 +289,7 @@ const char *FlowImplProc::fshaderFlowYSrc = OG_TO_STR
      vec4 y = vec4(t, (pix.y*pix.z+1.0)/2.0);
      gl_FragColor = y * strength;
  });
-// *INDENT-ON*
+// clang-format on
 
 //##########################################################################
 //                   +=> [Ix^2; Ix*Iy; Iy^2; Ix*It] => SMOOTH ===+
@@ -296,9 +297,12 @@ const char *FlowImplProc::fshaderFlowYSrc = OG_TO_STR
 //                   +=> [Ix^2; Ix*Iy; Iy^2; Iy*It] => SMOOTH ===+
 //##########################################################################
 
-Flow2Proc::Flow2Proc(float tau, float strength) : tau(tau), strength(strength) {}
+Flow2Proc::Flow2Proc(float tau, float strength)
+    : tau(tau)
+    , strength(strength) {
+}
 
-void Flow2Proc::filterShaderSetup(const char *vShaderSrc, const char *fShaderSrc, GLenum target) {
+void Flow2Proc::filterShaderSetup(const char* vShaderSrc, const char* fShaderSrc, GLenum target) {
     ProcBase::createShader(vShaderSrc, fShaderSrc, target);
     shParamAPos = shader->getParam(ATTR, "position");
     shParamATexCoord = shader->getParam(ATTR, "inputTextureCoordinate");
@@ -316,13 +320,12 @@ void Flow2Proc::setUniforms() {
     glUniform1f(shParamUTau, tau);
 }
 
-// *INDENT-OFF*
-const char *Flow2Proc::fshaderFlowSrc = OG_TO_STR
-(
+// clang-format off
+const char *Flow2Proc::fshaderFlowSrc = 
 #if defined(OGLES_GPGPU_OPENGLES)
- precision highp float;
+OG_TO_STR(precision highp float;)
 #endif
-
+OG_TO_STR(
  varying vec2 textureCoordinate;
  uniform sampler2D inputImageTexture;
  uniform sampler2D inputImageTexture2;
@@ -370,7 +373,7 @@ const char *Flow2Proc::fshaderFlowSrc = OG_TO_STR
      vec4 flow = vec4(((-uv + 1.0) / 2.0), L1, L2); // TODO: L1,L2 need scaling
      gl_FragColor = flow;
  });
-// *INDENT-ON*
+// clang-format on
 
 // =========================================
 
@@ -386,7 +389,7 @@ struct Flow2Pipeline::Impl {
         , flowYProc(false, 1.f)
         , flowYSmoothProc(5.0)
         , flowProc(tau, strength) {
-        if(!doGray) {
+        if (!doGray) {
             grayProc.setGrayscaleConvType(GRAYSCALE_INPUT_CONVERSION_NONE);
         }
 
@@ -452,16 +455,16 @@ Flow2Pipeline::Flow2Pipeline(float tau, float strength, bool doGray) {
 Flow2Pipeline::~Flow2Pipeline() {
     procPasses.clear();
 }
-ProcInterface * Flow2Pipeline::getInputFilter() const {
+ProcInterface* Flow2Pipeline::getInputFilter() const {
     return &m_pImpl->grayProc;
 }
 
 #if USE_MEDIAN
-ProcInterface * Flow2Pipeline::getOutputFilter() const {
+ProcInterface* Flow2Pipeline::getOutputFilter() const {
     return &m_pImpl->medianProc;
 }
 #else
-ProcInterface * Flow2Pipeline::getOutputFilter() const {
+ProcInterface* Flow2Pipeline::getOutputFilter() const {
     return &m_pImpl->nmsProc;
 }
 #endif
@@ -470,7 +473,7 @@ float Flow2Pipeline::getStrength() const {
     return m_pImpl->flowProc.getStrength();
 }
 
-ProcInterface * Flow2Pipeline::corners() {
+ProcInterface* Flow2Pipeline::corners() {
     return &m_pImpl->nmsProc;
 }
 
