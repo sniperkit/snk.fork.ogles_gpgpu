@@ -5,7 +5,7 @@
 | [![Build Status][travis_status]][travis_builds] | [![Build Status][appveyor_status]][appveyor_builds] |
 
 
-[travis_status]: https://travis-ci.org/hunter-packages/ogles_gpgpu.svg?branch=master
+[travis_status]: https://travis-ci.org/hunter-packages/ogles_gpgpu.svg?branch=hunter
 [travis_builds]: https://travis-ci.org/hunter-packages/ogles_gpgpu
 
 [appveyor_status]: https://ci.appveyor.com/api/projects/status/nuo2m8o09q562ogq/branch/hunter?svg=true
