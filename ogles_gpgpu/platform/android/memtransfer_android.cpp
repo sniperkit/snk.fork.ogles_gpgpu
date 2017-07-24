@@ -1,10 +1,67 @@
 #include "memtransfer_android.h"
-
-#include <dlfcn.h>
-
 #include "../../common/tools.h"
 
 #include <android/native_window.h>
+#include <sys/system_properties.h>
+
+#include <stdlib.h>
+#include <dlfcn.h>
+
+// Check Android API at run-time: https://stackoverflow.com/a/33268925
+// Android Nougat API=24 blocks dlopen.
+static int get_android_api()
+{
+    static int api(-1);
+    if(api < 0)
+    {
+#if __ANDROID_API__ < 21
+        char value[PROP_VALUE_MAX] = {'\0'};
+        int length = __system_property_get("ro.build.version.sdk", value);
+        api = atoi(value);
+#else
+        api = popen("getprop ro.build.version.sdk");
+#endif
+    }
+    
+    return api;
+}
+
+extern "C" void *fake_dlopen(const char *filename, int flags);
+extern "C" int fake_dlclose(void *handle);
+extern "C" void *fake_dlsym(void *handle, const char *symbol);
+
+void* try_dlopen(const char *lib, int flags) {
+    if(get_android_api() < 24) {
+        void* dlEGLhndl = fake_dlopen(lib, flags);
+    }
+    else {
+#  ifdef __arm__
+        std::string path = "/system/lib/";
+#  else
+        std::string path = "/system/lib64/";
+#  endif
+        path += lib;
+        void * dlEGLhndl = fake_dlopen(path.c_str(), flags);
+    }
+}
+
+void* try_dlsym(void *handle, const char *symbol) {
+    if(get_android_api() < 24) {    
+        return dlsym(handle, symbol);
+    }
+    else  {
+        return fake_dlsym(handle, symbol);
+    }
+}
+
+int try_dlclose(void *handle) {
+    if(get_android_api() < 24) {
+        return dlclose(handle);
+    }
+    else {
+        return fake_dlclose(handle);
+    }
+}
 
 typedef struct android_native_base_t {
     /* a magic value defined by the actual EGL native type */
@@ -91,11 +148,11 @@ enum {
     HAL_PIXEL_FORMAT_RGBA_4444 = 7,
 };
 
-#define OG_DL_FUNC(hndl, fn, type) (type) dlsym(hndl, fn)
+#define OG_DL_FUNC(hndl, fn, type) (type) try_dlsym(hndl, fn)
 #define OG_DL_FUNC_CHECK(hndl, fn_ptr, fn)                                                          \
     if (!fn_ptr) {                                                                                  \
         OG_LOGERR("MemTransferAndroid", "could not dynamically link func '%s': %s", fn, dlerror()); \
-        dlclose(hndl);                                                                              \
+        try_dlclose(hndl);                                                                              \
         return false;                                                                               \
     }
 
@@ -120,7 +177,7 @@ EGLExtFnDupNativeFenceFDANDROID MemTransferAndroid::dupNativeFenceFDANDROID = NU
 
 bool MemTransferAndroid::initPlatformOptimizations() {
     // load necessary EGL extension functions
-    void* dlEGLhndl = dlopen("libEGL.so", RTLD_LAZY);
+    void* dlEGLhndl = try_dlopen("libEGL.so", RTLD_LAZY);
     if (!dlEGLhndl) {
         OG_LOGERR("MemTransferAndroid", "could not load EGL library: %s", dlerror());
         return false;
@@ -150,10 +207,10 @@ bool MemTransferAndroid::initPlatformOptimizations() {
         }
     }
 
-    dlclose(dlEGLhndl);
+    try_dlclose(dlEGLhndl);
 
     // load necessary Android GraphicBuffer functions
-    void* dlUIhndl = dlopen("libui.so", RTLD_LAZY);
+    void* dlUIhndl = try_dlopen("libui.so", RTLD_LAZY);
     if (!dlUIhndl) {
         OG_LOGERR("MemTransferAndroid", "could not load Android UI library: %s", dlerror());
         return false;
@@ -174,7 +231,7 @@ bool MemTransferAndroid::initPlatformOptimizations() {
     graBufUnlock = OG_DL_FUNC(dlUIhndl, "_ZN7android13GraphicBuffer6unlockEv", GraphicBufferFnUnlock);
     OG_DL_FUNC_CHECK(dlUIhndl, graBufUnlock, "_ZN7android13GraphicBuffer6unlockEv");
 
-    dlclose(dlUIhndl);
+    try_dlclose(dlUIhndl);
 
     // all done
     OG_LOGINF("MemTransferAndroid", "static init completed");
