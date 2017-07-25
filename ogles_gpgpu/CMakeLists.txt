@@ -30,7 +30,7 @@ if(APPLE)
   endif()
 elseif(ANDROID)
   find_package(android REQUIRED)
-  find_package(log REQUIRED)
+  find_package(android_log REQUIRED)
   find_package(egl REQUIRED)
 
   if(OGLES_GPGPU_OPENGL_ES3)
