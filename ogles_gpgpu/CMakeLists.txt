@@ -29,19 +29,24 @@ if(APPLE)
       )
   endif()
 elseif(ANDROID)
-  find_package(Android REQUIRED)
-  find_package(Log REQUIRED)
-  find_package(EGL REQUIRED)
+  find_package(android REQUIRED)
+  find_package(log REQUIRED)
+  find_package(egl REQUIRED)
 
   if(OGLES_GPGPU_OPENGL_ES3)
-    find_package(OpenGLES3 REQUIRED)
-    set(ogles_gpgpu_opengl_lib GLESv3)
+    find_package(gles3 REQUIRED)
+    target_link_libraries(ogles_gpgpu PUBLIC gles3::gles3)
   else()
-    find_package(OpenGLES2 REQUIRED)
-    set(ogles_gpgpu_opengl_lib GLESv2)
+    find_package(gles2 REQUIRED)
+    target_link_libraries(ogles_gpgpu PUBLIC gles2::gles2)
   endif()
-  target_link_libraries(ogles_gpgpu PUBLIC log android EGL ${ogles_gpgpu_opengl_lib})
-
+  target_link_libraries(
+      ogles_gpgpu
+      PUBLIC
+      android::android
+      android_log::android_log
+      egl::egl
+  )
 
   target_compile_definitions(ogles_gpgpu PUBLIC EGL_EGLEXT_PROTOTYPES GL_GLEXT_PROTOTYPES)
 else()
