@@ -9,7 +9,7 @@ include("cmake/HunterGate.cmake")
 HunterGate(
   URL "https://github.com/ruslo/hunter/archive/v0.19.36.tar.gz"
   SHA1 "db6f5483795c56968fe628b3cc9791ec6627bdfc"
-  LOCAL  
+  LOCAL
 )
 
 project(ogles_gpgpu VERSION 0.2.1)
@@ -44,7 +44,7 @@ if(XCODE)
 endif()
 
 ## #################################################################
-## Testing: 
+## Testing:
 ## #################################################################
 
 string(COMPARE EQUAL "$ENV{TRAVIS}" "true" travis_ci)
@@ -75,7 +75,7 @@ if(OGLES_GPGPU_BUILD_TESTS)
   # Use GTest as unit test framework
   hunter_add_package(GTest)
   find_package(GTest CONFIG REQUIRED)
-  list(APPEND OGLES_GPGPU_TEST_LIBS GTest::gtest)  
+  list(APPEND OGLES_GPGPU_TEST_LIBS GTest::gtest)
 
   if(MSVC)
     # TODO: Temporary aglet fix for appveyor?  Shouldn't be needed.
@@ -83,7 +83,7 @@ if(OGLES_GPGPU_BUILD_TESTS)
     find_package(glew CONFIG REQUIRED)
   endif()
 
-  # Use aglet for portable lightweight off screen opengl context  
+  # Use aglet for portable lightweight off screen opengl context
   hunter_add_package(aglet)
   find_package(aglet CONFIG REQUIRED)
   list(APPEND OGLES_GPGPU_TEST_LIBS aglet::aglet)
