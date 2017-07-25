@@ -62,23 +62,9 @@ else()
     # OSMESA option is excluded from those platforms in the CMake control
     # logic.
 
-    find_library(OSMESA_LIBRARY OSMesa)
-    if(NOT OSMESA_LIBRARY)
-      message(FATAL_ERROR "OGLES_GPGPU was configured to use OSMesa, but the library could not be found")
-    endif()
-
-    get_filename_component(OSMESA_PATH ${OSMESA_LIBRARY} DIRECTORY)
-
-    find_library(GLAPI_LIBRARY glapi HINTS ${OSMESA_PATH} PATHS ${OSMESA_PATH})
-    if(NOT GLAPI_LIBRARY)
-      message(FATAL_ERROR "OGLES_GPGPU was configured to use OSMesa, but the GLAPI dependency was not found")
-    endif()
-
-    find_library(EGL_LIBRARY EGL HINTS ${OSMESA_PATH} PATHS ${OSMESA_PATH})
-    if(NOT EGL_LIBRARY)
-      message(FATAL_ERROR "EGL_LIBRARY was configured to use OSMesa, but the EGL dependency was not found")
-    endif()
-    mark_as_advanced(OSMESA_LIBRARY GLAPI_LIBRARY EGL_LIBRARY)
+    find_package(osmesa REQUIRED)
+    find_package(glapi REQUIRED)
+    find_package(egl REQUIRED)
 
     # Create a new target specfiically for OSMesa (cpu shader) based testing
     # (We will never create ogles_gpgpu libraries w/ CPU OpenGL processing.)
@@ -88,7 +74,7 @@ else()
       target_compile_definitions(ogles_gpgpu_cpu PUBLIC OGLES_GPGPU_VERBOSE=1)
     endif()
 
-    target_link_libraries(ogles_gpgpu_cpu PUBLIC ${OSMESA_LIBRARY} ${GLAPI_LIBRARY} ${EGL_LIBRARY})
+    target_link_libraries(ogles_gpgpu_cpu PUBLIC osmesa::osmesa glapi::glapi egl::egl)
 
     set_property(TARGET ogles_gpgpu_cpu PROPERTY FOLDER "libs/ogles_gpgpu")
     target_include_directories(
