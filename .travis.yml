@@ -38,6 +38,10 @@ addons:
       #- g++-5
       #- gcc-5
 
+env:
+  global:
+    - secure: "UW9uugVbUDdGwngqj69XFNkdrAo1xKZZo+XI/Aw+UsH2+f/bpsn4XAiy/o5Wn0RESpDdYKr4hWJsvBvuBAt43MFsLojgQcA6O0bmds8jCX6iNlspUJF1VfPysF40kscUH2jpobU23vQ4NV9aPZ8bK53KGUghfIB4j8iv84lD7CgYP7rI/pJAuQip3oGQNNR4LiO204FwzJkhSexmWKFMBc3gPD2Z7jGwQVzkZsO2oAZF101wqxDUxcoTBggq5zTEZL5OhoZuLRzk1t08I7L3P+N3jyqzgGr9RuzDUIZceR1KnyqegI2ij2vbFklIinxqiLkZnRWAXRhtScq2te9Sfj53CDrHg9F3FcTK9Bb1vgwCCXHqrOsmdHdsxWLU8iwqRDGD9JZj4s16MqeHkJapKDxf+ptS5c35UHN+J30fBhOHMGshhLFQTbfLzPChDliT+/tHqa3cFtO8M3FxBhuUiV5FBbMrSrGTTjqb1UrTCMZOKC1G90sUCVVGILMiji3I67h0+EE/WE53XHuGJven/+cZxRq8p4xqnDHlCmyKKbdJf6K5RULTL11fJcgHuWXoUn3tmYNWsPbtgSu2dAl0E40/LsF4uvBLzp/23a89l4lo2FH1+btpjN8SeJAhX0Qwwp1tSB1s2YrbdOtMhOqBQ0jvtgv4bjAbLpYhUgXGCrA="
+
 matrix:
   include:
     # Linux {
@@ -95,14 +99,6 @@ install:
   # Installed if toolchain is Android (otherwise directory doesn't exist)
   - export ANDROID_NDK_r10e="`pwd`/_ci/android-ndk-r10e"
 
-  # Teach hunter-packages about system OSMesa: FindOSMesa.cmake
-  - CMAKE_MODULE_PATH=$(dirname $(find "${PWD}/_ci/cmake" -name "FindOpenGL.cmake"))
-  - FIND_OSMESA_CMAKE="${CMAKE_MODULE_PATH}/FindOSMesa.cmake"
-  - echo "find_package (PkgConfig)" > "${FIND_OSMESA_CMAKE}"
-  - echo "pkg_check_modules (PKG_OSMESA QUIET osmesa)" >> "${FIND_OSMESA_CMAKE}"
-  - echo "set (OSMESA_INCLUDE_DIR \${PKG_OSMESA_INCLUDE_DIRS})" >> "${FIND_OSMESA_CMAKE}"
-  - echo "set (OSMESA_LIBRARIES   \${PKG_OSMESA_LIBRARIES})" >> "${FIND_OSMESA_CMAKE}"
-
 script:
 
   - >
@@ -120,7 +116,16 @@ script:
     --jobs 2
     ${INSTALL} ${TEST}
 
+  # Upload to server
+  - git clone https://github.com/ruslo/hunter
+  - >
+    ./hunter/maintenance/upload-cache-to-github.py
+    --username ingenue
+    --repo-owner ingenue
+    --repo hunter-cache
+    --cache-dir ${HOME}/.hunter/_Base/Cache
+    --temp-dir ${HOME}/__TEMP_HUNTER
+
 branches:
   except:
     - /^pr\..*/
-
