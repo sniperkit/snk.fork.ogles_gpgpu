@@ -5,7 +5,7 @@ image: Visual Studio 2015
 environment:
   global:
     GITHUB_USER_PASSWORD:
-      secure: AyN1ZFyVwxq0AUEACZjcd+icjGLxWnDY+9kgHeKg1duaOahoZme8jf26sMIfPEnE
+      secure: 6980PgdnCkPxG/dBu9+S7XonPmbLHkbnlEpjko7jgHeZoGJi3ekT1XvvR3vOjoRi
 
   matrix:
 
