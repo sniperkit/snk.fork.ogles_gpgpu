@@ -117,8 +117,6 @@ script:
     GAUZE_ANDROID_USE_EMULATOR=YES
     HUNTER_CONFIGURATION_TYPES=${CONFIG}
     HUNTER_SUPPRESS_LIST_OF_FILES=ON
-    --discard 4
-    --tail 100
     --jobs 2
     ${INSTALL} ${TEST}
 

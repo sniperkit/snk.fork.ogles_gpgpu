@@ -19,4 +19,5 @@ sugar_files(
     macros.h
     memtransfer_android.cpp
     memtransfer_android.h
+    fake_dlfcn.c
 )
