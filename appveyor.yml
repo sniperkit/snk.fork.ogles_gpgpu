@@ -5,10 +5,10 @@ image: Visual Studio 2015
 environment:
 
   matrix:
-    
+
     - TOOLCHAIN: "vs-14-2015-sdk-8-1"
       CONFIG: Release
-      
+
     - TOOLCHAIN: "vs-14-2015-sdk-8-1"
       CONFIG: Debug
 
@@ -38,7 +38,7 @@ install:
   - cmd: set PATH=%cd%\_ci\ninja;%PATH%
 
   # Add '--quiet' to avoid leaking the token to logs
-  - cmd: git submodule update --init --recursive --quiet    
+  - cmd: git submodule update --init --recursive --quiet
 
   # Remove entry with sh.exe from PATH to fix error with MinGW toolchain
   # (For MinGW make to work correctly sh.exe must NOT be in your path)
@@ -50,7 +50,7 @@ install:
   - cmd: set MINGW_PATH=C:\Qt\Tools\mingw492_32\bin
 
   # MSYS2 location
-  - cmd: set MSYS_PATH=C:\msys64\usr\bin    
+  - cmd: set MSYS_PATH=C:\msys64\usr\bin
 
 build_script:
   - cmd: python %POLLY_SOURCE_DIR%\bin\polly.py --toolchain "%TOOLCHAIN%" --config "%CONFIG%" --verbose --fwd OGLES_GPGPU_BUILD_TESTS=ON
