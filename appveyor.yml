@@ -60,7 +60,7 @@ build_script:
 
   # Upload to server
   - cmd: git clone https://github.com/ruslo/hunter
-  - cmd: python %cd%\hunter\maintenance\upload-cache-to-github.py --username ingenue --repo-owner ingenue --repo hunter-cache --cache-dir C:/Users/appveyor/.hunter/_Base/Cache --temp-dir C:/Users/appveyor/__TEMP_HUNTER
+  - cmd: python %cd%\hunter\maintenance\upload-cache-to-github.py --username ingenue --repo-owner ingenue --repo hunter-cache --cache-dir C:/.hunter/_Base/Cache --temp-dir C:/.hunter/__TEMP_HUNTER
 
 branches:
   except:
