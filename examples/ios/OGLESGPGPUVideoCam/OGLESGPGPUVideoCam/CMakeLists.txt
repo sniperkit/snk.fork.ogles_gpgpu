@@ -68,22 +68,34 @@ set_target_properties(
   "com.elucideye.OGLESGPGPUVideoCam.debug"
   )
 
+find_package(coregraphics REQUIRED)
+find_package(foundation REQUIRED)
+find_package(uikit REQUIRED)
+find_package(quartzcore REQUIRED)
+find_package(imageio REQUIRED)
+find_package(coregraphics REQUIRED)
+find_package(corevideo REQUIRED)
+find_package(coremedia REQUIRED)
+find_package(corelocation REQUIRED)
+find_package(glkit REQUIRED)
+find_package(accelerate REQUIRED)
+find_package(opengles REQUIRED)
+find_package(uikit REQUIRED)
+
 target_link_libraries(
   OGLESGPGPUVideoCam
   ogles_gpgpu
-  "-framework CoreGraphics"
-  "-framework Foundation"
-  "-framework UIKit"
-  "-framework QuartzCore"
-  "-framework ImageIO"
-  "-framework CoreGraphics"
-  "-framework CoreVideo"
-  "-framework CoreMedia"
-  "-framework CoreLocation" 
-  "-framework AVFoundation"
-  "-framework GLKit"
-  "-framework Accelerate"
-  "-framework OpenGLES"
-  "-framework UIKit"
+  coregraphics::coregraphics
+  foundation::foundation
+  uikit::uikit
+  quartzcore::quartzcore
+  imageio::imageio
+  coregraphics::coregraphics
+  corevideo::corevideo
+  coremedia::coremedia
+  corelocation::corelocation
+  glkit::glkit
+  accelerate::accelerate
+  opengles::opengles
+  uikit::uikit
   )
-

@@ -1,10 +1,8 @@
 @PACKAGE_INIT@
 
-include(CMakeFindDependencyMacro)
-
 if(@MSVC@)
-  find_dependency(glew CONFIG)
-  find_dependency(OpenGL)
+  find_package(glew CONFIG REQUIRED)
+  find_package(OpenGL REQUIRED)
 elseif(@ANDROID@)
   # Use system dependencies
   find_package(android REQUIRED)
@@ -16,9 +14,17 @@ elseif(@ANDROID@)
     find_package(gles2 REQUIRED)
   endif()
 elseif(@APPLE@)
-  # IOS and OSX are using frameworks
+  find_package(imageio REQUIRED)
+  find_package(corefoundation REQUIRED)
+  find_package(corevideo REQUIRED)
+  if(@IOS@)
+    find_package(foundation REQUIRED)
+    find_package(opengles REQUIRED)
+  else()
+    find_package(OpenGL REQUIRED)
+  endif()
 else()
-  find_dependency(OpenGL)
+  find_package(OpenGL REQUIRED)
 endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/@targets_export_name@.cmake")
