@@ -12,21 +12,26 @@ endif()
 ## #################################################################
 
 if(APPLE)
+  find_package(imageio REQUIRED)
+  find_package(corefoundation REQUIRED)
+  find_package(corevideo REQUIRED)
+  target_link_libraries(
+      ogles_gpgpu
+      PUBLIC
+      imageio::imageio
+      corefoundation::corefoundation
+      corevideo::corevideo
+  )
   if(IOS)
+    find_package(foundation REQUIRED)
+    find_package(opengles REQUIRED)
     target_link_libraries(ogles_gpgpu PUBLIC
-      "-framework ImageIO"
-      "-framework CoreFoundation"
-      "-framework CoreVideo"
-      "-framework Foundation" # NSLog
-      "-framework OpenGLES"
+      foundation::foundation
+      opengles::opengles
       )
   else()
-    target_link_libraries(ogles_gpgpu PUBLIC
-      "-framework ImageIO"
-      "-framework CoreFoundation"
-      "-framework CoreVideo"
-      "-framework OpenGL"
-      )
+    find_package(OpenGL REQUIRED)
+    target_link_libraries(ogles_gpgpu PUBLIC OpenGL::GL)
   endif()
 elseif(ANDROID)
   find_package(android REQUIRED)
