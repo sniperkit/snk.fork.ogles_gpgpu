@@ -106,7 +106,7 @@ install:
 script:
 
   - >
-    polly.py
+    travis_wait 200 polly.py
     --toolchain ${TOOLCHAIN}
     --config ${CONFIG}
     --verbose
