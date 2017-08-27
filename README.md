@@ -10,7 +10,16 @@
 [appveyor_status]: https://ci.appveyor.com/api/projects/status/5t9i7mwbdvhqn21i/branch/hunter?svg=true
 [appveyor_builds]: https://ci.appveyor.com/project/ruslo/ogles-gpgpu/branch/hunter
 
+This is an active fork of an original project by Markus Konrad.  
+* [Original project](https://github.com/internaut/ogles_gpgpu)
+* [Project documentation](http://www.mkonrad.net/projects/ogles_gpgpu.html) for more information
+
 UPDATE: CMake support has been added via the [Hunter](https://github.com/ruslo/hunter) package manager with cross platform toolchains provided by [Polly](https://github.com/ruslo/polly).  See the README pages of these links for details.
+
+The extensions in this fork include:
+* OpenGL ES 3.0 support (primarily for asynchronous PBO use)
+* Flexible bottom-up filter graph architectures: branch, merge, etc
+* Various shader implementations (many adapted from Brad Larson's GPUImage)
 
 ## Features
 
