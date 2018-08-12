@@ -1,3 +1,6 @@
+# Sniperkit-Bot
+# - Status: analyzed
+
 @PACKAGE_INIT@
 
 include(CMakeFindDependencyMacro)

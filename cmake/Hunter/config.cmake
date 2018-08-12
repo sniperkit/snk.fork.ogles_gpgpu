@@ -1,3 +1,6 @@
+# Sniperkit-Bot
+# - Status: analyzed
+
 set(OPENCV_CMAKE_ARGS
 
   BUILD_opencv_imgcodecs=ON  
